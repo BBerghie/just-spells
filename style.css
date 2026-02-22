@@ -1,3 +1,50 @@
-#mainTitle {
-    color: red;
+.title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+.selected-spells {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.spell-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #f3f3f3;
+}
+
+.search {
+    input {
+        border: black solid 1px;
+    }
+}
+.spellContainer {
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+.print-only {
+    display: none !important;
+}
+
+.controls {
+    display: flex;
+    /*gap: 1rem;*/
+    margin-bottom: 1.5rem;
+}
+.spell-list {
+    width: 21cm;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+@media print {
+    .body > * {
+        display: none !important;
+    }
+    .print-only {
+        display: block !important;
+    }
 }

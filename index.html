@@ -3,25 +3,30 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <h1 id="mainTitle">A simple Path Finder spell cards maker????</h1>
+        <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
         <link rel="stylesheet" href="./style.css" />
+        <link rel="stylesheet" href="./style/spellCard.css" />
     </head>
     <body>
         <main>
-            <h3 class="classClicame" id="soyUnico">pintame</h3>
-            <!-- picked spells-->
-            <section>
+            <section class="spellContainer">
+                <!-- List of selected Spells -->
+                <section class="selected-spells">
+                    <h2>Conjuros seleccionados</h2>
+                    <ul id="" class=""></ul>
+                </section>
+
+                <!-- List of Spells -->
                 <template id="spell-template">
                     <li>
-                        <button type="button">Button</button
-                        ><span class="title"></span>
+                        <span class="title"></span>
                     </li>
                 </template>
-                <ul id="spells"></ul>
+                <section id="spellPool" class="spell-list">
+                    <h2>Lista de hechizos</h2>
+                    <ul id="spells" class="spell-list"></ul>
+                </section>
             </section>
-
-            <!-- List of Spells-->
-            <section></section>
         </main>
         <footer></footer>
         <script type="module" src="./main.js"></script>
