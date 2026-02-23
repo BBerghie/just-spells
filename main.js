@@ -1,18 +1,36 @@
 //const fragment = document.getElementById("spell-template");
 
+function print() {
+  window.print();
+}
+
 async function loadData() {
   try {
     const res = await fetch("./resources/spells.json");
     const datos = await res.json();
 
     const spellPool = document.getElementById("spellPool");
-
-    datos.forEach((spell) => {
+    let i = 0;
+    datos.forEach((spellJson) => {
       const card = document.createElement("li");
       card.classList.add("card");
-
+      card.classList.add("no-print");
+      const spell = {
+        title: spellJson.title,
+        description: spellJson.description,
+        actionType: spellJson.actionType,
+        castTime: spellJson.castTime,
+        area: spellJson.area,
+        objectives: spellJson.objectives,
+        heightenings: spellJson.heightenings,
+        level: spellJson.level,
+        traditions: spellJson.traditions,
+        trigger: spellJson.trigger,
+        type: spellJson.type,
+        range: spellJson.range,
+        duration: spellJson.duration,
+      }
       card.innerHTML = `
-       	<button>
       		<div class="front">
      			<div class="body">
       				<h3 class="name lined srname">${spell.title} <img src="${getActionImg(spell.actionType)}" alt="${spell.actionType}"/></h3>
@@ -36,16 +54,17 @@ async function loadData() {
       				<p class="text">${spell.description}<br> <b>Elevaciones</b>: ${spell.heightenings} </p>
 
      			</div>
-     			<b class="class srclass">{spell.traditions}</b>
+     			<b class="class srclass">${spell.traditions}</b>
      			<b class="type srtype">${spell.type} ${spell.level}</b>
       		</div>
-      		</button>
       `;
 
+      card.id = 'spell-' + i;
       // Evento click → llama a una función con el objeto completo
-      card.addEventListener("click", () => selectSpell(spell));
+      card.addEventListener("click", () => selectSpell(spell, card.id));
 
       spellPool.appendChild(card);
+      i++;
     });
   } catch (error) {
     console.error("Error cargando JSON:", error);
@@ -74,8 +93,24 @@ function getActionImg(actionType) {
   return imgPath;
 }
 
-function selectSpell(item) {
-  console.log("Has hecho click en:", item.title);
+function selectSpell(item, id) {
+  const selectedSpells = document.getElementById("selected-spells");
+  const clickedSpell = document.getElementById(id);
+
+  const spellTitle = document.createElement("li");
+  spellTitle.innerText = item.title;
+  spellTitle.id = 'selected' + id;
+
+  if(clickedSpell.classList.contains("selected")) {
+    clickedSpell.classList.remove("selected");
+    clickedSpell.classList.add("no-print");
+
+    selectedSpells.removeChild(document.getElementById(spellTitle.id));
+  } else {
+    clickedSpell.classList.add("selected");
+    clickedSpell.classList.remove("no-print");
+    selectedSpells.appendChild(spellTitle);
+  }
 }
 
-loadData();
+loadData().then(() => console.log("Datos cargados correctamente"));

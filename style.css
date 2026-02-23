@@ -2,11 +2,11 @@
     font-size: 2rem;
     margin-bottom: 1rem;
 }
-.selected-spells {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
+/*.selected-spells {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    flex-wrap: wrap;*/
+/*}*/
 .spell-card {
     padding: 1rem;
     border-radius: 0.5rem;
@@ -21,9 +21,6 @@
 .spellContainer {
     display: grid;
     grid-template-columns: 20% 80%;
-}
-.print-only {
-    display: none !important;
 }
 
 .controls {
@@ -41,10 +38,7 @@
 }
 
 @media print {
-    .body > * {
+    .no-print {
         display: none !important;
-    }
-    .print-only {
-        display: block !important;
     }
 }

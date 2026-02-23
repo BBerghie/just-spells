@@ -3,17 +3,23 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
         <link rel="stylesheet" href="./style.css" />
         <link rel="stylesheet" href="./style/spellCard.css" />
+        <script type="module" src="./main.js"></script>
+        <title>A simple Path Finder spell cards maker</title>
     </head>
     <body>
+        <header class="no-print">
+            <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
+            <button onclick="print()">Imprimir</button>
+        </header>
         <main>
+
             <section class="spellContainer">
                 <!-- List of selected Spells -->
-                <section class="selected-spells">
+                <section class="no-print">
                     <h2>Conjuros seleccionados</h2>
-                    <ul id="" class=""></ul>
+                    <ul id="selected-spells" class="selected-spells"></ul>
                 </section>
 
                 <!-- List of Spells -->
@@ -22,13 +28,12 @@
                         <span class="title"></span>
                     </li>
                 </template>
-                <section id="spellPool" class="spell-list">
-                    <h2>Lista de hechizos</h2>
-                    <ul id="spells" class="spell-list"></ul>
+                <section id="spell-section">
+                    <h2 class="no-print">Lista de conjuros</h2>
+                    <ul id="spellPool" class="spell-list"></ul>
                 </section>
             </section>
         </main>
         <footer></footer>
-        <script type="module" src="./main.js"></script>
     </body>
 </html>
