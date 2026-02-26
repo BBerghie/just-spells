@@ -5,21 +5,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./style.css" />
         <link rel="stylesheet" href="./style/spellCard.css" />
-        <script type="module" src="./main.js"></script>
+        <script type="text/javascript" src="./main.js"></script>
         <title>A simple Path Finder spell cards maker</title>
     </head>
     <body>
         <header class="no-print">
             <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
-            <button onclick="print()">Imprimir</button>
+            <div class="button-row">
+
+            </div>
+            <div>
+
+            </div>
         </header>
         <main>
-
             <section class="spellContainer">
+                <section class="button-row no-print">
+                    <button onclick="window.print()">Imprimir</button>
+                    <div>
+                        <input type="color" id="colorPicker" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
+                        <label for="colorPicker">Elegir color de fondo</label>
+                    </div>
+
+
+                </section>
                 <!-- List of selected Spells -->
                 <section class="no-print">
-                    <h2>Conjuros seleccionados</h2>
-                    <ul id="selected-spells" class="selected-spells"></ul>
+
+                    <section class="selected-spells">
+                        <h2>Conjuros seleccionados</h2>
+                        <ul id="selected-spells" class="selected-spells"></ul>
+                    </section>
+
                 </section>
 
                 <!-- List of Spells -->

@@ -1,9 +1,5 @@
 //const fragment = document.getElementById("spell-template");
 
-function print() {
-  window.print();
-}
-
 async function loadData() {
   try {
     const res = await fetch("./resources/spells.json");
@@ -113,4 +109,6 @@ function selectSpell(item, id) {
   }
 }
 
-loadData().then(() => console.log("Datos cargados correctamente"));
+document.addEventListener("DOMContentLoaded", function(event) {
+  loadData().then(() => console.log("Datos cargados correctamente"));
+});

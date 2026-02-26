@@ -1,16 +1,16 @@
+:root {
+    --card-background: black;
+    --card-background-unselected: color-mix(in srgb, var(--card-background) 50%, transparent);
+}
+
 .title {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
-/*.selected-spells {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    flex-wrap: wrap;*/
-/*}*/
-.spell-card {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background: #f3f3f3;
+
+.button-row {
+    display: flex;
+    flex-direction: column;
 }
 
 .search {
@@ -20,7 +20,7 @@
 }
 .spellContainer {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 10% 20% 70%;
 }
 
 .controls {
