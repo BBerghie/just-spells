@@ -1,4 +1,4 @@
-//const fragment = document.getElementById("spell-template");
+import { cardTemplate } from "./js/CardTemplate.js";
 
 function print() {
   window.print();
@@ -17,6 +17,7 @@ async function loadData() {
       card.classList.add("no-print");
       const spell = {
         title: spellJson.title,
+        enTitle: spellJson.englishTitle,
         description: spellJson.description,
         actionType: spellJson.actionType,
         castTime: spellJson.castTime,
@@ -29,38 +30,18 @@ async function loadData() {
         type: spellJson.type,
         range: spellJson.range,
         duration: spellJson.duration,
-      }
-      card.innerHTML = `
-      		<div class="front">
-     			<div class="body">
-      				<h3 class="name lined srname">${spell.title} <img src="${getActionImg(spell.actionType)}" alt="${spell.actionType}"/></h3>
-      				<ul class="status lined">
-     					<li><em>Lanzamiento</em>${spell.castTime ? spell.castTime : "-"}</li>
-     					<li class="second"><em>Rango</em>${spell.range}</li>
-     					<br clear="all">
-      				</ul>
+      };
 
-      				<ul class="status lined">
-     					<li><em>Área</em>${spell.area}</li>
-     					<li class="second"><em>Duración</em>${spell.duration}</li>
-     					<br clear="all">
-      				</ul>
+      // card element template.
+      card.innerHTML = cardTemplate(spell);
 
-      				<ul class="status lined">
-     					<li><em>Objetivo</em>${spell.objectives}</li>
-     					<li class="second"><em>Desencadenate</em>${spell.trigger}</li>
-     					<br clear="all">
-      				</ul>
-      				<p class="text">${spell.description}<br> <b>Elevaciones</b>: ${spell.heightenings} </p>
+      card.id = "spell-" + i;
 
-     			</div>
-     			<b class="class srclass">${spell.traditions}</b>
-     			<b class="type srtype">${spell.type} ${spell.level}</b>
-      		</div>
-      `;
+      // dataset to search by spTitle & enTitle
+      card.dataset.search =
+        `${spellJson.title} ${spellJson.englishTitle}`.toLowerCase();
 
-      card.id = 'spell-' + i;
-      // Evento click → llama a una función con el objeto completo
+      // select a spell envent listener
       card.addEventListener("click", () => selectSpell(spell, card.id));
 
       spellPool.appendChild(card);
@@ -71,37 +52,15 @@ async function loadData() {
   }
 }
 
-function getActionImg(actionType) {
-  let imgPath = "";
-  switch (actionType) {
-    case "one-action":
-      imgPath = "./resources/assets/img/pf2e-action-1.png";
-      break;
-    case "two-actions":
-      imgPath = "./resources/assets/img/pf2e-action-2.png";
-      break;
-    case "three-actions":
-      imgPath = "./resources/assets/img/pf2e-action-3.png";
-      break;
-    case "reaction":
-      imgPath = "./resources/assets/img/pf2e-reaction.png";
-      break;
-    case "free-action":
-      imgPath = "./resources/assets/img/pf2e-free-action.png";
-      break;
-  }
-  return imgPath;
-}
-
 function selectSpell(item, id) {
   const selectedSpells = document.getElementById("selected-spells");
   const clickedSpell = document.getElementById(id);
 
   const spellTitle = document.createElement("li");
   spellTitle.innerText = item.title;
-  spellTitle.id = 'selected' + id;
+  spellTitle.id = "selected" + id;
 
-  if(clickedSpell.classList.contains("selected")) {
+  if (clickedSpell.classList.contains("selected")) {
     clickedSpell.classList.remove("selected");
     clickedSpell.classList.add("no-print");
 
@@ -113,4 +72,27 @@ function selectSpell(item, id) {
   }
 }
 
-loadData().then(() => console.log("Datos cargados correctamente"));
+function setupSearch() {
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", () => {
+    // users's imput
+    const query = searchInput.value.toLowerCase().trim();
+
+    // get all cards
+    const cards = document.querySelectorAll("#spellPool .card");
+
+    // iterate over all, save and print matches.
+    cards.forEach((card) => {
+      const title =
+        card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
+
+      const matches = title.includes(query);
+      card.style.display = matches ? "" : "none";
+    });
+  });
+}
+
+loadData().then(() => {
+  setupSearch();
+  console.log("Datos cargados correctamente");
+});

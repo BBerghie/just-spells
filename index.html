@@ -5,16 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./style.css" />
         <link rel="stylesheet" href="./style/spellCard.css" />
-        <script type="module" src="./main.js"></script>
         <title>A simple Path Finder spell cards maker</title>
     </head>
     <body>
         <header class="no-print">
             <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
             <button onclick="print()">Imprimir</button>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Buscar por título..."
+            />
         </header>
         <main>
-
             <section class="spellContainer">
                 <!-- List of selected Spells -->
                 <section class="no-print">
@@ -35,5 +38,7 @@
             </section>
         </main>
         <footer></footer>
+        <script type="module" src="./js/CardTemplate.js"></script>
+        <script type="module" src="./main.js"></script>
     </body>
 </html>
