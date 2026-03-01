@@ -17,6 +17,7 @@ async function loadData() {
       card.classList.add("no-print");
       const spell = {
         title: spellJson.title,
+        enTitle: spellJson.englishTitle,
         description: spellJson.description,
         actionType: spellJson.actionType,
         castTime: spellJson.castTime,
@@ -36,7 +37,11 @@ async function loadData() {
 
       card.id = "spell-" + i;
 
-      // select a spell envent listener.
+      // dataset to search by spTitle & enTitle
+      card.dataset.search =
+        `${spellJson.title} ${spellJson.englishTitle}`.toLowerCase();
+
+      // select a spell envent listener
       card.addEventListener("click", () => selectSpell(spell, card.id));
 
       spellPool.appendChild(card);
@@ -67,4 +72,27 @@ function selectSpell(item, id) {
   }
 }
 
-loadData().then(() => console.log("Datos cargados correctamente"));
+function setupSearch() {
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", () => {
+    // users's imput
+    const query = searchInput.value.toLowerCase().trim();
+
+    // get all cards
+    const cards = document.querySelectorAll("#spellPool .card");
+
+    // iterate over all, save and print matches.
+    cards.forEach((card) => {
+      const title =
+        card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
+
+      const matches = title.includes(query);
+      card.style.display = matches ? "" : "none";
+    });
+  });
+}
+
+loadData().then(() => {
+  setupSearch();
+  console.log("Datos cargados correctamente");
+});

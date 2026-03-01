@@ -2,7 +2,7 @@ function cardTemplate(spell) {
   return `
   		<div class="front">
  			<div class="body">
-  				<h3 class="name lined srname">${spell.title} <img src="${getActionImg(spell.actionType)}" alt="${spell.actionType}"/></h3>
+  				<h3 class="name lined srname" data-search="${spell.title} ${spell.enTitle}">${spell.title} <img src="${getActionImg(spell.actionType)}" alt="${spell.actionType}"/></h3>
   				<ul class="status lined">
  					<li><em>Lanzamiento</em>${spell.castTime ? spell.castTime : "-"}</li>
  					<li class="second"><em>Rango</em>${spell.range}</li>
