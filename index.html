@@ -11,12 +11,12 @@
     <body>
         <header class="no-print">
             <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
-            <div class="button-row">
-
-            </div>
-            <div>
-
-            </div>
+            <button onclick="print()">Imprimir</button>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Buscar por título..."
+            />
         </header>
         <main>
             <section class="spellContainer">
@@ -52,5 +52,7 @@
             </section>
         </main>
         <footer></footer>
+        <script type="module" src="./js/CardTemplate.js"></script>
+        <script type="module" src="./main.js"></script>
     </body>
 </html>
