@@ -5,3 +5,4 @@ A Pahfinder spells card maker.
 
 - Fondos de tarjetas
 - Estilo de botones
+- Diseño responsive

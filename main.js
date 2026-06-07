@@ -1,5 +1,3 @@
-import { cardTemplate } from "./js/CardTemplate.js";
-
 async function loadData() {
   try {
     const res = await fetch("./resources/spells.json");
@@ -35,9 +33,9 @@ async function loadData() {
 
       // dataset to search by spTitle & enTitle
       card.dataset.search =
-        `${spellJson.title} ${spellJson.englishTitle}`.toLowerCase();
+        `${spellJson.title} ${spellJson.enTitle}`.toLowerCase();
 
-      // select a spell envent listener
+      // select a spell event listener
       card.addEventListener("click", () => selectSpell(spell, card.id));
 
       spellPool.appendChild(card);
@@ -71,7 +69,7 @@ function selectSpell(item, id) {
 function setupSearch() {
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("input", () => {
-    // users's imput
+    // users's input
     const query = searchInput.value.toLowerCase().trim();
 
     // get all cards
@@ -87,9 +85,29 @@ function setupSearch() {
     });
   });
 }
+function getActionImg(actionType) {
+  let imgPath = "";
+  switch (actionType) {
+    case "one-action":
+      imgPath = "./resources/assets/img/pf2e-action-1.png";
+      break;
+    case "two-actions":
+      imgPath = "./resources/assets/img/pf2e-action-2.png";
+      break;
+    case "three-actions":
+      imgPath = "./resources/assets/img/pf2e-action-3.png";
+      break;
+    case "reaction":
+      imgPath = "./resources/assets/img/pf2e-reaction.png";
+      break;
+    case "free-action":
+      imgPath = "./resources/assets/img/pf2e-free-action.png";
+      break;
+  }
+  return imgPath;
+}
 
-
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
     loadData().then(() => {
         setupSearch();
         console.log("Datos cargados correctamente");

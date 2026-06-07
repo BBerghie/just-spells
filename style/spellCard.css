@@ -46,6 +46,10 @@
 
     .lined {
         border-bottom: 2px solid var(--card-background);
+
+        .clear {
+            clear: both;
+        }
     }
     .name {
         vertical-align: middle;

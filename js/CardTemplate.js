@@ -6,19 +6,19 @@ function cardTemplate(spell) {
   				<ul class="status lined">
  					<li><em>Lanzamiento</em>${spell.castTime ? spell.castTime : "-"}</li>
  					<li class="second"><em>Rango</em>${spell.range}</li>
- 					<br clear="all">
+ 					<br class="clear">
   				</ul>
 
   				<ul class="status lined">
  					<li><em>Área</em>${spell.area}</li>
  					<li class="second"><em>Duración</em>${spell.duration}</li>
- 					<br clear="all">
+ 					<br class="clear">
   				</ul>
 
   				<ul class="status lined">
  					<li><em>Objetivo</em>${spell.objectives}</li>
  					<li class="second"><em>Desencadenate</em>${spell.trigger}</li>
- 					<br clear="all">
+ 					<br class="clear">
   				</ul>
   				<p class="text">${spell.description}<br> <b>Elevaciones</b>: ${spell.heightenings} </p>
 
@@ -27,6 +27,44 @@ function cardTemplate(spell) {
  			<b class="type srtype">${spell.type} ${spell.level}</b>
   		</div>
   `;
+}
+
+function addIfNotEmpty(att, name, attList) {
+  if(att && att.length > 0) {
+    attList.push({name : name, value : att});
+  }
+  return attList;
+}
+
+function getNonEmptyAttributes(spell) {
+  let attributes = [];
+  attributes = addIfNotEmpty(spell.castTime, 'Lanzamiento', attributes);
+  attributes = addIfNotEmpty(spell.range, 'Rango', attributes);
+  attributes = addIfNotEmpty(spell.area, 'Área', attributes);
+  attributes = addIfNotEmpty(spell.duration, 'Duración', attributes);
+  attributes = addIfNotEmpty(spell.objectives, 'Objetivo', attributes);
+  attributes = addIfNotEmpty(spell.trigger, 'Desencadenate', attributes);
+
+  return attributes;
+}
+
+function getAttributeTwoLinesHtml(att1, att2) {
+  return `
+<ul class="status lined">
+    <li><em>${att1.name}</em>${att1.value}</li>
+    <li class="second"><em>{att2.name}</em>${att2.value}</li>
+    <br class="clear">
+</ul>
+`
+}
+function getAttributeLineHtml(att1) {
+  return `
+<ul class="status lined">
+    <li><em>${att1.name}</em>${att1.value}</li>
+    if(att2
+    <br class="clear">
+</ul>
+`
 }
 
 function getActionImg(actionType) {
@@ -50,5 +88,3 @@ function getActionImg(actionType) {
   }
   return imgPath;
 }
-
-export { cardTemplate };

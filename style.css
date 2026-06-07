@@ -11,7 +11,10 @@
 .button-row {
     display: flex;
     flex-direction: column;
+    padding-left: 1vw;
+
 }
+
 
 .search {
     input {
@@ -19,8 +22,16 @@
     }
 }
 .spellContainer {
-    display: grid;
-    grid-template-columns: 10% 20% 70%;
+    display: flex;
+    justify-content: left;
+}
+
+.fixedContainer {
+    width: 30%;
+    display: flex;
+ justify-content: space-between;
+    height: 100%;
+    overflow-y:auto;
 }
 
 .controls {
@@ -42,3 +53,20 @@
         display: none !important;
     }
 }
+
+.fixed {
+    position: sticky;
+    top: 5%;
+}
+
+.spell-section {
+    width: 70%;
+    height: 100%;
+}
+
+.selected-spells {
+    padding-right: 5%;
+    text-align: center;
+}
+
+
