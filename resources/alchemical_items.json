@@ -754,7 +754,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "BESTIAL MUTAGEN",
-    "title" : "MUTAGEN BESTIAL",
+    "title" : "MUTÁGENO BESTIAL",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -780,7 +780,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "COGNITIVE MUTAGEN",
-    "title" : "MUTAGEN COGNITIVO",
+    "title" : "MUTÁGENO COGNITIVO",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -806,7 +806,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "DRAKEHEART MUTAGEN",
-    "title" : "MUTAGEN DRAKEHEART",
+    "title" : "MUTÁGENO DRAKEHEART",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -832,7 +832,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "JUGGERNAUT MUTAGEN",
-    "title" : "MUTAGEN JUGGERNAUT",
+    "title" : "MUTÁGENO JUGGERNAUT",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -858,7 +858,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "QUICKSILVER MUTAGEN",
-    "title" : "MUTAGEN DE MERCURIO",
+    "title" : "MUTÁGENO DE MERCURIO",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -884,7 +884,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "SERENE MUTAGEN",
-    "title" : "MUTAGEN SERENE",
+    "title" : "MUTÁGENO SERENE",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
@@ -910,7 +910,7 @@
     "stage4" : ""
   }, {
     "englishTitle" : "SILVERTONGUE MUTAGEN",
-    "title" : "MUTAGEN DE LENGUA DE PLATA",
+    "title" : "MUTÁGENO DE LENGUA DE PLATA",
     "level" : "1",
     "tags" : [ "ELIXIR", "ALQUÍMICO", "CONSUMIBLE", "MUTÁGENO", "POLIMORFO" ],
     "price" : "",
