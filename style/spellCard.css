@@ -1,8 +1,6 @@
-@media screen {
-    .selected {
-        border-color: black !important;
-        background: black !important;
-    }
+.selected {
+    border-color: var(--card-background) !important;
+    background: var(--card-background) !important;
 }
 .card {
     float: left;
@@ -14,7 +12,8 @@
     }
 
     height: 3.5in;
-    background: gray;
+    background:  var(--card-background-unselected);
+    border-color:  var(--card-background-unselected);
     font-size: 10px;
     position: relative;
     vertical-align: top;
@@ -46,7 +45,15 @@
     }
 
     .lined {
-        border-bottom: 2px solid gray;
+        border-bottom: 2px solid var(--card-background);
+
+        .clear {
+            clear: both;
+        }
+    }
+    p {
+        margin-block-start: 0;
+        margin-block-end: 0;
     }
     .name {
         vertical-align: middle;
@@ -104,6 +111,7 @@
         font-size: 10px;
         line-height: 9px;
         margin: 0;
+        margin-block-end: 1em;
     }
     .class {
         position: absolute;
@@ -122,4 +130,5 @@
         font-size: 10px;
         font-weight: normal;
     }
+
 }

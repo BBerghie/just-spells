@@ -5,40 +5,119 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./style.css" />
         <link rel="stylesheet" href="./style/spellCard.css" />
+        <script type="text/javascript" src="./main.js"></script>
+        <script type="text/javascript" src="./js/CardTemplate.js"></script>
         <title>A simple Path Finder spell cards maker</title>
     </head>
     <body>
         <header class="no-print">
             <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
-            <button onclick="print()">Imprimir</button>
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Buscar por título..."
-            />
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Spells')">Conjuros</button>
+                <button class="tablinks" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
+            </div>
         </header>
         <main>
-            <section class="spellContainer">
-                <!-- List of selected Spells -->
-                <section class="no-print">
-                    <h2>Conjuros seleccionados</h2>
-                    <ul id="selected-spells" class="selected-spells"></ul>
-                </section>
+            <div id="Spells" class="tabcontent">
+                <section class="spellContainer">
+                    <section class="fixed fixedContainer no-print">
+                        <section class="button-row">
+                            <input type="text"
+                                   id="searchInputSpells"
+                                   placeholder="Buscar por título..."
+                            />
+                            <label for="searchInputSpells">Búsqueda</label>
+                            <button onclick="window.print()">Imprimir</button>
+                            <div>
+                                <input type="color" id="colorPickerSpells" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
+                                <label for="colorPickerSpells">Elegir color de fondo</label>
+                            </div>
 
-                <!-- List of Spells -->
-                <template id="spell-template">
-                    <li>
-                        <span class="title"></span>
-                    </li>
-                </template>
-                <section id="spell-section">
-                    <h2 class="no-print">Lista de conjuros</h2>
-                    <ul id="spellPool" class="spell-list"></ul>
+
+                        </section>
+                        <!-- List of selected Spells -->
+                        <section>
+                            <section class="selected-spells">
+                                <h2>Conjuros seleccionados</h2>
+                                <ul id="selected-spells" class="selected-spells"></ul>
+                            </section>
+
+                        </section>
+                    </section>
+
+
+                    <!-- List of Spells -->
+                    <section class="spell-section">
+                        <h2 class="no-print">Lista de conjuros</h2>
+                        <ul id="spellPool" class="spell-list"></ul>
+                    </section>
                 </section>
-            </section>
+            </div>
+
+            <div id="Alchemy" class="tabcontent">
+                <section class="spellContainer">
+                    <section class="fixed fixedContainer no-print">
+                        <section class="button-row">
+                            <input type="text"
+                                   id="searchInputAlchemy"
+                                   placeholder="Buscar por título..."
+                            />
+                            <label for="searchInputAlchemy">Búsqueda</label>
+                            <button onclick="window.print()">Imprimir</button>
+                            <div>
+                                <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
+                                <label for="colorPickerAlchemy">Elegir color de fondo</label>
+                            </div>
+
+
+                        </section>
+                        <!-- List of selected Spells -->
+                        <section>
+                            <section class="selected-alchemical-items">
+                                <h2>Objetos Alquímicos seleccionados</h2>
+                                <ul id="selected-alchemical-items" class="selected-alchemical-items"></ul>
+                            </section>
+                        </section>
+                    </section>
+
+
+                    <!-- List of Spells -->
+                    <section class="spell-section">
+                        <h2 class="no-print">Lista de Objetos Alquímicos</h2>
+                        <ul id="alchemicalItemPool" class="spell-list"></ul>
+                    </section>
+                </section>
+            </div>
         </main>
         <footer></footer>
-        <script type="module" src="./js/CardTemplate.js"></script>
-        <script type="module" src="./main.js"></script>
     </body>
 </html>
+
+<template id="card-template">
+    <div class="front">
+        <div class="body">
+            <h3 class="name lined srname" data-search="${spell.title} ${spell.enTitle}">${spell.title} <img src="getActionImg(spell.actionType)" alt="${spell.actionType}"/></h3>
+            <ul class="status lined">
+                <li><em>Lanzamiento</em>${spell.castTime ? spell.castTime : "-"}</li>
+                <li class="second"><em>Rango</em>${spell.range}</li>
+                <br class="clear">
+            </ul>
+
+            <ul class="status lined">
+                <li><em>Área</em>${spell.area}</li>
+                <li class="second"><em>Duración</em>${spell.duration}</li>
+                <br class="clear">
+            </ul>
+
+            <ul class="status lined">
+                <li><em>Objetivo</em>${spell.objectives}</li>
+                <li class="second"><em>Desencadenate</em>${spell.trigger}</li>
+                <br class="clear">
+            </ul>
+            <p class="text">${spell.description}<br> <b>Elevaciones</b>: ${spell.heightenings} </p>
+
+        </div>
+        <b class="class srclass">${spell.traditions}</b>
+        <b class="type srtype">${spell.type} ${spell.level}</b>
+    </div>
+</template>

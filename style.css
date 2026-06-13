@@ -1,17 +1,20 @@
+:root {
+    --card-background: black;
+    --card-background-unselected: color-mix(in srgb, var(--card-background) 50%, transparent);
+}
+
 .title {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
-/*.selected-spells {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    flex-wrap: wrap;*/
-/*}*/
-.spell-card {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background: #f3f3f3;
+
+.button-row {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1vw;
+
 }
+
 
 .search {
     input {
@@ -19,8 +22,16 @@
     }
 }
 .spellContainer {
-    display: grid;
-    grid-template-columns: 20% 80%;
+    display: flex;
+    justify-content: left;
+}
+
+.fixedContainer {
+    width: 30%;
+    display: flex;
+ justify-content: space-between;
+    height: 100%;
+    overflow-y:auto;
 }
 
 .controls {
@@ -37,8 +48,37 @@
     padding: 0;
 }
 
+.alchemical-item-list {
+    width: 21cm;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
 @media print {
     .no-print {
         display: none !important;
     }
 }
+
+.fixed {
+    position: sticky;
+    top: 5%;
+}
+
+.spell-section {
+    width: 70%;
+    height: 100%;
+}
+
+.selected-spells {
+    padding-right: 5%;
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
