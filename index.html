@@ -12,47 +12,82 @@
     <body>
         <header class="no-print">
             <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
-
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Spells')">Conjuros</button>
+                <button class="tablinks" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
+            </div>
         </header>
         <main>
-            <section class="spellContainer">
-                <section class="fixed fixedContainer no-print">
-                    <section class="button-row">
-                        <input type="text"
-                               id="searchInput"
-                               placeholder="Buscar por título..."
-                        />
-                        <label for="searchInput">Búsqueda</label>
-                        <button onclick="window.print()">Imprimir</button>
-                        <div>
-                            <input type="color" id="colorPicker" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
-                            <label for="colorPicker">Elegir color de fondo</label>
-                        </div>
+            <div id="Spells" class="tabcontent">
+                <section class="spellContainer">
+                    <section class="fixed fixedContainer no-print">
+                        <section class="button-row">
+                            <input type="text"
+                                   id="searchInputSpells"
+                                   placeholder="Buscar por título..."
+                            />
+                            <label for="searchInputSpells">Búsqueda</label>
+                            <button onclick="window.print()">Imprimir</button>
+                            <div>
+                                <input type="color" id="colorPickerSpells" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
+                                <label for="colorPickerSpells">Elegir color de fondo</label>
+                            </div>
 
 
-                    </section>
-                    <!-- List of selected Spells -->
-                    <section>
-                        <section class="selected-spells">
-                            <h2>Conjuros seleccionados</h2>
-                            <ul id="selected-spells" class="selected-spells"></ul>
                         </section>
+                        <!-- List of selected Spells -->
+                        <section>
+                            <section class="selected-spells">
+                                <h2>Conjuros seleccionados</h2>
+                                <ul id="selected-spells" class="selected-spells"></ul>
+                            </section>
 
+                        </section>
+                    </section>
+
+
+                    <!-- List of Spells -->
+                    <section class="spell-section">
+                        <h2 class="no-print">Lista de conjuros</h2>
+                        <ul id="spellPool" class="spell-list"></ul>
                     </section>
                 </section>
+            </div>
+
+            <div id="Alchemy" class="tabcontent">
+                <section class="spellContainer">
+                    <section class="fixed fixedContainer no-print">
+                        <section class="button-row">
+                            <input type="text"
+                                   id="searchInputAlchemy"
+                                   placeholder="Buscar por título..."
+                            />
+                            <label for="searchInputAlchemy">Búsqueda</label>
+                            <button onclick="window.print()">Imprimir</button>
+                            <div>
+                                <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
+                                <label for="colorPickerAlchemy">Elegir color de fondo</label>
+                            </div>
 
 
-                <!-- List of Spells -->
-                <template id="spell-template">
-                    <li>
-                        <span class="title"></span>
-                    </li>
-                </template>
-                <section class="spell-section">
-                    <h2 class="no-print">Lista de conjuros</h2>
-                    <ul id="spellPool" class="spell-list"></ul>
+                        </section>
+                        <!-- List of selected Spells -->
+                        <section>
+                            <section class="selected-alchemical-items">
+                                <h2>Objetos Alquímicos seleccionados</h2>
+                                <ul id="selected-alchemical-items" class="selected-alchemical-items"></ul>
+                            </section>
+                        </section>
+                    </section>
+
+
+                    <!-- List of Spells -->
+                    <section class="spell-section">
+                        <h2 class="no-print">Lista de Objetos Alquímicos</h2>
+                        <ul id="alchemicalItemPool" class="spell-list"></ul>
+                    </section>
                 </section>
-            </section>
+            </div>
         </main>
         <footer></footer>
     </body>
