@@ -35,35 +35,50 @@ function normalizeSpell(rawSpell) {
   };
 }
 
+const applicationState = {
+  sourceSpells: [],
+  effectiveSpells: [],
+};
+
 async function loadSpells() {
   try {
     const res = await fetch("./resources/spells.json");
-    const datos = await res.json();
+    const rawSpells = await res.json();
 
-    const spellPool = document.getElementById("spellPool");
-    datos.forEach((spellJson) => {
-      const card = document.createElement("li");
-      card.classList.add("card");
-      card.classList.add("no-print");
-      const spell = normalizeSpell(spellJson);
+    applicationState.sourceSpells = rawSpells.map(normalizeSpell);
+    applicationState.effectiveSpells = applicationState.sourceSpells.map(
+      (spell) => ({ ...spell, traditions: [...spell.traditions] }),
+    );
 
-      // card element template.
-      card.innerHTML = spellCardTemplate(spell);
-
-      card.id = spell.id;
-
-      // dataset to search by spTitle & enTitle
-      card.dataset.search =
-        `${spell.title} ${spell.enTitle}`.toLowerCase();
-
-      // select a spell event listener
-      card.addEventListener("click", () => selectSpell(spell, card.id));
-
-      spellPool.appendChild(card);
-    });
+    renderSpellPool();
   } catch (error) {
     console.error("Error cargando JSON:", error);
   }
+}
+
+function renderSpellPool() {
+  const spellPool = document.getElementById("spellPool");
+  spellPool.replaceChildren();
+
+  applicationState.effectiveSpells.forEach((spell) => {
+    const card = document.createElement("li");
+    card.classList.add("card");
+    card.classList.add("no-print");
+
+    // card element template.
+    card.innerHTML = spellCardTemplate(spell);
+
+    card.id = spell.id;
+
+    // dataset to search by spTitle & enTitle
+    card.dataset.search =
+      `${spell.title} ${spell.enTitle}`.toLowerCase();
+
+    // select a spell event listener
+    card.addEventListener("click", () => selectSpell(spell, card.id));
+
+    spellPool.appendChild(card);
+  });
 }
 
 async function loadAlchemicalItems() {

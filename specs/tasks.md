@@ -50,7 +50,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-003 — Introduce spell application state
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Store source spells and effective/rendered spells in explicit JavaScript state instead of relying on the DOM as the only state representation.
 
@@ -64,6 +64,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Spell pool rendering is performed from state.
 - Re-rendering the spell pool does not duplicate cards or event handlers.
 - Existing search/selection behavior remains functional.
+
+**Implementation note:** Source and effective spell records are held separately in `applicationState`, and `renderSpellPool()` replaces the existing spell DOM from effective state on each render.
 
 ---
 
