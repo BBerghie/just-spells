@@ -35,9 +35,82 @@ function normalizeSpell(rawSpell) {
   };
 }
 
+const SPELL_SESSION_STORAGE_KEY = "just-spells.session.v1";
+
+function createEmptySpellSession() {
+  return {
+    editedSpells: {},
+    customSpells: [],
+  };
+}
+
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizeSpellSession(value) {
+  if (
+    !isRecord(value) ||
+    !isRecord(value.editedSpells) ||
+    !Array.isArray(value.customSpells)
+  ) {
+    return null;
+  }
+
+  return {
+    editedSpells: Object.fromEntries(
+      Object.entries(value.editedSpells).filter(([, spell]) => isRecord(spell)),
+    ),
+    customSpells: value.customSpells.filter(isRecord),
+  };
+}
+
+function loadSpellSession() {
+  try {
+    const storedSession = sessionStorage.getItem(SPELL_SESSION_STORAGE_KEY);
+
+    if (storedSession === null) {
+      return createEmptySpellSession();
+    }
+
+    const spellSession = normalizeSpellSession(JSON.parse(storedSession));
+
+    if (spellSession === null) {
+      console.warn("Ignoring incompatible spell session data.");
+      return createEmptySpellSession();
+    }
+
+    return spellSession;
+  } catch (error) {
+    console.warn("Unable to load spell session data; using an empty session.", error);
+    return createEmptySpellSession();
+  }
+}
+
+function saveSpellSession(spellSession) {
+  const normalizedSession = normalizeSpellSession(spellSession);
+
+  if (normalizedSession === null) {
+    console.warn("Spell session data was not saved because it is incompatible.");
+    return false;
+  }
+
+  try {
+    sessionStorage.setItem(
+      SPELL_SESSION_STORAGE_KEY,
+      JSON.stringify(normalizedSession),
+    );
+    return true;
+  } catch (error) {
+    console.warn("Unable to save spell session data.", error);
+    return false;
+  }
+}
+
 const applicationState = {
   sourceSpells: [],
   effectiveSpells: [],
+  spellSession: createEmptySpellSession(),
 };
 
 async function loadSpells() {
@@ -45,6 +118,7 @@ async function loadSpells() {
     const res = await fetch("./resources/spells.json");
     const rawSpells = await res.json();
 
+    applicationState.spellSession = loadSpellSession();
     applicationState.sourceSpells = rawSpells.map(normalizeSpell);
     applicationState.effectiveSpells = applicationState.sourceSpells.map(
       (spell) => ({ ...spell, traditions: [...spell.traditions] }),

@@ -73,7 +73,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-004 — Add versioned session storage utilities
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Add defensive load/save helpers for session-only spell changes.
 
@@ -88,6 +88,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Invalid JSON does not prevent the application from starting.
 - Save/load utilities can represent edited source spells and custom spells.
 - The full source dataset is not unnecessarily copied into storage.
+
+**Implementation note:** Session-only spell changes use the versioned `just-spells.session.v1` key with defensive load/save helpers and the compact shape `{ editedSpells, customSpells }`. Missing, malformed, or incompatible data falls back to an empty session.
 
 ---
 
