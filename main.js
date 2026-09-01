@@ -107,11 +107,110 @@ function saveSpellSession(spellSession) {
   }
 }
 
+function copySpell(spell) {
+  return {
+    ...spell,
+    traditions: Array.isArray(spell.traditions) ? [...spell.traditions] : [],
+  };
+}
+
+function buildEffectiveSpells(sourceSpells, spellSession) {
+  const knownIds = new Set(sourceSpells.map((spell) => spell.id));
+  const effectiveSpells = sourceSpells.map((sourceSpell) => {
+    const editedSpell = spellSession.editedSpells[sourceSpell.id];
+
+    if (!isRecord(editedSpell)) {
+      return copySpell(sourceSpell);
+    }
+
+    return copySpell({
+      ...sourceSpell,
+      ...editedSpell,
+      id: sourceSpell.id,
+    });
+  });
+
+  spellSession.customSpells.forEach((customSpell) => {
+    if (
+      typeof customSpell.id !== "string" ||
+      customSpell.id.length === 0 ||
+      knownIds.has(customSpell.id)
+    ) {
+      return;
+    }
+
+    effectiveSpells.push(copySpell(customSpell));
+    knownIds.add(customSpell.id);
+  });
+
+  return effectiveSpells;
+}
+
 const applicationState = {
   sourceSpells: [],
   effectiveSpells: [],
   spellSession: createEmptySpellSession(),
+  editingSpellId: null,
 };
+
+function requestSpellEdit(spellId) {
+  const spell = applicationState.effectiveSpells.find(
+    (candidate) => candidate.id === spellId,
+  );
+
+  if (!spell) {
+    return;
+  }
+
+  applicationState.editingSpellId = spellId;
+
+  const dialog = document.getElementById("spellEditorDialog");
+  const form = document.getElementById("spellEditorForm");
+  const values = {
+    title: spell.title,
+    enTitle: spell.enTitle,
+    actionType: spell.actionType,
+    type: spell.type,
+    level: spell.level,
+    traditions: spell.traditions.join(", "),
+    castTime: spell.castTime,
+    range: spell.range,
+    area: spell.area,
+    duration: spell.duration,
+    objectives: spell.objectives,
+    trigger: spell.trigger,
+    description: spell.description,
+    heightenings: spell.heightenings,
+  };
+
+  Object.entries(values).forEach(([name, value]) => {
+    form.elements.namedItem(name).value = value ?? "";
+  });
+
+  dialog.showModal();
+}
+
+function closeSpellEditor() {
+  const dialog = document.getElementById("spellEditorDialog");
+
+  if (dialog.open) {
+    dialog.close();
+  }
+
+  applicationState.editingSpellId = null;
+}
+
+function setupSpellEditor() {
+  const dialog = document.getElementById("spellEditorDialog");
+  const form = document.getElementById("spellEditorForm");
+  const cancelButton = document.getElementById("cancelSpellEdit");
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  cancelButton.addEventListener("click", closeSpellEditor);
+  dialog.addEventListener("close", () => {
+    applicationState.editingSpellId = null;
+  });
+}
 
 async function loadSpells() {
   try {
@@ -120,8 +219,9 @@ async function loadSpells() {
 
     applicationState.spellSession = loadSpellSession();
     applicationState.sourceSpells = rawSpells.map(normalizeSpell);
-    applicationState.effectiveSpells = applicationState.sourceSpells.map(
-      (spell) => ({ ...spell, traditions: [...spell.traditions] }),
+    applicationState.effectiveSpells = buildEffectiveSpells(
+      applicationState.sourceSpells,
+      applicationState.spellSession,
     );
 
     renderSpellPool();
@@ -150,6 +250,17 @@ function renderSpellPool() {
 
     // select a spell event listener
     card.addEventListener("click", () => selectSpell(spell, card.id));
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.classList.add("spell-edit-button", "no-print");
+    editButton.textContent = "Edit";
+    editButton.setAttribute("aria-label", `Edit ${spell.title}`);
+    editButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      requestSpellEdit(spell.id);
+    });
+    card.appendChild(editButton);
 
     spellPool.appendChild(card);
   });
@@ -315,6 +426,7 @@ function getActionImg(actionType) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    setupSpellEditor();
     loadSpells().then(() => {
         setupSpellSearch();
         console.log("Conjuros cargados correctamente");

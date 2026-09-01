@@ -82,3 +82,59 @@
     display: none !important;
 }
 
+.spell-editor {
+    width: min(52rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+    padding: 1.25rem;
+    border: 1px solid #555;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+}
+
+.spell-editor::backdrop {
+    background: rgb(0 0 0 / 55%);
+}
+
+.spell-editor h2 {
+    margin-top: 0;
+}
+
+.spell-editor-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.spell-editor-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.spell-editor-fields input,
+.spell-editor-fields select,
+.spell-editor-fields textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.spell-editor-wide {
+    grid-column: 1 / -1;
+}
+
+.spell-editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 40rem) {
+    .spell-editor-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .spell-editor-wide {
+        grid-column: auto;
+    }
+}

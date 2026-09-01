@@ -21,6 +21,18 @@
     z-index: 1;
     margin: 1vw 1px 1px 0;
 
+    .spell-edit-button {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 2;
+        padding: 2px 5px;
+        border: 1px solid #666;
+        border-radius: 3px;
+        background: #fff;
+        cursor: pointer;
+    }
+
     .front {
         height: 100%;
         width: 100%;
