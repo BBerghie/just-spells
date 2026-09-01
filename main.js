@@ -1,3 +1,22 @@
+function normalizeSpell(rawSpell) {
+  return {
+    title: rawSpell.title,
+    enTitle: rawSpell.englishTitle,
+    description: rawSpell.description,
+    actionType: rawSpell.actionType,
+    castTime: rawSpell.castTime,
+    area: rawSpell.area,
+    objectives: rawSpell.objectives,
+    heightenings: rawSpell.heightenings,
+    level: rawSpell.level,
+    traditions: rawSpell.traditions,
+    trigger: rawSpell.trigger,
+    type: rawSpell.type,
+    range: rawSpell.range,
+    duration: rawSpell.duration,
+  };
+}
+
 async function loadSpells() {
   try {
     const res = await fetch("./resources/spells.json");
@@ -9,22 +28,7 @@ async function loadSpells() {
       const card = document.createElement("li");
       card.classList.add("card");
       card.classList.add("no-print");
-      const spell = {
-        title: spellJson.title,
-        enTitle: spellJson.englishTitle,
-        description: spellJson.description,
-        actionType: spellJson.actionType,
-        castTime: spellJson.castTime,
-        area: spellJson.area,
-        objectives: spellJson.objectives,
-        heightenings: spellJson.heightenings,
-        level: spellJson.level,
-        traditions: spellJson.traditions,
-        trigger: spellJson.trigger,
-        type: spellJson.type,
-        range: spellJson.range,
-        duration: spellJson.duration,
-      };
+      const spell = normalizeSpell(spellJson);
 
       // card element template.
       card.innerHTML = spellCardTemplate(spell);
@@ -33,7 +37,7 @@ async function loadSpells() {
 
       // dataset to search by spTitle & enTitle
       card.dataset.search =
-        `${spellJson.title} ${spellJson.enTitle}`.toLowerCase();
+        `${spell.title} ${spell.enTitle}`.toLowerCase();
 
       // select a spell event listener
       card.addEventListener("click", () => selectSpell(spell, card.id));

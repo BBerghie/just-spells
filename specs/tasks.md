@@ -8,7 +8,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-001 — Document and normalize the spell data model
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Create a single normalization function for records loaded from `spells.json` so later state/editing code does not duplicate field mapping.
 
@@ -22,6 +22,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - No editing behavior is added yet.
 
 **Validation:** Search for a spell using both its source title and English title; select and print-preview it.
+
+**Implementation note:** Spell records are normalized through `normalizeSpell()` before rendering, including the `englishTitle` to `enTitle` mapping used by the existing card template and search behavior.
 
 ---
 

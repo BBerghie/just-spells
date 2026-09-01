@@ -61,7 +61,7 @@ For every implementation task:
 A simple local server can be started from the repository root with:
 
 ```bash
-python3 -m http.server 8000
+caddy file-server --listen :8080
 ```
 
 Then open `http://localhost:8000`.
