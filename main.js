@@ -1,5 +1,23 @@
+function createSourceSpellId(rawSpell) {
+  const identity = [
+    rawSpell.title,
+    rawSpell.englishTitle,
+    rawSpell.type,
+    rawSpell.level,
+  ].join("\u001f");
+  let hash = 2166136261;
+
+  for (let i = 0; i < identity.length; i++) {
+    hash ^= identity.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return `source-spell-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
 function normalizeSpell(rawSpell) {
   return {
+    id: createSourceSpellId(rawSpell),
     title: rawSpell.title,
     enTitle: rawSpell.englishTitle,
     description: rawSpell.description,
@@ -23,7 +41,6 @@ async function loadSpells() {
     const datos = await res.json();
 
     const spellPool = document.getElementById("spellPool");
-    let i = 0;
     datos.forEach((spellJson) => {
       const card = document.createElement("li");
       card.classList.add("card");
@@ -33,7 +50,7 @@ async function loadSpells() {
       // card element template.
       card.innerHTML = spellCardTemplate(spell);
 
-      card.id = "spell-" + i;
+      card.id = spell.id;
 
       // dataset to search by spTitle & enTitle
       card.dataset.search =
@@ -43,7 +60,6 @@ async function loadSpells() {
       card.addEventListener("click", () => selectSpell(spell, card.id));
 
       spellPool.appendChild(card);
-      i++;
     });
   } catch (error) {
     console.error("Error cargando JSON:", error);
