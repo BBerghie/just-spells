@@ -3,6 +3,6 @@ A Pahfinder spells card maker.
 
 # TODO
 
-- Fondos de tarjetas
-- Estilo de botones
-- Diseño responsive
+- Fondos de tarjetas hight
+- Estilo de botones medium
+- Diseño responsive Low
