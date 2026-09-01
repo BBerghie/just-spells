@@ -29,7 +29,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-002 — Add stable spell IDs
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Give every source spell a stable application ID that does not depend only on its position in the rendered list.
 
@@ -43,6 +43,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - IDs are unique for the current source dataset.
 - DOM element IDs may use the stable ID safely or keep a separate DOM-safe representation.
 - Search, selection, and printing still work.
+
+**Implementation note:** Normalized source spells receive deterministic, DOM-safe IDs derived from their source and English titles, type, and level. Spell card DOM IDs now use those stable application IDs.
 
 ---
 
