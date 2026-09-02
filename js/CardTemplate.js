@@ -1,49 +1,91 @@
 function spellCardTemplate(spell) {
-  const safe = Object.fromEntries(
-    Object.entries(spell).map(([key, value]) => [
-      key,
-      escapeCardText(Array.isArray(value) ? value.join(", ") : value),
-    ]),
+  const front = document.createElement("div");
+  front.className = "front";
+
+  const body = document.createElement("div");
+  body.className = "body";
+
+  const title = document.createElement("h3");
+  title.className = "name lined srname";
+  title.dataset.search = `${spell.title ?? ""} ${spell.enTitle ?? ""}`;
+  title.append(document.createTextNode(`${spell.title ?? ""} `));
+
+  const actionImagePath = getActionImg(spell.actionType);
+  if (actionImagePath) {
+    const actionImage = document.createElement("img");
+    actionImage.src = actionImagePath;
+    actionImage.alt = spell.actionType ?? "";
+    title.appendChild(actionImage);
+  }
+
+  body.append(
+    title,
+    spellStatusTemplate(
+      "Lanzamiento",
+      spell.castTime || "-",
+      "Rango",
+      spell.range,
+    ),
+    spellStatusTemplate("Área", spell.area, "Duración", spell.duration),
+    spellStatusTemplate(
+      "Objetivo",
+      spell.objectives,
+      "Desencadenate",
+      spell.trigger,
+    ),
   );
-  const actionImage = escapeCardText(getActionImg(spell.actionType));
 
-  return `
-  		<div class="front">
- 			<div class="body">
-				<h3 class="name lined srname" data-search="${safe.title} ${safe.enTitle}">${safe.title} <img src="${actionImage}" alt="${safe.actionType}"/></h3>
-  				<ul class="status lined">
-					<li><em>Lanzamiento</em>${safe.castTime || "-"}</li>
-					<li class="second"><em>Rango</em>${safe.range}</li>
- 					<br class="clear">
-  				</ul>
+  const description = document.createElement("p");
+  description.className = "text";
+  description.append(
+    document.createTextNode(spell.description ?? ""),
+    document.createElement("br"),
+    document.createTextNode(" "),
+  );
+  const heighteningsLabel = document.createElement("b");
+  heighteningsLabel.textContent = "Elevaciones";
+  description.append(
+    heighteningsLabel,
+    document.createTextNode(`: ${spell.heightenings ?? ""} `),
+  );
+  body.appendChild(description);
 
-  				<ul class="status lined">
-					<li><em>Área</em>${safe.area}</li>
-					<li class="second"><em>Duración</em>${safe.duration}</li>
- 					<br class="clear">
-  				</ul>
+  const traditions = document.createElement("b");
+  traditions.className = "class srclass";
+  traditions.textContent = Array.isArray(spell.traditions)
+    ? spell.traditions.join(", ")
+    : "";
 
-  				<ul class="status lined">
-					<li><em>Objetivo</em>${safe.objectives}</li>
-					<li class="second"><em>Desencadenate</em>${safe.trigger}</li>
- 					<br class="clear">
-  				</ul>
-				<p class="text">${safe.description}<br> <b>Elevaciones</b>: ${safe.heightenings} </p>
+  const type = document.createElement("b");
+  type.className = "type srtype";
+  type.textContent = `${spell.type ?? ""} ${spell.level ?? ""}`;
 
- 			</div>
-			<b class="class srclass">${safe.traditions}</b>
-			<b class="type srtype">${safe.type} ${safe.level}</b>
-  		</div>
-  `;
+  front.append(body, traditions, type);
+  return front;
 }
 
-function escapeCardText(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+function spellStatusTemplate(firstLabel, firstValue, secondLabel, secondValue) {
+  const status = document.createElement("ul");
+  status.className = "status lined";
+  status.append(
+    spellStatusItemTemplate(firstLabel, firstValue),
+    spellStatusItemTemplate(secondLabel, secondValue, "second"),
+  );
+
+  const clear = document.createElement("br");
+  clear.className = "clear";
+  status.appendChild(clear);
+  return status;
+}
+
+function spellStatusItemTemplate(label, value, className = "") {
+  const item = document.createElement("li");
+  item.className = className;
+
+  const labelElement = document.createElement("em");
+  labelElement.textContent = label;
+  item.append(labelElement, document.createTextNode(value ?? ""));
+  return item;
 }
 
 function alchemicalItemCardTemplate(alchemicalItem) {
@@ -221,7 +263,7 @@ function getActionImg(actionType) {
       imgPath = "./resources/assets/img/pf2e-free-action.png";
       break;
     default:
-      imgPath = actionType;
+      imgPath = "";
   }
   return imgPath;
 }
