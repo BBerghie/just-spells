@@ -199,7 +199,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### UI-004 — Add Create spell flow
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Reuse the spell editor form to create a new session-only spell.
 
@@ -213,6 +213,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The new card appears immediately.
 - The custom spell is written to session storage.
 - Cancel creates nothing.
+
+**Implementation note:** The spell view now provides a non-printing `Create spell` action that opens the shared editor in create mode with an empty form. Saving assigns a collision-checked custom ID using `crypto.randomUUID()` with a fallback, appends the spell to session state, persists it, and re-renders it in the spell pool. The shared edit flow also updates custom spells in session state.
 
 ---
 
