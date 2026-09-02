@@ -89,6 +89,40 @@
                 </section>
             </div>
         </main>
+        <dialog id="spellEditorDialog" class="spell-editor no-print" aria-labelledby="spellEditorHeading">
+            <form id="spellEditorForm">
+                <h2 id="spellEditorHeading">Edit spell</h2>
+                <div class="spell-editor-fields">
+                    <label>Title <input name="title" type="text" /></label>
+                    <label>English title <input name="enTitle" type="text" /></label>
+                    <label>Action type
+                        <select name="actionType">
+                            <option value="">None</option>
+                            <option value="one-action">One action</option>
+                            <option value="two-actions">Two actions</option>
+                            <option value="three-actions">Three actions</option>
+                            <option value="reaction">Reaction</option>
+                            <option value="free-action">Free action</option>
+                        </select>
+                    </label>
+                    <label>Type <input name="type" type="text" /></label>
+                    <label>Level <input name="level" type="text" /></label>
+                    <label>Traditions <input name="traditions" type="text" /></label>
+                    <label>Cast time <input name="castTime" type="text" /></label>
+                    <label>Range <input name="range" type="text" /></label>
+                    <label>Area <input name="area" type="text" /></label>
+                    <label>Duration <input name="duration" type="text" /></label>
+                    <label>Objectives <input name="objectives" type="text" /></label>
+                    <label>Trigger <textarea name="trigger" rows="3"></textarea></label>
+                    <label class="spell-editor-wide">Description <textarea name="description" rows="7"></textarea></label>
+                    <label class="spell-editor-wide">Heightenings <textarea name="heightenings" rows="4"></textarea></label>
+                </div>
+                <div class="spell-editor-actions">
+                    <button id="saveSpellEdit" type="submit">Save</button>
+                    <button id="cancelSpellEdit" type="button">Cancel</button>
+                </div>
+            </form>
+        </dialog>
         <footer></footer>
     </body>
 </html>

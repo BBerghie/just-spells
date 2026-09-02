@@ -95,7 +95,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-005 — Merge source spells with session state
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Build the effective spell list from immutable source records plus session edits/custom records.
 
@@ -108,13 +108,15 @@ The tasks are intentionally small. Complete and validate one task before startin
 - With empty session state, rendering matches the source dataset.
 - Unknown/stale edit IDs are ignored safely.
 
+**Implementation note:** `buildEffectiveSpells()` creates render copies from immutable source records, applies matching session edit overlays while preserving source IDs, appends valid custom spells, and ignores stale edits or conflicting custom IDs.
+
 ---
 
 ## Spell editor
 
 ### UI-001 — Add an explicit Edit action to spell cards
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Let the user request editing without interfering with select/deselect behavior.
 
@@ -128,11 +130,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Clicking Edit does not toggle card selection.
 - Edit controls are not printed.
 
+**Implementation note:** Each rendered spell card includes an English `Edit` button marked `no-print`. Its click handler stops propagation and records the requested spell ID in application UI state without changing card selection.
+
 ---
 
 ### UI-002 — Add a spell editor form
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Provide a simple form for the fields currently used by spell card rendering.
 
@@ -148,11 +152,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Cancel performs no mutation.
 - Form labels and messages are in English.
 
+**Implementation note:** A native modal dialog now exposes all fields used by spell rendering and is populated from the current effective spell. Cancel and dialog dismissal clear editor UI state without changing spell or session data; saving is intentionally deferred to JS-006.
+
 ---
 
 ### JS-006 — Save spell edits safely
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Save edited values into application/session state and re-render the card.
 
@@ -165,6 +171,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The change survives reload in the same browser session.
 - Edited user text cannot execute injected HTML or JavaScript.
 - Search uses the edited titles after saving.
+
+**Implementation note:** Saving now records an editable-field overlay for the source spell, persists it under the versioned session key, rebuilds effective state, and immediately re-renders while retaining selection and the active search filter. Spell template values are HTML-escaped before interpolation so session-provided text is rendered inert.
 
 ---
 

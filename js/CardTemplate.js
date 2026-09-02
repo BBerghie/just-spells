@@ -1,32 +1,49 @@
 function spellCardTemplate(spell) {
+  const safe = Object.fromEntries(
+    Object.entries(spell).map(([key, value]) => [
+      key,
+      escapeCardText(Array.isArray(value) ? value.join(", ") : value),
+    ]),
+  );
+  const actionImage = escapeCardText(getActionImg(spell.actionType));
+
   return `
   		<div class="front">
  			<div class="body">
-  				<h3 class="name lined srname" data-search="${spell.title} ${spell.enTitle}">${spell.title} <img src="${getActionImg(spell.actionType)}" alt="${spell.actionType}"/></h3>
+				<h3 class="name lined srname" data-search="${safe.title} ${safe.enTitle}">${safe.title} <img src="${actionImage}" alt="${safe.actionType}"/></h3>
   				<ul class="status lined">
- 					<li><em>Lanzamiento</em>${spell.castTime ? spell.castTime : "-"}</li>
- 					<li class="second"><em>Rango</em>${spell.range}</li>
+					<li><em>Lanzamiento</em>${safe.castTime || "-"}</li>
+					<li class="second"><em>Rango</em>${safe.range}</li>
  					<br class="clear">
   				</ul>
 
   				<ul class="status lined">
- 					<li><em>Área</em>${spell.area}</li>
- 					<li class="second"><em>Duración</em>${spell.duration}</li>
+					<li><em>Área</em>${safe.area}</li>
+					<li class="second"><em>Duración</em>${safe.duration}</li>
  					<br class="clear">
   				</ul>
 
   				<ul class="status lined">
- 					<li><em>Objetivo</em>${spell.objectives}</li>
- 					<li class="second"><em>Desencadenate</em>${spell.trigger}</li>
+					<li><em>Objetivo</em>${safe.objectives}</li>
+					<li class="second"><em>Desencadenate</em>${safe.trigger}</li>
  					<br class="clear">
   				</ul>
-  				<p class="text">${spell.description}<br> <b>Elevaciones</b>: ${spell.heightenings} </p>
+				<p class="text">${safe.description}<br> <b>Elevaciones</b>: ${safe.heightenings} </p>
 
  			</div>
- 			<b class="class srclass">${spell.traditions}</b>
- 			<b class="type srtype">${spell.type} ${spell.level}</b>
+			<b class="class srclass">${safe.traditions}</b>
+			<b class="type srtype">${safe.type} ${safe.level}</b>
   		</div>
   `;
+}
+
+function escapeCardText(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function alchemicalItemCardTemplate(alchemicalItem) {
