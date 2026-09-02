@@ -220,7 +220,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### UI-005 — Delete a custom spell
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Allow session-created spells to be removed.
 
@@ -233,13 +233,15 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The card disappears immediately.
 - Deleting a selected custom card does not leave stale selection-list UI behind.
 
+**Implementation note:** Custom spell cards now show a non-printing `Delete` action that is not rendered for bundled source spells. Deleting removes the custom record and any matching selected-spell list entry, persists the session immediately, rebuilds effective state, and re-renders the filtered spell pool.
+
 ---
 
 ## Cleanup directly supporting the feature
 
 ### JS-007 — Make card rendering safe for editable text
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Remove unsafe interpolation paths for fields that can contain user-entered values.
 
@@ -253,11 +255,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Existing bundled descriptions still render correctly for expected plain-text data.
 - Action icons continue to render from controlled application values.
 
+**Implementation note:** Spell cards are now built with DOM nodes and all editable values are assigned through `textContent` or text nodes rather than interpolated into `innerHTML`. Action images are created only for the known action-type values; unknown session values render without an image. The non-editable alchemical item renderer remains unchanged.
+
 ---
 
 ### BUG-001 — Repair or remove broken native text autosizing implementation
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Address `autoSizeText()` using jQuery-style `.css()` on native elements.
 
@@ -269,11 +273,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 - If autosizing remains, it has a lower font-size bound and cannot loop indefinitely.
 - Existing cards do not regress visually.
 
+**Implementation note:** `autoSizeText()` now uses native `getComputedStyle()` and `element.style.fontSize` APIs. It changes only overflowing `.resize` elements, stops at a 7px lower bound, and caps iterations based on the initial computed size so it always terminates.
+
 ---
 
 ### CLEAN-001 — Remove duplicate `getActionImg()` implementation
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Keep one source of truth for action icon mapping.
 
@@ -283,6 +289,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 - Exactly one implementation is used by spell and alchemical item rendering.
 - Both card types still display action icons correctly.
+
+**Implementation note:** The duplicate action-icon mapping was removed from `main.js`. Spell and alchemical item card rendering now share the single `getActionImg()` implementation in `js/CardTemplate.js`.
 
 ---
 

@@ -33,7 +33,8 @@
         cursor: pointer;
     }
 
-    .spell-reset-button {
+    .spell-reset-button,
+    .spell-delete-button {
         position: absolute;
         top: 40px;
         right: 14px;

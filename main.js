@@ -318,6 +318,25 @@ function resetSpellEdit(spellId) {
   renderSpellPool();
 }
 
+function deleteCustomSpell(spellId) {
+  const customSpellIndex = applicationState.spellSession.customSpells.findIndex(
+    (spell) => spell.id === spellId,
+  );
+
+  if (customSpellIndex === -1) {
+    return;
+  }
+
+  applicationState.spellSession.customSpells.splice(customSpellIndex, 1);
+  document.getElementById(`selected${spellId}`)?.remove();
+  saveSpellSession(applicationState.spellSession);
+  applicationState.effectiveSpells = buildEffectiveSpells(
+    applicationState.sourceSpells,
+    applicationState.spellSession,
+  );
+  renderSpellPool();
+}
+
 function setupSpellEditor() {
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
@@ -365,7 +384,7 @@ function renderSpellPool() {
     card.classList.add("no-print");
 
     // card element template.
-    card.innerHTML = spellCardTemplate(spell);
+    card.appendChild(spellCardTemplate(spell));
 
     card.id = spell.id;
 
@@ -415,6 +434,26 @@ function renderSpellPool() {
         resetSpellEdit(spell.id);
       });
       card.appendChild(resetButton);
+    }
+
+    if (
+      applicationState.spellSession.customSpells.some(
+        (customSpell) => customSpell.id === spell.id,
+      )
+    ) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.classList.add("spell-delete-button", "no-print");
+      deleteButton.textContent = "Delete";
+      deleteButton.setAttribute(
+        "aria-label",
+        `Delete custom spell ${spell.title}`,
+      );
+      deleteButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        deleteCustomSpell(spell.id);
+      });
+      card.appendChild(deleteButton);
     }
 
     spellPool.appendChild(card);
@@ -562,28 +601,6 @@ function setupAlchemicalItemSearch() {
     });
   });
 }
-function getActionImg(actionType) {
-  let imgPath = "";
-  switch (actionType) {
-    case "one-action":
-      imgPath = "./resources/assets/img/pf2e-action-1.png";
-      break;
-    case "two-actions":
-      imgPath = "./resources/assets/img/pf2e-action-2.png";
-      break;
-    case "three-actions":
-      imgPath = "./resources/assets/img/pf2e-action-3.png";
-      break;
-    case "reaction":
-      imgPath = "./resources/assets/img/pf2e-reaction.png";
-      break;
-    case "free-action":
-      imgPath = "./resources/assets/img/pf2e-free-action.png";
-      break;
-  }
-  return imgPath;
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     setupSpellEditor();
     document
@@ -626,34 +643,30 @@ function openTab(evt, tabName) {
 }
 
 function autoSizeText() {
-  let el, elements, _i, _len, _results;
-  elements = document.querySelectorAll('.resize');
-  console.log(elements);
-  if (elements.length < 0) {
-    return;
-  }
-  _results = [];
-  for (_i = 0, _len = elements.length; _i < _len; _i++) {
-    el = elements[_i];
-    _results.push((function(el) {
-      let resizeText, _results1;
-      resizeText = function() {
-        let elNewFontSize;
-        elNewFontSize = (parseInt(el.css('font-size').slice(0, -2)) - 1) + 'px';
-        console.log('new font size: ' + elNewFontSize);
-        return el.css('font-size', elNewFontSize);
-      };
-      _results1 = [];
-      console.log('element: ' + el.innerHTML);
-      console.log('scrollHeight: ' + el.scrollHeight);
-      console.log('offsetHeight: ' + el.offsetHeight);
+  const minimumFontSize = 7;
+  const elements = document.querySelectorAll(".resize");
 
-      while (el.scrollHeight > el.offsetHeight) {
-        console.log('text too big, resizing');
-        _results1.push(resizeText());
-      }
-      return _results1;
-    })(el));
-  }
-  return _results;
+  elements.forEach((element) => {
+    let fontSize = Number.parseFloat(getComputedStyle(element).fontSize);
+
+    if (!Number.isFinite(fontSize)) {
+      return;
+    }
+
+    const maximumAdjustments = Math.max(
+      0,
+      Math.ceil(fontSize - minimumFontSize),
+    );
+    let adjustments = 0;
+
+    while (
+      element.scrollHeight > element.offsetHeight &&
+      fontSize > minimumFontSize &&
+      adjustments < maximumAdjustments
+    ) {
+      fontSize = Math.max(minimumFontSize, fontSize - 1);
+      element.style.fontSize = `${fontSize}px`;
+      adjustments += 1;
+    }
+  });
 }
