@@ -33,6 +33,18 @@
         cursor: pointer;
     }
 
+    .spell-reset-button {
+        position: absolute;
+        top: 40px;
+        right: 14px;
+        z-index: 2;
+        padding: 2px 5px;
+        border: 1px solid #666;
+        border-radius: 3px;
+        background: #fff;
+        cursor: pointer;
+    }
+
     .front {
         height: 100%;
         width: 100%;

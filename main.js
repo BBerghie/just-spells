@@ -246,6 +246,25 @@ function saveSpellEdit(form) {
   renderSpellPool();
 }
 
+function resetSpellEdit(spellId) {
+  if (
+    !Object.prototype.hasOwnProperty.call(
+      applicationState.spellSession.editedSpells,
+      spellId,
+    )
+  ) {
+    return;
+  }
+
+  delete applicationState.spellSession.editedSpells[spellId];
+  saveSpellSession(applicationState.spellSession);
+  applicationState.effectiveSpells = buildEffectiveSpells(
+    applicationState.sourceSpells,
+    applicationState.spellSession,
+  );
+  renderSpellPool();
+}
+
 function setupSpellEditor() {
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
@@ -322,6 +341,27 @@ function renderSpellPool() {
       requestSpellEdit(spell.id);
     });
     card.appendChild(editButton);
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        applicationState.spellSession.editedSpells,
+        spell.id,
+      )
+    ) {
+      const resetButton = document.createElement("button");
+      resetButton.type = "button";
+      resetButton.classList.add("spell-reset-button", "no-print");
+      resetButton.textContent = "Reset";
+      resetButton.setAttribute(
+        "aria-label",
+        `Reset ${spell.title} to its source version`,
+      );
+      resetButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        resetSpellEdit(spell.id);
+      });
+      card.appendChild(resetButton);
+    }
 
     spellPool.appendChild(card);
   });
