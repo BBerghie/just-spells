@@ -150,6 +150,7 @@ const applicationState = {
   sourceSpells: [],
   effectiveSpells: [],
   spellSession: createEmptySpellSession(),
+  spellEditorMode: null,
   editingSpellId: null,
 };
 
@@ -162,10 +163,12 @@ function requestSpellEdit(spellId) {
     return;
   }
 
+  applicationState.spellEditorMode = "edit";
   applicationState.editingSpellId = spellId;
 
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
+  document.getElementById("spellEditorHeading").textContent = "Edit spell";
   const values = {
     title: spell.title,
     enTitle: spell.enTitle,
@@ -190,6 +193,17 @@ function requestSpellEdit(spellId) {
   dialog.showModal();
 }
 
+function requestSpellCreate() {
+  const dialog = document.getElementById("spellEditorDialog");
+  const form = document.getElementById("spellEditorForm");
+
+  applicationState.spellEditorMode = "create";
+  applicationState.editingSpellId = null;
+  form.reset();
+  document.getElementById("spellEditorHeading").textContent = "Create spell";
+  dialog.showModal();
+}
+
 function closeSpellEditor() {
   const dialog = document.getElementById("spellEditorDialog");
 
@@ -197,6 +211,7 @@ function closeSpellEditor() {
     dialog.close();
   }
 
+  applicationState.spellEditorMode = null;
   applicationState.editingSpellId = null;
 }
 
@@ -224,19 +239,57 @@ function getSpellEditorValues(form) {
   };
 }
 
-function saveSpellEdit(form) {
-  const spellId = applicationState.editingSpellId;
-  const sourceSpell = applicationState.sourceSpells.find(
-    (spell) => spell.id === spellId,
+function createCustomSpellId() {
+  const knownIds = new Set(
+    applicationState.sourceSpells
+      .map((spell) => spell.id)
+      .concat(applicationState.spellSession.customSpells.map((spell) => spell.id)),
   );
+  let id;
 
-  if (!sourceSpell) {
-    closeSpellEditor();
+  do {
+    const uniquePart = globalThis.crypto?.randomUUID
+      ? globalThis.crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    id = `custom-spell-${uniquePart}`;
+  } while (knownIds.has(id));
+
+  return id;
+}
+
+function saveSpellEditor(form) {
+  const values = getSpellEditorValues(form);
+
+  if (applicationState.spellEditorMode === "create") {
+    applicationState.spellSession.customSpells.push({
+      id: createCustomSpellId(),
+      ...values,
+    });
+  } else if (applicationState.spellEditorMode === "edit") {
+    const spellId = applicationState.editingSpellId;
+    const sourceSpell = applicationState.sourceSpells.find(
+      (spell) => spell.id === spellId,
+    );
+    const customSpellIndex =
+      applicationState.spellSession.customSpells.findIndex(
+        (spell) => spell.id === spellId,
+      );
+
+    if (sourceSpell) {
+      applicationState.spellSession.editedSpells[spellId] = values;
+    } else if (customSpellIndex !== -1) {
+      applicationState.spellSession.customSpells[customSpellIndex] = {
+        id: spellId,
+        ...values,
+      };
+    } else {
+      closeSpellEditor();
+      return;
+    }
+  } else {
     return;
   }
 
-  applicationState.spellSession.editedSpells[spellId] =
-    getSpellEditorValues(form);
   saveSpellSession(applicationState.spellSession);
   applicationState.effectiveSpells = buildEffectiveSpells(
     applicationState.sourceSpells,
@@ -272,10 +325,11 @@ function setupSpellEditor() {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    saveSpellEdit(form);
+    saveSpellEditor(form);
   });
   cancelButton.addEventListener("click", closeSpellEditor);
   dialog.addEventListener("close", () => {
+    applicationState.spellEditorMode = null;
     applicationState.editingSpellId = null;
   });
 }
@@ -532,6 +586,9 @@ function getActionImg(actionType) {
 
 document.addEventListener("DOMContentLoaded", function() {
     setupSpellEditor();
+    document
+      .getElementById("createSpellButton")
+      .addEventListener("click", requestSpellCreate);
     loadSpells().then(() => {
         setupSpellSearch();
         console.log("Conjuros cargados correctamente");
