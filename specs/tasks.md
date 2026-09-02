@@ -178,7 +178,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### UI-003 — Reset an edited source spell
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Allow a source spell with session edits to be restored to its bundled value.
 
@@ -190,6 +190,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Reset removes the edit overlay from session storage.
 - The original source version is immediately rendered.
 - Selection state does not unexpectedly toggle when Reset is clicked.
+
+**Implementation note:** Edited source spell cards now show a non-printing `Reset` action. Reset removes only that spell's edit overlay, saves the updated session immediately, rebuilds the effective spell list from bundled source data, and re-renders while preserving selection and search state.
 
 ---
 
