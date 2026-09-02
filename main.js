@@ -200,12 +200,61 @@ function closeSpellEditor() {
   applicationState.editingSpellId = null;
 }
 
+function getSpellEditorValues(form) {
+  const formData = new FormData(form);
+
+  return {
+    title: String(formData.get("title") ?? "").trim(),
+    enTitle: String(formData.get("enTitle") ?? "").trim(),
+    actionType: String(formData.get("actionType") ?? ""),
+    type: String(formData.get("type") ?? "").trim(),
+    level: String(formData.get("level") ?? "").trim(),
+    traditions: String(formData.get("traditions") ?? "")
+      .split(",")
+      .map((tradition) => tradition.trim())
+      .filter(Boolean),
+    castTime: String(formData.get("castTime") ?? "").trim(),
+    range: String(formData.get("range") ?? "").trim(),
+    area: String(formData.get("area") ?? "").trim(),
+    duration: String(formData.get("duration") ?? "").trim(),
+    objectives: String(formData.get("objectives") ?? "").trim(),
+    trigger: String(formData.get("trigger") ?? "").trim(),
+    description: String(formData.get("description") ?? "").trim(),
+    heightenings: String(formData.get("heightenings") ?? "").trim(),
+  };
+}
+
+function saveSpellEdit(form) {
+  const spellId = applicationState.editingSpellId;
+  const sourceSpell = applicationState.sourceSpells.find(
+    (spell) => spell.id === spellId,
+  );
+
+  if (!sourceSpell) {
+    closeSpellEditor();
+    return;
+  }
+
+  applicationState.spellSession.editedSpells[spellId] =
+    getSpellEditorValues(form);
+  saveSpellSession(applicationState.spellSession);
+  applicationState.effectiveSpells = buildEffectiveSpells(
+    applicationState.sourceSpells,
+    applicationState.spellSession,
+  );
+  closeSpellEditor();
+  renderSpellPool();
+}
+
 function setupSpellEditor() {
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
   const cancelButton = document.getElementById("cancelSpellEdit");
 
-  form.addEventListener("submit", (event) => event.preventDefault());
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveSpellEdit(form);
+  });
   cancelButton.addEventListener("click", closeSpellEditor);
   dialog.addEventListener("close", () => {
     applicationState.editingSpellId = null;
@@ -232,6 +281,9 @@ async function loadSpells() {
 
 function renderSpellPool() {
   const spellPool = document.getElementById("spellPool");
+  const selectedSpellIds = new Set(
+    Array.from(spellPool.querySelectorAll(".card.selected"), (card) => card.id),
+  );
   spellPool.replaceChildren();
 
   applicationState.effectiveSpells.forEach((spell) => {
@@ -243,6 +295,15 @@ function renderSpellPool() {
     card.innerHTML = spellCardTemplate(spell);
 
     card.id = spell.id;
+
+    if (selectedSpellIds.has(spell.id)) {
+      card.classList.add("selected");
+      card.classList.remove("no-print");
+      const selectedTitle = document.getElementById(`selected${spell.id}`);
+      if (selectedTitle) {
+        selectedTitle.textContent = spell.title;
+      }
+    }
 
     // dataset to search by spTitle & enTitle
     card.dataset.search =
@@ -264,6 +325,8 @@ function renderSpellPool() {
 
     spellPool.appendChild(card);
   });
+
+  filterSpellCards();
 }
 
 async function loadAlchemicalItems() {
@@ -367,21 +430,23 @@ function selectAlchemicalItem(item, id) {
 
 function setupSpellSearch() {
   const searchInput = document.getElementById("searchInputSpells");
-  searchInput.addEventListener("input", () => {
-    // users's input
-    const query = searchInput.value.toLowerCase().trim();
+  searchInput.addEventListener("input", filterSpellCards);
+}
 
-    // get all cards
-    const cards = document.querySelectorAll("#spellPool .card");
+function filterSpellCards() {
+  const searchInput = document.getElementById("searchInputSpells");
+  const query = searchInput.value.toLowerCase().trim();
 
-    // iterate over all, save and print matches.
-    cards.forEach((card) => {
-      const title =
-        card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
+  // get all cards
+  const cards = document.querySelectorAll("#spellPool .card");
 
-      const matches = title.includes(query);
-      card.style.display = matches ? "" : "none";
-    });
+  // iterate over all, save and print matches.
+  cards.forEach((card) => {
+    const title =
+      card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
+
+    const matches = title.includes(query);
+    card.style.display = matches ? "" : "none";
   });
 }
 function setupAlchemicalItemSearch() {

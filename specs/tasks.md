@@ -158,7 +158,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### JS-006 — Save spell edits safely
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Save edited values into application/session state and re-render the card.
 
@@ -171,6 +171,8 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The change survives reload in the same browser session.
 - Edited user text cannot execute injected HTML or JavaScript.
 - Search uses the edited titles after saving.
+
+**Implementation note:** Saving now records an editable-field overlay for the source spell, persists it under the versioned session key, rebuilds effective state, and immediately re-renders while retaining selection and the active search filter. Spell template values are HTML-escaped before interpolation so session-provided text is rendered inert.
 
 ---
 
