@@ -115,6 +115,22 @@ The editable model preserves all fields currently rendered from `alchemical_item
 - User-entered values are rendered as text and cannot inject executable markup.
 - The bundled alchemical JSON schema and files are not changed.
 
+## R11 — Printable card borders
+
+Selected spell and alchemical item cards must print with a visible outer border by default. The border uses the current shared card color selected in either view and must not rely only on browser background printing.
+
+Users may switch to borderless printing to reproduce the previous PDF appearance. This preference is transient UI state: it is shared by both views, does not alter card or selection data, and resets to bordered mode after a reload.
+
+### Acceptance criteria
+
+- Bordered printing is the default.
+- A real CSS border uses the current `--card-background` color in print preview and generated PDFs.
+- Print CSS requests exact color reproduction for the colored card frame.
+- A control in both views switches between bordered and borderless printing and clearly communicates the available action.
+- Both controls remain synchronized because they change one shared print mode.
+- Borderless mode removes only the outer border/frame; card content and internal separators remain visible.
+- Only selected cards are printed in either mode.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;

@@ -809,9 +809,32 @@ function filterAlchemicalItemCards() {
     card.style.display = title.includes(query) ? "" : "none";
   });
 }
+
+function setBorderlessPrint(borderless) {
+  document.documentElement.classList.toggle("print-borderless", borderless);
+  document.querySelectorAll(".print-border-toggle").forEach((button) => {
+    button.textContent = borderless
+      ? "Print with borders"
+      : "Print without borders";
+    button.setAttribute("aria-pressed", String(borderless));
+  });
+}
+
+function setupPrintBorderControls() {
+  document.querySelectorAll(".print-border-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const borderless =
+        !document.documentElement.classList.contains("print-borderless");
+      setBorderlessPrint(borderless);
+    });
+  });
+  setBorderlessPrint(false);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     setupSpellEditor();
     setupAlchemicalItemEditor();
+    setupPrintBorderControls();
     document
       .getElementById("createSpellButton")
       .addEventListener("click", requestSpellCreate);

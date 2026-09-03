@@ -318,7 +318,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### PRINT-001 — Specify printable card border behavior
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Define the expected bordered and borderless print modes before changing rendering or controls.
 
@@ -332,11 +332,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The behavior applies consistently to selected spell and alchemical item cards.
 - The specification states whether the mode persists; unless another requirement is added, it is UI state only and resets to bordered mode on reload.
 
+**Implementation note:** R11 and the print-rendering architecture now define bordered printing as the default shared mode. Borderless mode is transient root-level UI state, applies to both card types, and resets on reload.
+
 ---
 
 ### PRINT-002 — Add a reliable print border
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Make selected cards show their configured color around the card in print preview and generated PDFs without relying only on printable backgrounds.
 
@@ -355,11 +357,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Validation:** Select multiple spell and alchemical cards, choose a non-black color, and verify the border in print preview and a generated PDF with browser background graphics both enabled and disabled where the browser permits.
 
+**Implementation note:** Print media now gives selected cards a real 2px solid border using `var(--card-background)`, keeps it within existing dimensions with `box-sizing: border-box`, and requests exact color reproduction through standard and WebKit properties. The rule is shared by both card types and leaves the existing selected-only print filtering intact.
+
 ---
 
 ### PRINT-003 — Add a borderless print toggle
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Let users deliberately print selected cards without the outer colored border.
 
@@ -378,11 +382,13 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Validation:** Toggle both modes from each view and verify spell and alchemical print previews, including after changing the shared card color.
 
+**Implementation note:** Both views now expose synchronized `Print without borders` / `Print with borders` controls. They toggle one root class and ARIA pressed state without touching selection or session persistence. Borderless print CSS removes only the outer border and frame.
+
 ---
 
 ### PRINT-004 — Run print regression checks
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Verify the complete print-border behavior and existing browse/print workflows after implementation.
 
@@ -399,3 +405,5 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Switching modes does not change card selection or editable session data.
 - Changed JavaScript passes `node --check` and changed CSS has no obvious parsing errors in supported browsers.
 - The manual validation result and any browser-specific limitation are recorded in the relevant task implementation notes.
+
+**Implementation note:** JavaScript syntax checks, `git diff --check`, deterministic toggle-state checks, local HTTP serving, and a headless Firefox render completed successfully. The installed Firefox supports headless screenshots but provides no command-line print/PDF operation, and no Chromium/WebDriver tooling is installed. Interactive print preview and generated-PDF checks—including background-graphics variations—remain blocked on an interactive browser environment. The implementation therefore must not be marked fully validated until those manual checks pass.
