@@ -131,6 +131,21 @@ Users may switch to borderless printing to reproduce the previous PDF appearance
 - Borderless mode removes only the outer border/frame; card content and internal separators remain visible.
 - Only selected cards are printed in either mode.
 
+## R12 — Preview unsaved card changes
+
+Spell and alchemical item editors must provide an explicit preview of the current unsaved form values in both create and edit modes.
+
+### Acceptance criteria
+
+- An English-labeled `Preview` button renders one card on demand; previews do not update continuously.
+- Preview uses the same form normalization and safe card template as Save and normal pool rendering.
+- Preview uses the current shared card color.
+- Preview does not modify application data, selection, search results, or `sessionStorage`.
+- Repeated preview requests replace the previous preview.
+- Saving, canceling, closing, or reopening an editor clears stale preview content.
+- Spell and alchemical item preview behavior is consistent, including array-field normalization and alchemical text autosizing.
+- Preview UI and content are not printed.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;

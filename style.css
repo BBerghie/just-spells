@@ -103,6 +103,7 @@
     border: 1px solid #555;
     border-radius: 0.5rem;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .spell-editor::backdrop {
@@ -141,6 +142,28 @@
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 1rem;
+}
+
+.editor-preview[hidden] {
+    display: none;
+}
+
+.editor-preview {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+}
+
+.editor-preview h3 {
+    margin: 0 0 0.5rem;
+}
+
+.editor-preview-card.card {
+    float: none;
+    display: block;
+    width: min(100%, 3.25in);
+    height: 3.5in;
+    margin: 0 auto;
 }
 
 @media (max-width: 40rem) {
