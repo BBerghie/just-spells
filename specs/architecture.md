@@ -78,6 +78,12 @@ The application should distinguish between:
 
 Initially, only edited/custom record persistence is required. Selection persistence should not be added unless a requirement explicitly requests it.
 
+Print border mode is transient shared UI state. It is represented by a class on the document root so print CSS can apply the same mode to spell and alchemical item cards. It is not stored in `sessionStorage`; a reload restores the default bordered mode.
+
+## Print rendering
+
+Selected cards use an explicit CSS border in print media, with `box-sizing: border-box` so the border remains inside the existing card dimensions. The card background continues to provide the wider visual frame when the browser honors exact print colors, while the real border provides a printable outline that does not depend on background graphics. A root-level borderless-mode class suppresses the outer border and frame without changing selection or internal card separators.
+
 ## Identity
 
 Editing requires stable record identities that do not depend only on the DOM list index.

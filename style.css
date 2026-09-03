@@ -61,6 +61,20 @@
     .no-print {
         display: none !important;
     }
+
+    .card.selected {
+        box-sizing: border-box;
+        border: 2px solid var(--card-background) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .print-borderless .card.selected {
+        border: 0 !important;
+        background: transparent !important;
+        -webkit-print-color-adjust: economy;
+        print-color-adjust: economy;
+    }
 }
 
 .fixed {
