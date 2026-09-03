@@ -64,6 +64,7 @@
                                    placeholder="Buscar por título..."
                             />
                             <label for="searchInputAlchemy">Búsqueda</label>
+                            <button id="createAlchemicalItemButton" class="no-print" type="button">Create alchemical item</button>
                             <button onclick="window.print()">Imprimir</button>
                             <div>
                                 <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
@@ -121,6 +122,49 @@
                 <div class="spell-editor-actions">
                     <button id="saveSpellEdit" type="submit">Save</button>
                     <button id="cancelSpellEdit" type="button">Cancel</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="alchemicalItemEditorDialog" class="spell-editor no-print" aria-labelledby="alchemicalItemEditorHeading">
+            <form id="alchemicalItemEditorForm">
+                <h2 id="alchemicalItemEditorHeading">Edit alchemical item</h2>
+                <p class="editor-help">Separate tags with commas. Enter each item tier component on a separate line.</p>
+                <div class="spell-editor-fields">
+                    <label>Title <input name="title" type="text" /></label>
+                    <label>English title <input name="englishTitle" type="text" /></label>
+                    <label>Level <input name="level" type="text" /></label>
+                    <label>Tags <input name="tags" type="text" /></label>
+                    <label>Price <input name="price" type="text" /></label>
+                    <label>Hands <input name="hands" type="text" /></label>
+                    <label>Bulk <input name="bulk" type="text" /></label>
+                    <label>Action type
+                        <select name="actions">
+                            <option value="">None</option><option value="one-action">One action</option>
+                            <option value="two-actions">Two actions</option><option value="three-actions">Three actions</option>
+                            <option value="reaction">Reaction</option><option value="free-action">Free action</option>
+                        </select>
+                    </label>
+                    <label>Activation <input name="action_type" type="text" /></label>
+                    <label>Saving throw <input name="saving_throw" type="text" /></label>
+                    <label>Onset <input name="onset" type="text" /></label>
+                    <label>Maximum duration <input name="maximum_duration" type="text" /></label>
+                    <label class="spell-editor-wide">Description <textarea name="description" rows="5"></textarea></label>
+                    <label>Benefit <textarea name="benefit" rows="3"></textarea></label>
+                    <label>Drawback <textarea name="drawback" rows="3"></textarea></label>
+                    <label>Minor tier <textarea name="minor" rows="3"></textarea></label>
+                    <label>Lesser tier <textarea name="lesser" rows="3"></textarea></label>
+                    <label>Moderate tier <textarea name="moderate" rows="3"></textarea></label>
+                    <label>Greater tier <textarea name="greater" rows="3"></textarea></label>
+                    <label>Major tier <textarea name="major" rows="3"></textarea></label>
+                    <label>Unclassified tier <textarea name="level_true" rows="3"></textarea></label>
+                    <label>Stage 1 <textarea name="stage1" rows="2"></textarea></label>
+                    <label>Stage 2 <textarea name="stage2" rows="2"></textarea></label>
+                    <label>Stage 3 <textarea name="stage3" rows="2"></textarea></label>
+                    <label>Stage 4 <textarea name="stage4" rows="2"></textarea></label>
+                </div>
+                <div class="spell-editor-actions">
+                    <button type="submit">Save</button>
+                    <button id="cancelAlchemicalItemEdit" type="button">Cancel</button>
                 </div>
             </form>
         </dialog>

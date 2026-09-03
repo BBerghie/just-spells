@@ -298,7 +298,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### ALC-001 — Apply the edit/create/session model to alchemical items
 
-**Status:** TODO
+**Status:** DONE
 
 **Goal:** Extend the proven spell editing architecture to alchemical items after the spell workflow is complete.
 
@@ -309,3 +309,93 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Requirements are refined for the more complex alchemical item schema before implementation.
 - Existing spell editing architecture is reused where appropriate.
 - No backend or permanent persistence is introduced.
+
+**Implementation note:** The alchemical item schema and editor representation are documented in R10. Bundled items now receive stable IDs and render from source/effective state merged with edit overlays and custom items in `just-spells.session.v1`. The shared session workflow supports safe edit/create/reset/delete behavior, updated search and selection labels, and text-only rendering for all user-editable item fields without changing the bundled JSON schema.
+
+---
+
+## Print borders
+
+### PRINT-001 — Specify printable card border behavior
+
+**Status:** TODO
+
+**Goal:** Define the expected bordered and borderless print modes before changing rendering or controls.
+
+**Likely files:** `specs/requirements.md`, `specs/architecture.md`
+
+**Acceptance criteria:**
+
+- Bordered printing is documented as the default mode.
+- The printed border uses the current `--card-background` color selected by either card view.
+- Borderless printing is documented as an explicit user choice that reproduces the current PDF appearance.
+- The behavior applies consistently to selected spell and alchemical item cards.
+- The specification states whether the mode persists; unless another requirement is added, it is UI state only and resets to bordered mode on reload.
+
+---
+
+### PRINT-002 — Add a reliable print border
+
+**Status:** TODO
+
+**Goal:** Make selected cards show their configured color around the card in print preview and generated PDFs without relying only on printable backgrounds.
+
+**Depends on:** PRINT-001
+
+**Likely files:** `style.css`, `style/spellCard.css`
+
+**Acceptance criteria:**
+
+- Selected cards have a real CSS border with an explicit width, style, and `var(--card-background)` color in bordered print mode.
+- Print CSS requests exact color reproduction with the standard and WebKit print-color-adjust properties.
+- Card dimensions and page layout account for the border with `box-sizing: border-box` and do not unexpectedly add pages or clip content.
+- Internal colored separators and action icons continue to render correctly.
+- Only selected cards are printed.
+- The implementation is shared by spell and alchemical item cards.
+
+**Validation:** Select multiple spell and alchemical cards, choose a non-black color, and verify the border in print preview and a generated PDF with browser background graphics both enabled and disabled where the browser permits.
+
+---
+
+### PRINT-003 — Add a borderless print toggle
+
+**Status:** TODO
+
+**Goal:** Let users deliberately print selected cards without the outer colored border.
+
+**Depends on:** PRINT-001, PRINT-002
+
+**Likely files:** `index.html`, `main.js`, `style.css`, `style/spellCard.css`
+
+**Acceptance criteria:**
+
+- An English-labeled non-print control is available from both the spell and alchemical item views.
+- Bordered mode is active by default.
+- Activating borderless mode removes the outer border in print preview/PDF while retaining card content and internal separators.
+- The control clearly communicates the current mode and allows switching back to bordered printing.
+- Controls in both views reflect the same shared print mode.
+- Toggling the mode does not select/deselect cards and does not alter session-stored spell or alchemical item data.
+
+**Validation:** Toggle both modes from each view and verify spell and alchemical print previews, including after changing the shared card color.
+
+---
+
+### PRINT-004 — Run print regression checks
+
+**Status:** TODO
+
+**Goal:** Verify the complete print-border behavior and existing browse/print workflows after implementation.
+
+**Depends on:** PRINT-002, PRINT-003
+
+**Likely files:** `specs/tasks.md`
+
+**Acceptance criteria:**
+
+- Spell and alchemical search still work.
+- Selection and deselection still work, and unselected cards do not appear in print.
+- Black and non-black border colors appear in bordered print preview and generated PDF.
+- Borderless mode produces cards without the outer colored border.
+- Switching modes does not change card selection or editable session data.
+- Changed JavaScript passes `node --check` and changed CSS has no obvious parsing errors in supported browsers.
+- The manual validation result and any browser-specific limitation are recorded in the relevant task implementation notes.

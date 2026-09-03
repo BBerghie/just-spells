@@ -98,6 +98,23 @@ The first editing iteration should establish the pattern using spells. Alchemica
 - Spell editing does not regress alchemical item browsing/printing.
 - Shared state/rendering utilities are designed so alchemical support can be added without replacing the whole approach.
 
+## R10 — Edit and create alchemical items
+
+Alchemical items must support the same session-only edit, create, reset, and delete workflow as spells.
+
+The editable model preserves all fields currently rendered from `alchemical_items.json`. `tags` remains an array represented in the editor as comma-separated values. The tier fields (`minor`, `lesser`, `moderate`, `greater`, `major`, and `level_true`) remain arrays represented as one entry per line. All other fields are edited as plain text; the controlled `actions` field selects a known action icon.
+
+### Acceptance criteria
+
+- Every bundled alchemical item has a deterministic application ID and is held in source/effective application state.
+- A user can edit every currently rendered field, save or cancel, and reset a bundled item.
+- A user can create, edit, and delete a custom alchemical item.
+- Edits and custom items persist in `just-spells.session.v1` without copying the bundled dataset.
+- Edited/custom titles participate in source-title and English-title search.
+- Selection, deselection, selected-list labels, printing, and background color continue to work after re-rendering.
+- User-entered values are rendered as text and cannot inject executable markup.
+- The bundled alchemical JSON schema and files are not changed.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;
