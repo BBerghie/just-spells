@@ -41,6 +41,8 @@ function createEmptySpellSession() {
   return {
     editedSpells: {},
     customSpells: [],
+    editedAlchemicalItems: {},
+    customAlchemicalItems: [],
   };
 }
 
@@ -62,6 +64,16 @@ function normalizeSpellSession(value) {
       Object.entries(value.editedSpells).filter(([, spell]) => isRecord(spell)),
     ),
     customSpells: value.customSpells.filter(isRecord),
+    editedAlchemicalItems: isRecord(value.editedAlchemicalItems)
+      ? Object.fromEntries(
+          Object.entries(value.editedAlchemicalItems).filter(([, item]) =>
+            isRecord(item),
+          ),
+        )
+      : {},
+    customAlchemicalItems: Array.isArray(value.customAlchemicalItems)
+      ? value.customAlchemicalItems.filter(isRecord)
+      : [],
   };
 }
 
@@ -152,6 +164,10 @@ const applicationState = {
   spellSession: createEmptySpellSession(),
   spellEditorMode: null,
   editingSpellId: null,
+  sourceAlchemicalItems: [],
+  effectiveAlchemicalItems: [],
+  alchemicalEditorMode: null,
+  editingAlchemicalItemId: null,
 };
 
 function requestSpellEdit(spellId) {
@@ -462,63 +478,263 @@ function renderSpellPool() {
   filterSpellCards();
 }
 
+const ALCHEMICAL_ARRAY_FIELDS = [
+  "minor", "lesser", "moderate", "greater", "major", "level_true",
+];
+const ALCHEMICAL_EDITABLE_FIELDS = [
+  "englishTitle", "title", "level", "tags", "price", "hands", "bulk",
+  "actions", "action_type", "description", "benefit", "drawback",
+  ...ALCHEMICAL_ARRAY_FIELDS, "saving_throw", "onset", "maximum_duration",
+  "stage1", "stage2", "stage3", "stage4",
+];
+
+function createSourceAlchemicalItemId(rawItem) {
+  const identity = [rawItem.title, rawItem.englishTitle, rawItem.level].join("\u001f");
+  let hash = 2166136261;
+  for (let i = 0; i < identity.length; i++) {
+    hash ^= identity.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `source-alchemical-item-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
+function normalizeAlchemicalItem(rawItem) {
+  const item = { id: createSourceAlchemicalItemId(rawItem) };
+  ALCHEMICAL_EDITABLE_FIELDS.forEach((field) => {
+    if (field === "tags" || ALCHEMICAL_ARRAY_FIELDS.includes(field)) {
+      item[field] = Array.isArray(rawItem[field]) ? [...rawItem[field]] : [];
+    } else {
+      item[field] = rawItem[field] ?? "";
+    }
+  });
+  return item;
+}
+
+function copyAlchemicalItem(item) {
+  const copy = { ...item };
+  ["tags", ...ALCHEMICAL_ARRAY_FIELDS].forEach((field) => {
+    copy[field] = Array.isArray(item[field]) ? [...item[field]] : [];
+  });
+  return copy;
+}
+
+function buildEffectiveAlchemicalItems(sourceItems, session) {
+  const knownIds = new Set(sourceItems.map((item) => item.id));
+  const effectiveItems = sourceItems.map((sourceItem) =>
+    copyAlchemicalItem({
+      ...sourceItem,
+      ...(session.editedAlchemicalItems[sourceItem.id] || {}),
+      id: sourceItem.id,
+    }),
+  );
+  session.customAlchemicalItems.forEach((item) => {
+    if (typeof item.id === "string" && item.id && !knownIds.has(item.id)) {
+      effectiveItems.push(copyAlchemicalItem(item));
+      knownIds.add(item.id);
+    }
+  });
+  return effectiveItems;
+}
+
+function rebuildAlchemicalItems() {
+  applicationState.effectiveAlchemicalItems = buildEffectiveAlchemicalItems(
+    applicationState.sourceAlchemicalItems,
+    applicationState.spellSession,
+  );
+  renderAlchemicalItemPool();
+}
+
+function requestAlchemicalItemEdit(itemId) {
+  const item = applicationState.effectiveAlchemicalItems.find(
+    (candidate) => candidate.id === itemId,
+  );
+  if (!item) return;
+
+  applicationState.alchemicalEditorMode = "edit";
+  applicationState.editingAlchemicalItemId = itemId;
+  const form = document.getElementById("alchemicalItemEditorForm");
+  ALCHEMICAL_EDITABLE_FIELDS.forEach((field) => {
+    const value = item[field];
+    form.elements.namedItem(field).value = Array.isArray(value)
+      ? value.join(field === "tags" ? ", " : "\n")
+      : value ?? "";
+  });
+  document.getElementById("alchemicalItemEditorHeading").textContent =
+    "Edit alchemical item";
+  document.getElementById("alchemicalItemEditorDialog").showModal();
+}
+
+function requestAlchemicalItemCreate() {
+  applicationState.alchemicalEditorMode = "create";
+  applicationState.editingAlchemicalItemId = null;
+  document.getElementById("alchemicalItemEditorForm").reset();
+  document.getElementById("alchemicalItemEditorHeading").textContent =
+    "Create alchemical item";
+  document.getElementById("alchemicalItemEditorDialog").showModal();
+}
+
+function closeAlchemicalItemEditor() {
+  const dialog = document.getElementById("alchemicalItemEditorDialog");
+  if (dialog.open) dialog.close();
+  applicationState.alchemicalEditorMode = null;
+  applicationState.editingAlchemicalItemId = null;
+}
+
+function getAlchemicalItemEditorValues(form) {
+  const data = new FormData(form);
+  const values = {};
+  ALCHEMICAL_EDITABLE_FIELDS.forEach((field) => {
+    const rawValue = String(data.get(field) ?? "").trim();
+    if (field === "tags") {
+      values[field] = rawValue.split(",").map((value) => value.trim()).filter(Boolean);
+    } else if (ALCHEMICAL_ARRAY_FIELDS.includes(field)) {
+      values[field] = rawValue.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+    } else {
+      values[field] = rawValue;
+    }
+  });
+  return values;
+}
+
+function createCustomAlchemicalItemId() {
+  const knownIds = new Set(applicationState.effectiveAlchemicalItems.map((item) => item.id));
+  let id;
+  do {
+    const uniquePart = globalThis.crypto?.randomUUID
+      ? globalThis.crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    id = `custom-alchemical-item-${uniquePart}`;
+  } while (knownIds.has(id));
+  return id;
+}
+
+function saveAlchemicalItemEditor(form) {
+  const values = getAlchemicalItemEditorValues(form);
+  const itemId = applicationState.editingAlchemicalItemId;
+  if (applicationState.alchemicalEditorMode === "create") {
+    applicationState.spellSession.customAlchemicalItems.push({
+      id: createCustomAlchemicalItemId(), ...values,
+    });
+  } else if (applicationState.alchemicalEditorMode === "edit") {
+    const customIndex = applicationState.spellSession.customAlchemicalItems.findIndex(
+      (item) => item.id === itemId,
+    );
+    if (applicationState.sourceAlchemicalItems.some((item) => item.id === itemId)) {
+      applicationState.spellSession.editedAlchemicalItems[itemId] = values;
+    } else if (customIndex !== -1) {
+      applicationState.spellSession.customAlchemicalItems[customIndex] = { id: itemId, ...values };
+    } else return closeAlchemicalItemEditor();
+  } else return;
+
+  saveSpellSession(applicationState.spellSession);
+  closeAlchemicalItemEditor();
+  rebuildAlchemicalItems();
+}
+
+function resetAlchemicalItemEdit(itemId) {
+  if (!Object.prototype.hasOwnProperty.call(
+    applicationState.spellSession.editedAlchemicalItems, itemId,
+  )) return;
+  delete applicationState.spellSession.editedAlchemicalItems[itemId];
+  saveSpellSession(applicationState.spellSession);
+  rebuildAlchemicalItems();
+}
+
+function deleteCustomAlchemicalItem(itemId) {
+  const index = applicationState.spellSession.customAlchemicalItems.findIndex(
+    (item) => item.id === itemId,
+  );
+  if (index === -1) return;
+  applicationState.spellSession.customAlchemicalItems.splice(index, 1);
+  document.getElementById(`selected${itemId}`)?.remove();
+  saveSpellSession(applicationState.spellSession);
+  rebuildAlchemicalItems();
+}
+
+function setupAlchemicalItemEditor() {
+  const dialog = document.getElementById("alchemicalItemEditorDialog");
+  const form = document.getElementById("alchemicalItemEditorForm");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveAlchemicalItemEditor(form);
+  });
+  document.getElementById("cancelAlchemicalItemEdit")
+    .addEventListener("click", closeAlchemicalItemEditor);
+  dialog.addEventListener("close", () => {
+    applicationState.alchemicalEditorMode = null;
+    applicationState.editingAlchemicalItemId = null;
+  });
+}
+
 async function loadAlchemicalItems() {
   try {
     const res = await fetch("./resources/alchemical_items.json");
-    const datos = await res.json();
-
-    const alchemicalItemPool = document.getElementById("alchemicalItemPool");
-    let i = 0;
-    console.log('Cargados ' + datos.length + ' items');
-    datos.forEach((alchemicalItemJson) => {
-      const card = document.createElement("li");
-      card.classList.add("card");
-      card.classList.add("no-print");
-      const alchemicalItem = {
-        englishTitle: alchemicalItemJson.englishTitle,
-        title: alchemicalItemJson.title,
-        level: alchemicalItemJson.level,
-        tags: alchemicalItemJson.tags,
-        price: alchemicalItemJson.price,
-        hands: alchemicalItemJson.hands,
-        bulk: alchemicalItemJson.bulk,
-        actions: alchemicalItemJson.actions,
-        action_type: alchemicalItemJson.action_type,
-        description: alchemicalItemJson.description,
-        benefit: alchemicalItemJson.benefit,
-        drawback: alchemicalItemJson.drawback,
-        minor: alchemicalItemJson.minor,
-        lesser: alchemicalItemJson.lesser,
-        moderate: alchemicalItemJson.moderate,
-        greater: alchemicalItemJson.greater,
-        major: alchemicalItemJson.major,
-        level_true: alchemicalItemJson.level_true,
-        saving_throw: alchemicalItemJson.saving_throw,
-        onset: alchemicalItemJson.onset,
-        maximum_duration: alchemicalItemJson.maximum_duration,
-        stage1: alchemicalItemJson.stage1,
-        stage2: alchemicalItemJson.stage2,
-        stage3: alchemicalItemJson.stage3,
-        stage4: alchemicalItemJson.stage4
-      };
-
-      // card element template.
-      card.appendChild(alchemicalItemCardTemplate(alchemicalItem));
-
-      card.id = "alchemical-item-" + i;
-
-      // dataset to search by spTitle & enTitle
-      card.dataset.search =
-          `${alchemicalItemJson.title} ${alchemicalItemJson.englishTitle}`.toLowerCase();
-
-      // select a spell event listener
-      card.addEventListener("click", () => selectAlchemicalItem(alchemicalItem, card.id));
-      alchemicalItemPool.appendChild(card);
-      i++;
-    });
+    const rawItems = await res.json();
+    applicationState.sourceAlchemicalItems = rawItems.map(normalizeAlchemicalItem);
+    applicationState.effectiveAlchemicalItems = buildEffectiveAlchemicalItems(
+      applicationState.sourceAlchemicalItems, applicationState.spellSession,
+    );
+    renderAlchemicalItemPool();
+    console.log(`Loaded ${rawItems.length} alchemical items.`);
   } catch (error) {
-    console.error("Error cargando JSON:", error);
+    console.error("Unable to load alchemical items.", error);
   }
+}
+
+function renderAlchemicalItemPool() {
+  const pool = document.getElementById("alchemicalItemPool");
+  const selectedIds = new Set(
+    Array.from(pool.querySelectorAll(".card.selected"), (card) => card.id),
+  );
+  pool.replaceChildren();
+  applicationState.effectiveAlchemicalItems.forEach((alchemicalItem) => {
+      const card = document.createElement("li");
+      card.classList.add("card", "no-print");
+      card.appendChild(alchemicalItemCardTemplate(alchemicalItem));
+      card.id = alchemicalItem.id;
+      if (selectedIds.has(card.id)) {
+        card.classList.add("selected");
+        card.classList.remove("no-print");
+        const selectedTitle = document.getElementById(`selected${card.id}`);
+        if (selectedTitle) selectedTitle.textContent = alchemicalItem.title;
+      }
+      card.addEventListener("click", () => selectAlchemicalItem(alchemicalItem, card.id));
+      const editButton = createCardActionButton("Edit", `Edit ${alchemicalItem.title}`, () =>
+        requestAlchemicalItemEdit(alchemicalItem.id));
+      card.appendChild(editButton);
+      if (Object.prototype.hasOwnProperty.call(
+        applicationState.spellSession.editedAlchemicalItems, alchemicalItem.id,
+      )) {
+        card.appendChild(createCardActionButton(
+          "Reset", `Reset ${alchemicalItem.title} to its source version`,
+          () => resetAlchemicalItemEdit(alchemicalItem.id),
+        ));
+      }
+      if (applicationState.spellSession.customAlchemicalItems.some(
+        (item) => item.id === alchemicalItem.id,
+      )) {
+        card.appendChild(createCardActionButton(
+          "Delete", `Delete custom alchemical item ${alchemicalItem.title}`,
+          () => deleteCustomAlchemicalItem(alchemicalItem.id),
+        ));
+      }
+      pool.appendChild(card);
+    });
+  filterAlchemicalItemCards();
+  autoSizeText();
+}
+
+function createCardActionButton(label, ariaLabel, action) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("spell-edit-button", "no-print");
+  button.textContent = label;
+  button.setAttribute("aria-label", ariaLabel);
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    action();
+  });
+  return button;
 }
 
 function selectSpell(item, id) {
@@ -584,34 +800,30 @@ function filterSpellCards() {
 }
 function setupAlchemicalItemSearch() {
   const searchInput = document.getElementById("searchInputAlchemy");
-  searchInput.addEventListener("input", () => {
-    // users's input
-    const query = searchInput.value.toLowerCase().trim();
-
-    // get all cards
-    const cards = document.querySelectorAll("#alchemicalItemPool .card");
-
-    // iterate over all, save and print matches.
-    cards.forEach((card) => {
-      const title =
-          card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
-
-      const matches = title.includes(query);
-      card.style.display = matches ? "" : "none";
-    });
+  searchInput.addEventListener("input", filterAlchemicalItemCards);
+}
+function filterAlchemicalItemCards() {
+  const query = document.getElementById("searchInputAlchemy").value.toLowerCase().trim();
+  document.querySelectorAll("#alchemicalItemPool .card").forEach((card) => {
+    const title = card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
+    card.style.display = title.includes(query) ? "" : "none";
   });
 }
 document.addEventListener("DOMContentLoaded", function() {
     setupSpellEditor();
+    setupAlchemicalItemEditor();
     document
       .getElementById("createSpellButton")
       .addEventListener("click", requestSpellCreate);
+    document
+      .getElementById("createAlchemicalItemButton")
+      .addEventListener("click", requestAlchemicalItemCreate);
     loadSpells().then(() => {
         setupSpellSearch();
-        console.log("Conjuros cargados correctamente");
+        console.log("Spells loaded successfully.");
       loadAlchemicalItems().then(() => {
         setupAlchemicalItemSearch();
-        console.log("Items alquímicos cargados correctamente");
+        console.log("Alchemical items loaded successfully.");
         autoSizeText();
       });
     });

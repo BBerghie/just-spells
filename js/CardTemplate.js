@@ -89,33 +89,61 @@ function spellStatusItemTemplate(label, value, className = "") {
 }
 
 function alchemicalItemCardTemplate(alchemicalItem) {
-  let template = document.createElement("div");
-  template.setAttribute("class", "front");
-  template.innerHTML = `
-  		<div class="front">
- 			<div class="body">
-  				<h3 class="name lined srname" data-search="${alchemicalItem.title} ${alchemicalItem.englishTitle}">${alchemicalItem.title} <img src="${getActionImg(alchemicalItem.actions)}" alt="${alchemicalItem.actions}"/></h3>
-  				<div class="attributes"></div>
-  				<p class="text resize">${alchemicalItem.description}</p>
-  				<p class="benefit resize"><strong>Beneficio: </strong>${alchemicalItem.benefit}</p>
-  				<p class="drawback resize"><strong>Desventaja: </strong>${alchemicalItem.drawback}</p>
-  				<p class="minor resize"><strong>Menor: </strong>${alchemicalItem.minor}</p>
-  				<p class="lesser resize"><strong>Inferior: </strong>${alchemicalItem.lesser}</p>
-  				<p class="moderate resize"><strong>Moderado: </strong>${alchemicalItem.moderate}</p>
-  				<p class="greater resize"><strong>Superior: </strong>${alchemicalItem.greater}</p>
-  				<p class="major resize"><strong>Mayor: </strong>${alchemicalItem.major}</p>
-  				<p class="level_true resize"><strong>Beneficio: </strong>${alchemicalItem.level_true}</p>
-  				<p class="stage1 resize"><strong>Etapa 1: </strong>${alchemicalItem.stage1}</p>
-  				<p class="stage2 resize"><strong>Etapa 2: </strong>${alchemicalItem.stage2}</p>
-  				<p class="stage3 resize"><strong>Etapa 3: </strong>${alchemicalItem.stage3}</p>
-  				<p class="stage4 resize"><strong>Etapa 4: </strong>${alchemicalItem.stage4}</p>
-  				
+  const template = document.createElement("div");
+  template.className = "front";
+  const body = document.createElement("div");
+  body.className = "body";
+  const title = document.createElement("h3");
+  title.className = "name lined srname";
+  title.dataset.search = `${alchemicalItem.title ?? ""} ${alchemicalItem.englishTitle ?? ""}`;
+  title.append(document.createTextNode(`${alchemicalItem.title ?? ""} `));
+  const actionImagePath = getActionImg(alchemicalItem.actions);
+  if (actionImagePath) {
+    const image = document.createElement("img");
+    image.src = actionImagePath;
+    image.alt = alchemicalItem.actions ?? "";
+    title.appendChild(image);
+  }
+  const attributes = document.createElement("div");
+  attributes.className = "attributes";
+  body.append(title, attributes);
 
- 			</div>
- 			<b class="class srclass">${getAlchemicalItemType(alchemicalItem.tags)}</b>
- 			<b class="type srtype">ITEM ${alchemicalItem.level}</b>
-  		</div>
-  `;
+  const sections = [
+    ["text", "", alchemicalItem.description],
+    ["benefit", "Beneficio: ", alchemicalItem.benefit],
+    ["drawback", "Desventaja: ", alchemicalItem.drawback],
+    ["minor", "Menor: ", alchemicalItem.minor],
+    ["lesser", "Inferior: ", alchemicalItem.lesser],
+    ["moderate", "Moderado: ", alchemicalItem.moderate],
+    ["greater", "Superior: ", alchemicalItem.greater],
+    ["major", "Mayor: ", alchemicalItem.major],
+    ["level_true", "Beneficio: ", alchemicalItem.level_true],
+    ["stage1", "Etapa 1: ", alchemicalItem.stage1],
+    ["stage2", "Etapa 2: ", alchemicalItem.stage2],
+    ["stage3", "Etapa 3: ", alchemicalItem.stage3],
+    ["stage4", "Etapa 4: ", alchemicalItem.stage4],
+  ];
+  sections.forEach(([className, label, value]) => {
+    const paragraph = document.createElement("p");
+    paragraph.className = `${className} resize`;
+    if (label) {
+      const strong = document.createElement("strong");
+      strong.textContent = label;
+      paragraph.appendChild(strong);
+    }
+    paragraph.appendChild(document.createTextNode(
+      Array.isArray(value) ? value.join(",") : value ?? "",
+    ));
+    if (!hasAlchemicalValue(value)) paragraph.classList.add("hidden");
+    body.appendChild(paragraph);
+  });
+  const itemClass = document.createElement("b");
+  itemClass.className = "class srclass";
+  itemClass.textContent = getAlchemicalItemType(alchemicalItem.tags);
+  const type = document.createElement("b");
+  type.className = "type srtype";
+  type.textContent = `ITEM ${alchemicalItem.level ?? ""}`;
+  template.append(body, itemClass, type);
   let validAttributes = [];
   addIfNotEmpty(alchemicalItem.price, "Precio", validAttributes);
   addIfNotEmpty(alchemicalItem.hands, "Manos", validAttributes);
@@ -125,7 +153,7 @@ function alchemicalItemCardTemplate(alchemicalItem) {
   addIfNotEmpty(alchemicalItem.maximum_duration, "Duración máxima", validAttributes);
 
   // Attributes
-  let attributesHtml = template.querySelector('.attributes');
+  let attributesHtml = attributes;
   let counter = 0;
   while(counter < validAttributes.length) {
     if(validAttributes.length - counter >= 2) {
@@ -138,25 +166,12 @@ function alchemicalItemCardTemplate(alchemicalItem) {
   }
 
 
-  // Mutagens
-  hideSectionIfEmpty(template, alchemicalItem.benefit, '.benefit');
-  hideSectionIfEmpty(template, alchemicalItem.drawback, '.drawback');
-
-  // Types
-  hideSectionIfEmpty(template, alchemicalItem.minor, '.minor');
-  hideSectionIfEmpty(template, alchemicalItem.lesser, '.lesser');
-  hideSectionIfEmpty(template, alchemicalItem.moderate, '.moderate');
-  hideSectionIfEmpty(template, alchemicalItem.greater, '.greater');
-  hideSectionIfEmpty(template, alchemicalItem.major, '.major');
-  hideSectionIfEmpty(template, alchemicalItem.level_true, '.level_true');
-
-  // Stages
-  hideSectionIfEmpty(template, alchemicalItem.stage1, '.stage1');
-  hideSectionIfEmpty(template, alchemicalItem.stage2, '.stage2');
-  hideSectionIfEmpty(template, alchemicalItem.stage3, '.stage3');
-  hideSectionIfEmpty(template, alchemicalItem.stage4, '.stage4');
-
   return template;
+}
+
+function hasAlchemicalValue(value) {
+  if (Array.isArray(value)) return value.some((entry) => String(entry).trim());
+  return value !== undefined && value !== null && String(value).trim() !== "";
 }
 
 function hideSectionIfEmpty(template, attr, selector) {
@@ -223,25 +238,30 @@ function getNonEmptyAttributes(spell) {
 }
 
 function getAttributeTwoLinesHtml(att1, att2) {
-  let el = document.createElement('ul');
-  el.setAttribute('class', 'status lined');
-  el.innerHTML = `
-    <li><em>${att1.name}</em>${att1.value}</li>
-    <li class="second"><em>${att2.name}</em>${att2.value}</li>
-    <br class="clear">
-`;
-
-  return el;
+  return createAttributeLine([att1, att2]);
 }
 function getAttributeLineHtml(att1) {
-  let el = document.createElement('ul');
-  el.setAttribute('class', 'status lined');
-  el.innerHTML =  `
-    <li><em>${att1.name}</em>${att1.value}</li>
-    <li class="second"></li>
-    <br class="clear">
-`
-  return el;
+  return createAttributeLine([att1]);
+}
+
+function createAttributeLine(attributes) {
+  const line = document.createElement("ul");
+  line.className = "status lined";
+  for (let index = 0; index < 2; index++) {
+    const item = document.createElement("li");
+    if (index === 1) item.className = "second";
+    const attribute = attributes[index];
+    if (attribute) {
+      const label = document.createElement("em");
+      label.textContent = attribute.name;
+      item.append(label, document.createTextNode(attribute.value ?? ""));
+    }
+    line.appendChild(item);
+  }
+  const clear = document.createElement("br");
+  clear.className = "clear";
+  line.appendChild(clear);
+  return line;
 }
 
 function getActionImg(actionType) {
