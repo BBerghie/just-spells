@@ -407,3 +407,122 @@ The tasks are intentionally small. Complete and validate one task before startin
 - The manual validation result and any browser-specific limitation are recorded in the relevant task implementation notes.
 
 **Implementation note:** JavaScript syntax checks, `git diff --check`, deterministic toggle-state checks, local HTTP serving, and a headless Firefox render completed successfully. The installed Firefox supports headless screenshots but provides no command-line print/PDF operation, and no Chromium/WebDriver tooling is installed. Interactive print preview and generated-PDF checks—including background-graphics variations—remain blocked on an interactive browser environment. The implementation therefore must not be marked fully validated until those manual checks pass.
+
+---
+
+## Card editor preview
+
+### PREVIEW-001 — Specify unsaved card preview behavior
+
+**Status:** DONE
+
+**Goal:** Define how previews behave in spell and alchemical item create/edit flows before implementation.
+
+**Likely files:** `specs/requirements.md`, `specs/architecture.md`
+
+**Acceptance criteria:**
+
+- Preview is available in both create and edit modes for spells and alchemical items.
+- Preview is explicitly triggered by an English-labeled `Preview` button and does not update continuously.
+- Preview uses the current unsaved form values and the current shared card color.
+- Preview does not save, create, edit, select, or print a card and does not write to `sessionStorage`.
+- Repeated preview requests replace the previous preview rather than appending cards.
+- Closing or reopening an editor does not expose stale preview content from a previous editing session.
+
+**Implementation note:** R12 and the editor-preview architecture define an explicit, on-demand preview for both record types. Preview values are disposable DOM data, share the normal form normalization and rendering paths, and never enter application or session state.
+
+---
+
+### PREVIEW-002 — Add a reusable editor preview surface
+
+**Status:** DONE
+
+**Goal:** Add the shared dialog structure and styling needed to display a single card preview without changing save/cancel behavior.
+
+**Depends on:** PREVIEW-001
+
+**Likely files:** `index.html`, `style.css`, `style/spellCard.css`
+
+**Acceptance criteria:**
+
+- Both editor dialogs have a `Preview` button with `type="button"` so it cannot submit the form.
+- Each dialog has an accessible preview region with an English label or heading.
+- The region fits one normal card within the dialog and remains usable on narrow screens.
+- Preview content is visually isolated from selectable cards in the main pools.
+- Preview controls and content remain excluded from printing with the editor dialog.
+- Existing Save and Cancel controls retain their behavior and remain accessible.
+
+**Implementation note:** Both dialogs now have a non-submitting `Preview` button and an accessible live preview region. Shared responsive styles display one normal-sized card, allow the dialog to scroll, and retain the dialog's existing non-print behavior.
+
+---
+
+### PREVIEW-003 — Preview unsaved spell values
+
+**Status:** DONE
+
+**Goal:** Render the current spell form values on demand without mutating spell or session state.
+
+**Depends on:** PREVIEW-001, PREVIEW-002
+
+**Likely files:** `main.js`
+
+**Acceptance criteria:**
+
+- Clicking the spell editor's `Preview` button reads values through the existing spell form conversion path.
+- The preview reuses `spellCardTemplate()` so its layout and safe text rendering match saved spell cards.
+- Title, English title, action type, type, level, traditions, attributes, description, and heightenings reflect the unsaved form values.
+- HTML/script-like input is displayed as text and cannot execute.
+- Previewing does not change effective spells, selections, search results, or session storage.
+- Canceling after preview leaves the original spell or spell pool unchanged.
+
+**Implementation note:** Spell preview reads the current form through `getSpellEditorValues()` and renders it with `spellCardTemplate()`. Each request replaces the prior temporary card without invoking save, selection, search, or persistence code.
+
+---
+
+### PREVIEW-004 — Preview unsaved alchemical item values
+
+**Status:** DONE
+
+**Goal:** Render the current alchemical item form values on demand without mutating item or session state.
+
+**Depends on:** PREVIEW-001, PREVIEW-002
+
+**Likely files:** `main.js`
+
+**Acceptance criteria:**
+
+- Clicking the alchemical editor's `Preview` button reads values through the existing alchemical form conversion path.
+- The preview reuses `alchemicalItemCardTemplate()` so its layout and safe text rendering match saved item cards.
+- Comma-separated tags and line-separated tier values use the same normalization as Save.
+- All other rendered fields and the controlled action icon reflect the unsaved form values.
+- Existing bounded text autosizing is applied to the preview where required.
+- HTML/script-like input is displayed as text and cannot execute.
+- Previewing does not change effective items, selections, search results, or session storage.
+- Canceling after preview leaves the original item or item pool unchanged.
+
+**Implementation note:** Alchemical preview reads the current form through `getAlchemicalItemEditorValues()`, renders it with `alchemicalItemCardTemplate()`, and applies bounded autosizing within the preview card. Its temporary values use the same tag and tier normalization as Save.
+
+---
+
+### PREVIEW-005 — Clear previews and run editor regressions
+
+**Status:** DONE
+
+**Goal:** Prevent stale previews and verify preview integration against existing editor workflows.
+
+**Depends on:** PREVIEW-003, PREVIEW-004
+
+**Likely files:** `main.js`, `specs/tasks.md`
+
+**Acceptance criteria:**
+
+- Opening create or edit mode starts with an empty/hidden preview region.
+- Saving, canceling, or otherwise closing a dialog clears its preview.
+- Multiple preview clicks maintain exactly one preview card.
+- Spell and alchemical create, edit, reset, delete, search, selection, and printing still work.
+- Previewing followed by Cancel produces no session-storage change; previewing followed by Save persists only the saved form values.
+- The current card color is visible in both preview types.
+- Changed JavaScript passes `node --check` and the application loads through a local HTTP server.
+- Manual browser results and any environment limitations are recorded in the implementation note.
+
+**Implementation note:** Preview regions are cleared on create/edit open, Save, Cancel, and native dialog close. JavaScript syntax checks and `git diff --check` passed, the application loaded through Caddy, and a headless Firefox smoke test passed for spell/alchemical rendering, replacement, safe HTML-like text, array normalization, Cancel cleanup, and unchanged session storage. Interactive print-preview validation remains subject to the existing environment limitation recorded in PRINT-004.

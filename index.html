@@ -121,7 +121,12 @@
                     <label class="spell-editor-wide">Description <textarea name="description" rows="7"></textarea></label>
                     <label class="spell-editor-wide">Heightenings <textarea name="heightenings" rows="4"></textarea></label>
                 </div>
+                <section id="spellEditorPreview" class="editor-preview" aria-labelledby="spellEditorPreviewHeading" aria-live="polite" hidden>
+                    <h3 id="spellEditorPreviewHeading">Card preview</h3>
+                    <div id="spellEditorPreviewCard" class="card selected editor-preview-card"></div>
+                </section>
                 <div class="spell-editor-actions">
+                    <button id="previewSpell" type="button">Preview</button>
                     <button id="saveSpellEdit" type="submit">Save</button>
                     <button id="cancelSpellEdit" type="button">Cancel</button>
                 </div>
@@ -164,7 +169,12 @@
                     <label>Stage 3 <textarea name="stage3" rows="2"></textarea></label>
                     <label>Stage 4 <textarea name="stage4" rows="2"></textarea></label>
                 </div>
+                <section id="alchemicalItemEditorPreview" class="editor-preview" aria-labelledby="alchemicalItemEditorPreviewHeading" aria-live="polite" hidden>
+                    <h3 id="alchemicalItemEditorPreviewHeading">Card preview</h3>
+                    <div id="alchemicalItemEditorPreviewCard" class="card selected editor-preview-card"></div>
+                </section>
                 <div class="spell-editor-actions">
+                    <button id="previewAlchemicalItem" type="button">Preview</button>
                     <button type="submit">Save</button>
                     <button id="cancelAlchemicalItemEdit" type="button">Cancel</button>
                 </div>

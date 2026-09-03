@@ -184,6 +184,7 @@ function requestSpellEdit(spellId) {
 
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
+  clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
   document.getElementById("spellEditorHeading").textContent = "Edit spell";
   const values = {
     title: spell.title,
@@ -215,6 +216,7 @@ function requestSpellCreate() {
 
   applicationState.spellEditorMode = "create";
   applicationState.editingSpellId = null;
+  clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
   form.reset();
   document.getElementById("spellEditorHeading").textContent = "Create spell";
   dialog.showModal();
@@ -229,6 +231,7 @@ function closeSpellEditor() {
 
   applicationState.spellEditorMode = null;
   applicationState.editingSpellId = null;
+  clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
 }
 
 function getSpellEditorValues(form) {
@@ -253,6 +256,27 @@ function getSpellEditorValues(form) {
     description: String(formData.get("description") ?? "").trim(),
     heightenings: String(formData.get("heightenings") ?? "").trim(),
   };
+}
+
+function clearCardPreview(previewId, cardId) {
+  document.getElementById(cardId).replaceChildren();
+  document.getElementById(previewId).hidden = true;
+}
+
+function renderCardPreview(previewId, cardId, cardContent) {
+  const preview = document.getElementById(previewId);
+  const card = document.getElementById(cardId);
+  card.replaceChildren(cardContent);
+  preview.hidden = false;
+  return card;
+}
+
+function previewSpell(form) {
+  renderCardPreview(
+    "spellEditorPreview",
+    "spellEditorPreviewCard",
+    spellCardTemplate(getSpellEditorValues(form)),
+  );
 }
 
 function createCustomSpellId() {
@@ -363,9 +387,13 @@ function setupSpellEditor() {
     saveSpellEditor(form);
   });
   cancelButton.addEventListener("click", closeSpellEditor);
+  document.getElementById("previewSpell").addEventListener("click", () => {
+    previewSpell(form);
+  });
   dialog.addEventListener("close", () => {
     applicationState.spellEditorMode = null;
     applicationState.editingSpellId = null;
+    clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
   });
 }
 
@@ -552,6 +580,10 @@ function requestAlchemicalItemEdit(itemId) {
 
   applicationState.alchemicalEditorMode = "edit";
   applicationState.editingAlchemicalItemId = itemId;
+  clearCardPreview(
+    "alchemicalItemEditorPreview",
+    "alchemicalItemEditorPreviewCard",
+  );
   const form = document.getElementById("alchemicalItemEditorForm");
   ALCHEMICAL_EDITABLE_FIELDS.forEach((field) => {
     const value = item[field];
@@ -567,6 +599,10 @@ function requestAlchemicalItemEdit(itemId) {
 function requestAlchemicalItemCreate() {
   applicationState.alchemicalEditorMode = "create";
   applicationState.editingAlchemicalItemId = null;
+  clearCardPreview(
+    "alchemicalItemEditorPreview",
+    "alchemicalItemEditorPreviewCard",
+  );
   document.getElementById("alchemicalItemEditorForm").reset();
   document.getElementById("alchemicalItemEditorHeading").textContent =
     "Create alchemical item";
@@ -578,6 +614,10 @@ function closeAlchemicalItemEditor() {
   if (dialog.open) dialog.close();
   applicationState.alchemicalEditorMode = null;
   applicationState.editingAlchemicalItemId = null;
+  clearCardPreview(
+    "alchemicalItemEditorPreview",
+    "alchemicalItemEditorPreviewCard",
+  );
 }
 
 function getAlchemicalItemEditorValues(form) {
@@ -594,6 +634,15 @@ function getAlchemicalItemEditorValues(form) {
     }
   });
   return values;
+}
+
+function previewAlchemicalItem(form) {
+  const card = renderCardPreview(
+    "alchemicalItemEditorPreview",
+    "alchemicalItemEditorPreviewCard",
+    alchemicalItemCardTemplate(getAlchemicalItemEditorValues(form)),
+  );
+  autoSizeText(card);
 }
 
 function createCustomAlchemicalItemId() {
@@ -660,9 +709,17 @@ function setupAlchemicalItemEditor() {
   });
   document.getElementById("cancelAlchemicalItemEdit")
     .addEventListener("click", closeAlchemicalItemEditor);
+  document.getElementById("previewAlchemicalItem")
+    .addEventListener("click", () => {
+      previewAlchemicalItem(form);
+    });
   dialog.addEventListener("close", () => {
     applicationState.alchemicalEditorMode = null;
     applicationState.editingAlchemicalItemId = null;
+    clearCardPreview(
+      "alchemicalItemEditorPreview",
+      "alchemicalItemEditorPreviewCard",
+    );
   });
 }
 
@@ -877,9 +934,9 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
-function autoSizeText() {
+function autoSizeText(root = document) {
   const minimumFontSize = 7;
-  const elements = document.querySelectorAll(".resize");
+  const elements = root.querySelectorAll(".resize");
 
   elements.forEach((element) => {
     let fontSize = Number.parseFloat(getComputedStyle(element).fontSize);

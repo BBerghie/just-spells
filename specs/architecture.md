@@ -98,6 +98,10 @@ Rendering should be driven by the current application state. An edited record sh
 
 Avoid maintaining independent copies of the same record only in DOM text. The JavaScript object/state should be the source of truth and the DOM should be re-rendered or updated from it.
 
+### Editor preview rendering
+
+An editor preview is a disposable DOM rendering of the current form values. The existing form-value conversion function produces a temporary record, and the existing spell or alchemical item card template renders it into the dialog's preview region. Preview records are never added to application state or session storage. Each request replaces the region contents, and every editor open/close path clears them to prevent stale previews.
+
 ## Session persistence
 
 Use a versioned `sessionStorage` key, for example:
