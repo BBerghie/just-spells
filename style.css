@@ -138,6 +138,10 @@ header .tab {
     font-size: 0.85rem;
 }
 
+.duplex-print-document {
+    display: none;
+}
+
 .tablinks {
     flex: 0 0 auto;
     min-height: 2.65rem;
@@ -588,6 +592,11 @@ main {
 }
 
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
     body {
         background: #fff !important;
     }
@@ -620,6 +629,79 @@ main {
         display: none !important;
     }
 
+    .duplex-print-active main > .catalog-view {
+        display: none !important;
+    }
+
+    .duplex-print-active main > .duplex-print-document {
+        display: block !important;
+        width: 21cm;
+        margin: 0 auto;
+    }
+
+    .duplex-print-sheet {
+        display: grid !important;
+        width: 21cm !important;
+        grid-template-columns: repeat(3, 7cm) !important;
+        grid-auto-rows: 3.5in;
+        align-content: start;
+        gap: 0 !important;
+        margin: 0;
+        padding: 0;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .duplex-print-last-sheet {
+        break-after: auto !important;
+        page-break-after: auto !important;
+    }
+
+    .duplex-print-back-card {
+        width: 7cm;
+        height: 3.5in;
+        box-sizing: border-box;
+        border: 0.48rem solid transparent;
+        background: transparent;
+        break-inside: avoid-page;
+    }
+
+    .duplex-print-back-card.has-back {
+        position: relative;
+        overflow: hidden;
+        border-color: var(--card-background);
+        background:
+            radial-gradient(circle at center, rgba(214, 169, 92, 0.2), transparent 22%),
+            var(--card-background);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .duplex-print-back-card.has-back::before {
+        position: absolute;
+        inset: 0.22in;
+        border: 1px solid var(--highlight);
+        box-shadow:
+            inset 0 0 0 0.07in rgba(214, 169, 92, 0.28),
+            0 0 0 0.035in rgba(255, 255, 255, 0.52);
+        content: "";
+    }
+
+    .duplex-print-back-card.has-back::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1.25cm;
+        height: 1.25cm;
+        border: 2px solid var(--highlight);
+        background: linear-gradient(135deg, rgba(214, 169, 92, 0.32), transparent 72%);
+        box-shadow:
+            inset 0 0 0 0.07cm rgba(255, 255, 255, 0.34),
+            0 0 0 0.1cm rgba(214, 169, 92, 0.18);
+        content: "";
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
     .card.selected {
         box-sizing: border-box;
         border: 0.48rem solid var(--card-background) !important;
@@ -637,6 +719,10 @@ main {
         background: transparent !important;
         -webkit-print-color-adjust: economy;
         print-color-adjust: economy;
+    }
+
+    .print-borderless .duplex-print-back-card.has-back {
+        border-color: transparent;
     }
 
     .print-borderless .card.selected .front {

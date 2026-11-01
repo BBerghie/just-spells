@@ -212,6 +212,21 @@ Users can import JSON files matching a bundled resource dataset. The import cont
 - An invalid file shows a Spanish error message and leaves all catalogs and stored state unchanged.
 - Imported content is rendered through existing safe text-based card templates.
 
+## R18 — Print colored card backs for long-edge duplex
+
+Every catalog sidebar can enable a shared print mode that adds a matching reverse page after each front page of selected cards. The reverse page uses the shared card color as a solid card back and mirrors card positions horizontally for portrait-sheet duplex printing on the long edge. The setting is transient and defaults to front-only printing after reload.
+
+### Acceptance criteria
+
+- Every catalog sidebar offers a synchronized control for printing card backs.
+- With the mode enabled, printing creates a front sheet followed by a reverse sheet for each group of up to nine selected card pages.
+- Reverse sheets use the same 3-by-3 card grid and card dimensions as the fronts.
+- A reverse card appears only for an occupied front position, reflected left-to-right for long-edge duplex alignment.
+- Reverse card backgrounds use the current shared `--card-background` color and print color adjustment rules.
+- With the mode disabled, printing retains the existing front-only behavior.
+- The mode does not change card selection, search, session data, or bordered/borderless print mode.
+- Normal application rendering and selected-only printing continue to work for all discovered catalog types.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;

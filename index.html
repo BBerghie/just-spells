@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./style.css?v=4" />
+        <link rel="stylesheet" href="./style.css?v=6" />
         <link rel="stylesheet" href="./style/spellCard.css?v=5" />
         <script type="text/javascript" src="./js/CardTemplate.js?v=2"></script>
-        <script type="text/javascript" src="./main.js?v=12"></script>
+        <script type="text/javascript" src="./main.js?v=13"></script>
         <title>Tarjetas de Pathfinder 2.ª edición</title>
     </head>
     <body>
@@ -37,6 +37,7 @@
                             </details>
                             <button id="createSpellButton" data-catalog-create="spells" class="no-print" type="button">Crear conjuro</button>
                             <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
+                            <button class="print-back-toggle no-print" type="button" aria-pressed="false">Imprimir también reversos</button>
                             <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
                                 <input type="color" id="colorPickerSpells" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
@@ -80,6 +81,7 @@
                             </details>
                             <button id="createAlchemicalItemButton" data-catalog-create="alchemical-items" class="no-print" type="button">Crear objeto alquímico</button>
                             <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
+                            <button class="print-back-toggle no-print" type="button" aria-pressed="false">Imprimir también reversos</button>
                             <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
                                 <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>

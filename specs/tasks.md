@@ -709,3 +709,19 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Imported records support the existing search, filters, editing, selection, and printing behavior.
 
 **Implementation note:** Added the shared header picker, type/schema validation, all-record validation before mutation, type-aware normalization, and session-backed import into the existing custom record stores. Browser loading confirms the enabled import button remains alongside all seven generated catalog tabs. Added `resources/test_spells_import.json`, an unindexed fixture containing three invented spells with the exact bundled spell schema for manual import checks. `node --check` passes for both JavaScript files, `git diff --check` passes, and every bundled dataset has consistent record fields. Direct valid/invalid file-picker and reload verification remains pending because the browser evaluation bridge does not expose file/session APIs.
+
+### PRINT-DUPLEX-001 — Print matching card backs for long-edge duplex
+
+**Status:** IN PROGRESS
+
+**Goal:** Add an optional colored card back aligned to each selected card when printing portrait sheets duplex on the long edge.
+
+**Acceptance criteria:**
+
+- A synchronized toggle is available in every catalog sidebar and starts disabled.
+- Enabled duplex printing creates one matching back sheet after each front sheet, with up to nine card positions per sheet.
+- Back positions mirror horizontally and only correspond to occupied front card positions.
+- Back fill uses the chosen shared card color; borderless mode removes only the outer frame.
+- Selected-only printing and normal catalog rendering remain unchanged.
+
+**Implementation note:** Added R18 and documented the temporary print-document approach. The UI now exposes synchronized duplex toggles across all seven catalog sidebars, and browser checks confirmed that enabling one updates all seven labels and pressed states. The renderer groups selected card pages into 3-by-3 front sheets and builds horizontally mirrored color-back sheets. Back cards now use a double inset frame and a central diamond medallion in the same navy, cream, and gold palette as the front border. `node --check` and `git diff --check` pass. Print preview remains unverified because opening native print preview has made the browser automation unresponsive in this environment.

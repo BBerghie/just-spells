@@ -91,6 +91,8 @@ Print border mode is transient shared UI state. It is represented by a class on 
 
 Selected cards use an explicit CSS border in print media, with `box-sizing: border-box` so the colored frame remains inside the existing card dimensions. The print border matches the frame thickness and provides the visible selected color even when browser background graphics are disabled. A root-level borderless-mode class suppresses the outer border and frame without changing selection or internal card separators.
 
+When duplex backs are enabled, `beforeprint` builds a temporary print document from selected card clones. Each front sheet contains up to nine cards in a fixed 3-by-3 A4 portrait grid; its following back sheet mirrors occupied positions horizontally and fills them with the shared card color. The print document is removed on `afterprint`; this setting is transient and does not alter the catalog DOM or session state.
+
 ## Identity
 
 Editing requires stable record identities that do not depend only on the DOM list index.

@@ -21,6 +21,7 @@ The application currently:
 - lets the user select cards for printing;
 - allows the card background color to be changed;
 - uses the browser print dialog to print selected cards.
+- can print matching colored card backs on reverse sheets for long-edge duplex printing.
 
 ## Near-term product direction
 

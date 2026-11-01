@@ -934,6 +934,14 @@ function setupGenericCatalogViews(catalogs) {
     printButton.addEventListener("click", () => {
       setBorderlessPrint(!document.documentElement.classList.contains("print-borderless"));
     });
+    const printBackButton = document.createElement("button");
+    printBackButton.type = "button";
+    printBackButton.className = "print-back-toggle no-print";
+    printBackButton.textContent = "Imprimir también reversos";
+    printBackButton.setAttribute("aria-pressed", "false");
+    printBackButton.addEventListener("click", () => {
+      setDuplexPrint(!document.documentElement.classList.contains("print-with-backs"));
+    });
     const printAction = document.createElement("button");
     printAction.type = "button";
     printAction.textContent = "Imprimir seleccionados";
@@ -957,7 +965,7 @@ function setupGenericCatalogViews(catalogs) {
     createButton.dataset.catalogCreate = type;
     createButton.textContent = createLabel;
     createButton.addEventListener("click", () => requestGenericRecordCreate(type));
-    controls.append(search, searchLabel, filters, createButton, printButton, printAction, colorControl);
+    controls.append(search, searchLabel, filters, createButton, printButton, printBackButton, printAction, colorControl);
 
     const selectedSection = document.createElement("section");
     selectedSection.className = "selected-spells";
@@ -986,6 +994,7 @@ function setupGenericCatalogViews(catalogs) {
     search.addEventListener("input", () => filterCards(type));
   });
   tabBar.append(...importControls);
+  setDuplexPrint(document.documentElement.classList.contains("print-with-backs"));
   tabBar.querySelector(".tablinks")?.click();
 }
 
@@ -1918,10 +1927,86 @@ function setupPrintBorderControls() {
   setBorderlessPrint(false);
 }
 
+function setDuplexPrint(enabled) {
+  document.documentElement.classList.toggle("print-with-backs", enabled);
+  document.querySelectorAll(".print-back-toggle").forEach((button) => {
+    button.textContent = enabled
+      ? "Imprimir solo anversos"
+      : "Imprimir también reversos";
+    button.setAttribute("aria-pressed", String(enabled));
+  });
+}
+
+function createDuplexPrintDocument() {
+  const printDocument = document.createElement("section");
+  printDocument.id = "duplexPrintDocument";
+  printDocument.className = "duplex-print-document";
+  const activeView = [...document.querySelectorAll("[data-catalog-view]")]
+    .find((view) => getComputedStyle(view).display !== "none");
+  const selectedCards = [...(activeView?.querySelectorAll(".card.selected") ?? [])];
+  const sheets = [];
+
+  for (let offset = 0; offset < selectedCards.length; offset += 9) {
+    const pageCards = selectedCards.slice(offset, offset + 9);
+    const frontSheet = document.createElement("ul");
+    frontSheet.className = "spell-list duplex-print-sheet duplex-front-sheet";
+    pageCards.forEach((card) => {
+      const copy = card.cloneNode(true);
+      copy.removeAttribute("id");
+      copy.style.display = "";
+      frontSheet.appendChild(copy);
+    });
+    printDocument.appendChild(frontSheet);
+    sheets.push(frontSheet);
+
+    if (document.documentElement.classList.contains("print-with-backs")) {
+      const backSheet = document.createElement("ul");
+      backSheet.className = "spell-list duplex-print-sheet duplex-back-sheet";
+      for (let backIndex = 0; backIndex < 9; backIndex += 1) {
+        const row = Math.floor(backIndex / 3);
+        const column = backIndex % 3;
+        const frontIndex = row * 3 + (2 - column);
+        const backCard = document.createElement("li");
+        backCard.className = "duplex-print-back-card";
+        if (frontIndex < pageCards.length) backCard.classList.add("has-back");
+        backSheet.appendChild(backCard);
+      }
+      printDocument.appendChild(backSheet);
+      sheets.push(backSheet);
+    }
+  }
+
+  sheets.at(-1)?.classList.add("duplex-print-last-sheet");
+  document.querySelector("main").appendChild(printDocument);
+  document.documentElement.classList.add("duplex-print-active");
+}
+
+function clearDuplexPrintDocument() {
+  document.getElementById("duplexPrintDocument")?.remove();
+  document.documentElement.classList.remove("duplex-print-active");
+}
+
+function setupDuplexPrintControls() {
+  document.querySelectorAll(".print-back-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      setDuplexPrint(!document.documentElement.classList.contains("print-with-backs"));
+    });
+  });
+  setDuplexPrint(false);
+  window.addEventListener("beforeprint", () => {
+    clearDuplexPrintDocument();
+    if (document.documentElement.classList.contains("print-with-backs")) {
+      createDuplexPrintDocument();
+    }
+  });
+  window.addEventListener("afterprint", clearDuplexPrintDocument);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     setupGenericCatalogEditor();
     setupDatasetImport();
     setupPrintBorderControls();
+    setupDuplexPrintControls();
     applicationState.spellSession = loadSpellSession();
     indexedDatasetsPromise = fetchIndexedDatasets();
     loadCatalogDefinitions().catch((error) => {
