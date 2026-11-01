@@ -893,7 +893,7 @@ function filterCards(type) {
 
   document.querySelectorAll(`#${poolId} .card`).forEach((card) => {
     const titleMatches = (card.dataset.search ?? "").includes(query);
-    const record = JSON.parse(card.dataset.filterData ?? "{}");
+    const record = card.catalogRecord;
     const fieldsMatch = fieldFilters.every(({ field, value }) => {
       const control = container.querySelector(`[data-filter-field="${CSS.escape(field)}"]`);
       const rawValue = control.tagName === "SELECT"
@@ -953,7 +953,7 @@ function setupGenericCatalogViews() {
     const colorControl = document.createElement("div");
     const colorPicker = document.createElement("input");
     colorPicker.type = "color";
-    colorPicker.value = "#000000";
+    colorPicker.value = getComputedStyle(document.documentElement).getPropertyValue("--card-background").trim() || "#000000";
     colorPicker.setAttribute("aria-label", "Color de fondo de las tarjetas");
     colorPicker.addEventListener("input", () => {
       document.documentElement.style.setProperty("--card-background", colorPicker.value);
@@ -1114,7 +1114,7 @@ function renderGenericCatalog(type) {
       .filter(([key]) => key !== "id")
       .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
       .join(" ").toLowerCase();
-    card.dataset.filterData = JSON.stringify(record);
+    card.catalogRecord = record;
     if (selectedIds.has(card.id)) {
       card.classList.add("selected");
       card.classList.remove("no-print");
@@ -1311,24 +1311,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 function openTab(evt, tabName) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
-
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
+  document.querySelectorAll(".tabcontent").forEach((view) => {
+    view.style.display = view.id === tabName ? "block" : "none";
+  });
+  document.querySelectorAll(".tablinks").forEach((button) => {
+    button.classList.toggle("active", button === evt.currentTarget);
+  });
 }
 
 function autoSizeText(root = document) {

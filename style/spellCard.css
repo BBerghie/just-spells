@@ -6,7 +6,7 @@
     height: 3.5in;
     min-width: 0;
     margin: 0;
-    border: 1px solid rgba(25, 39, 51, 0.1);
+    border: 1px solid var(--card-background);
     border-radius: 0.85rem;
     background: var(--card-background-unselected);
     box-shadow: var(--small-shadow);
@@ -66,11 +66,16 @@
 }
 
 .card .name {
-    display: inline-block;
+    position: relative;
+    display: flex;
     width: 100%;
-    min-height: 1.7rem;
+    min-height: 2.2rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
     margin: 0;
-    padding: 0.35rem 0.45rem;
+    padding: 0.3rem 3.5rem;
+    box-sizing: border-box;
     color: #1c2933;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 13px;
@@ -78,17 +83,14 @@
     line-height: 1.15;
     text-align: center;
     text-transform: uppercase;
-    vertical-align: middle;
-}
-
-.card:has(.spell-edit-button) .name {
-    padding-right: 3.5rem;
 }
 
 .card .name img {
+    display: block;
+    flex: 0 0 auto;
     width: 1rem;
-    margin: auto;
-    vertical-align: middle;
+    height: 1rem;
+    margin: 0;
 }
 
 .card .status {
@@ -179,7 +181,9 @@
 }
 
 .card .spell-edit-button {
-    top: 0.72rem;
+    top: 0.55rem;
+    min-height: 1.45rem;
+    padding: 0.1rem 0.35rem;
 }
 
 .card .spell-reset-button {

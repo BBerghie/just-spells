@@ -622,3 +622,11 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Manual browser results and any environment limitations are recorded in the implementation note.
 
 **Implementation note:** Preview regions are cleared on create/edit open, Save, Cancel, and native dialog close. JavaScript syntax checks and `git diff --check` passed, the application loaded through Caddy, and a headless Firefox smoke test passed for spell/alchemical rendering, replacement, safe HTML-like text, array normalization, Cancel cleanup, and unchanged session storage. Interactive print-preview validation remains subject to the existing environment limitation recorded in PRINT-004.
+
+### UI-006 — Polish card layout and tab switching
+
+**Status:** DONE
+
+**Goal:** Keep card actions within the title row, align titles and action symbols, and avoid tab-switch layout flashes.
+
+**Implementation note:** Card title rows now use centered flex alignment, edit actions fit inside the row, and card borders and color controls share the same initial color. Tab switching uses direct element/class updates without synchronous text autosizing. Catalog filtering now reuses each card's record object instead of serializing and reparsing it on each keystroke.

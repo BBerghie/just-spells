@@ -8,7 +8,10 @@ function spellCardTemplate(spell) {
   const title = document.createElement("h3");
   title.className = "name lined srname";
   title.dataset.search = `${spell.title ?? ""} ${spell.enTitle ?? ""}`;
-  title.append(document.createTextNode(`${spell.title ?? ""} `));
+  const titleText = document.createElement("span");
+  titleText.className = "card-title-text";
+  titleText.textContent = spell.title ?? "";
+  title.appendChild(titleText);
 
   const actionImagePath = getActionImg(spell.actionType);
   if (actionImagePath) {
@@ -96,7 +99,10 @@ function alchemicalItemCardTemplate(alchemicalItem) {
   const title = document.createElement("h3");
   title.className = "name lined srname";
   title.dataset.search = `${alchemicalItem.title ?? ""} ${alchemicalItem.englishTitle ?? ""}`;
-  title.append(document.createTextNode(`${alchemicalItem.title ?? ""} `));
+  const titleText = document.createElement("span");
+  titleText.className = "card-title-text";
+  titleText.textContent = alchemicalItem.title ?? "";
+  title.appendChild(titleText);
   const actionImagePath = getActionImg(alchemicalItem.actions);
   if (actionImagePath) {
     const image = document.createElement("img");
