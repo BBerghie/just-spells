@@ -4,6 +4,23 @@ Statuses: `TODO`, `IN PROGRESS`, `DONE`, `BLOCKED`.
 
 The tasks are intentionally small. Complete and validate one task before starting the next.
 
+## Presentation
+
+### STYLE-001 — Refresh the application and card styles
+
+**Status:** DONE
+
+**Goal:** Give the application and all card types a more complete, consistent appearance using only project-owned CSS.
+
+**Acceptance criteria:**
+
+- App navigation, controls, sidebar, catalog layout, and dialogs share a responsive visual system.
+- Spell, alchemical, and generic catalog cards retain a consistent card frame and readable typography.
+- Selected-card printing retains its existing dimensions and layout.
+- No external style libraries are introduced.
+
+**Implementation note:** Reworked `style.css` and `style/spellCard.css` with shared colors, surfaces, spacing, focus states, responsive catalog layout, and refined card details. Added a version query to the card stylesheet URL in `index.html` so browsers refresh a cached older card layout. `node --check main.js` and `git diff --check` pass. Browser review confirmed the updated spell and armor layouts share the sidebar design, card widths render correctly, and title search still filters spells and alchemical items.
+
 ## Dataset loading
 
 ### FILTER-001 — Add field filters to every card type

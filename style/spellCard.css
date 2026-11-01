@@ -1,159 +1,221 @@
-.selected {
+.card {
+    position: relative;
+    display: block;
+    float: none;
+    width: auto;
+    height: 3.5in;
+    min-width: 0;
+    margin: 0;
+    border: 1px solid rgba(25, 39, 51, 0.1);
+    border-radius: 0.85rem;
+    background: var(--card-background-unselected);
+    box-shadow: var(--small-shadow);
+    color: #111;
+    font-size: 10px;
+    text-align: left;
+    vertical-align: top;
+    transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.card:hover {
+    z-index: 2;
+    box-shadow: 0 12px 24px rgba(28, 42, 53, 0.15);
+    transform: translateY(-2px);
+}
+
+.card.selected {
     border-color: var(--card-background) !important;
     background: var(--card-background) !important;
+    box-shadow: 0 7px 18px rgba(28, 42, 53, 0.16);
 }
-.card {
-    float: left;
-    display: table;
-    width: 33%;
 
-    @media print {
-        break-inside: avoid-page;
-    }
+.card .front {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0.48rem 0.48rem 1.55rem;
+    box-sizing: border-box;
+}
 
-    height: 3.5in;
-    background:  var(--card-background-unselected);
-    border-color:  var(--card-background-unselected);
+.card .front .body {
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(39, 61, 80, 0.1);
+    border-radius: 0.55rem;
+    background: #fff !important;
+    color: #111;
+}
+
+.card .front * {
+    color: #111;
     font-size: 10px;
-    position: relative;
+}
+
+.card .lined {
+    border-bottom: 1px solid var(--card-background);
+}
+
+.card .lined .clear {
+    clear: both;
+}
+
+.card p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.card .name {
+    display: inline-block;
+    width: 100%;
+    min-height: 1.7rem;
+    margin: 0;
+    padding: 0.35rem 0.45rem;
+    color: #1c2933;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.card .name img {
+    width: 1rem;
+    margin: auto;
+    vertical-align: middle;
+}
+
+.card .status {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.card .status li {
+    float: left;
+    width: 50%;
+    min-height: 25px;
+    margin: 0;
+    padding: 2px 4px;
+    box-sizing: border-box;
+    font-size: 9px;
+    line-height: 9px;
     vertical-align: top;
-    text-align: left;
-    z-index: 1;
-    margin: 1vw 1px 1px 0;
+}
 
-    .spell-edit-button {
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        z-index: 2;
-        padding: 2px 5px;
-        border: 1px solid #666;
-        border-radius: 3px;
-        background: #fff;
-        cursor: pointer;
-    }
+.card .status li.second {
+    border-left: 1px solid rgba(39, 61, 80, 0.32);
+}
 
-    .spell-reset-button,
-    .spell-delete-button {
-        position: absolute;
-        top: 40px;
-        right: 14px;
-        z-index: 2;
-        padding: 2px 5px;
-        border: 1px solid #666;
-        border-radius: 3px;
-        background: #fff;
-        cursor: pointer;
-    }
+.card .status li em {
+    display: block;
+    padding-bottom: 2px;
+    color: #8c4f45;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: 800;
+    text-transform: uppercase;
+}
 
-    .front {
-        height: 100%;
-        width: 100%;
-        padding: 10px 10px 25px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        position: absolute;
-        top: 0;
-        left: 0;
+.card .text {
+    margin: 0 0 1em;
+    padding: 0.25rem 0.35rem;
+    font-size: 9px;
+    line-height: 1.08;
+}
 
-        .body {
-            background-color: #fff !important;
-            border-radius: 5px;
-            height: 100%;
-            overflow: hidden;
-        }
-    }
-    * {
-        color: black !important;
-        font-size: 10px;
-    }
+.card .attributes {
+    margin: 0;
+}
 
-    .lined {
-        border-bottom: 2px solid var(--card-background);
+.card .attributes .status li {
+    min-height: 25px;
+}
 
-        .clear {
-            clear: both;
-        }
+.card .class,
+.card .type {
+    position: absolute;
+    bottom: 0.36rem;
+    color: #fff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 8px;
+    font-weight: 650;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+}
+
+.card .class {
+    left: 0.65rem;
+}
+
+.card .type {
+    right: 0.65rem;
+    text-align: right;
+}
+
+.card .spell-edit-button,
+.card .spell-reset-button,
+.card .spell-delete-button {
+    position: absolute;
+    z-index: 3;
+    right: 0.8rem;
+    min-height: 1.65rem;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid rgba(40, 62, 82, 0.22);
+    border-radius: 0.4rem;
+    background: rgba(255, 255, 255, 0.94);
+    color: #283e52;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.card .spell-edit-button {
+    top: 0.72rem;
+}
+
+.card .spell-reset-button {
+    top: 2.55rem;
+}
+
+.card .spell-delete-button {
+    top: 4.35rem;
+}
+
+.card .spell-edit-button:hover,
+.card .spell-reset-button:hover,
+.card .spell-delete-button:hover {
+    border-color: var(--highlight);
+    background: #fff;
+}
+
+@media (max-width: 680px) {
+    .card {
+        height: 3.5in;
     }
-    p {
-        margin-block-start: 0;
-        margin-block-end: 0;
-    }
-    .name {
-        vertical-align: middle;
-        display: inline-block;
-        font-size: 14px;
-        line-height: normal;
-        padding: 6px 5px;
+}
+
+@media print {
+    .card {
+        width: 7cm;
+        height: 3.5in;
         margin: 0;
-        text-transform: uppercase;
-        text-align: center;
-        min-height: 20px;
-        width: 100%;
-
-        img {
-            vertical-align: middle;
-            width: 1rem;
-            margin: auto;
-        }
-    }
-    .status {
-        list-style: none;
-        text-align: center;
-        padding: 0;
-        margin: 0;
-
-        li {
-            padding: 2px 4px;
-            float: left;
-            vertical-align: top;
-            font-size: 9px;
-            line-height: 9px;
-            min-height: 25px;
-            width: 50%;
-            margin: 0;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-
-            em {
-                font-style: normal;
-                text-transform: uppercase;
-                display: block;
-                color: maroon !important;
-                font-weight: bold;
-                padding-bottom: 2px;
-            }
-        }
-
-        li.second {
-            border-left: 2px solid maroon;
-        }
+        border-radius: 0;
+        box-shadow: none;
+        break-inside: avoid-page;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-    .text {
-        padding: 2px 4px;
-        font-size: 10px;
-        line-height: 9px;
-        margin: 0;
-        margin-block-end: 1em;
-    }
-    .class {
-        position: absolute;
-        bottom: 8px;
-        color: #fff !important;
-        left: 10px;
-        font-size: 9px;
-        font-weight: normal;
+    .card:hover {
+        transform: none;
     }
 
-    .type {
-        position: absolute;
-        bottom: 8px;
-        color: #fff !important;
-        right: 10px;
-        font-size: 10px;
-        font-weight: normal;
+    .card .front .body {
+        border-radius: 0;
     }
-
 }
