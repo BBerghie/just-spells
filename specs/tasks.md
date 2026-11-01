@@ -6,6 +6,23 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ## Dataset loading
 
+### DATA-003 — Add equipment and general item catalogs
+
+**Status:** IN PROGRESS
+
+**Goal:** Rename the new source datasets in English, identify them by type, and make them browseable in the application.
+
+**Acceptance criteria:**
+
+- New resource filenames are English and each root object declares its catalog `type` with records under `data`.
+- The static resource index includes all new datasets.
+- Each dataset appears in its own searchable view with safe text rendering, selection, deselection, and selected-card printing.
+- Spell, alchemical item, and equipment views use the same sidebar layout and shared search, selection, print, and card-color controls.
+- New catalog cards use the same visual template structure as spell and alchemical item cards.
+- Existing spell and alchemical views continue to use their current templates and workflows.
+
+**Implementation note:** Added armor, ranged weapons, melee weapons, shields, and general items catalogs. Their source filenames are `armor.json`, `ranged_weapons.json`, `melee_weapons.json`, `shields.json`, and `items.json`. Their card template shares the existing spell/alchemical frame and typography. Generic catalog views use the same sidebar structure and control order as spell and alchemical views. Syntax and dataset structure checks pass. Browser verification confirmed all five catalogs load, generic search filters records, selection and deselection work, and English-title search still works for spells and alchemical items. The in-app browser did not open native print preview, so print preview remains to be checked manually.
+
 ### DATA-002 — Combine all datasets by declared type
 
 **Status:** DONE

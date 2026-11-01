@@ -92,6 +92,10 @@
     text-align: center;
 }
 
+.selected-catalog-items {
+    text-align: center;
+}
+
 .hidden {
     display: none !important;
 }

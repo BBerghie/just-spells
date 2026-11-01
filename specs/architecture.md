@@ -13,6 +13,7 @@ Just Spells is a static client-side application.
 - `js/CardTemplate.js` contains card rendering helpers/templates.
 - `resources/datasets.json` indexes the JSON dataset filenames for static hosting.
 - Each indexed dataset declares a root `type` and stores its records under `data`; loaders merge every dataset matching the requested type.
+- Equipment catalogs use the types `armor`, `ranged-weapons`, `melee-weapons`, `shields`, and `items`, and render records through a shared card template that uses the spell and alchemical card frame, body, title, field rows, and footer.
 - The index file itself uses `{ "type": "dataset-index", "files": [...] }`.
 
 ### Runtime data flow

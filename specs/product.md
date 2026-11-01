@@ -15,7 +15,7 @@ The application currently:
 - loads and combines all indexed JSON datasets of type `spells`;
 - loads and combines all indexed JSON datasets of type `alchemical-items`;
 - renders the records as printable cards;
-- provides separate spell and alchemical item views;
+- provides separate spell, alchemical item, armor, ranged weapon, melee weapon, shield, and general item views;
 - searches cards by title;
 - lets the user select cards for printing;
 - allows the card background color to be changed;

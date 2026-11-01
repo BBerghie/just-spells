@@ -146,6 +146,18 @@ Spell and alchemical item editors must provide an explicit preview of the curren
 - Spell and alchemical item preview behavior is consistent, including array-field normalization and alchemical text autosizing.
 - Preview UI and content are not printed.
 
+## R13 — Browse equipment and item datasets
+
+The application must expose the indexed armor, ranged weapon, melee weapon, shield, and general item datasets as separate browsable catalogs.
+
+### Acceptance criteria
+
+- Each catalog JSON filename and root `type` uses an English identifier.
+- Each catalog has its own view, search field, card list, and selected-card list.
+- Cards display the record's fields safely as text and use the same card frame, white content panel, title rule, and footer style as spell and alchemical cards.
+- Catalog cards support selection, deselection, and selected-only printing.
+- Existing spell and alchemical item views continue to load through the shared dataset index.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;

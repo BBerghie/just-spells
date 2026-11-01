@@ -1,0 +1,49 @@
+{
+  "type": "shields",
+  "data": [
+    {
+      "Escudo": "Escudo de acero",
+      "Precio": 2,
+      "Moneda": "po",
+      "Bon. CA": 2,
+      "Pen. Velocidad": "—",
+      "Imp.": 1,
+      "Dureza": 5,
+      "PG": 20,
+      "UR": 10
+    },
+    {
+      "Escudo": "Escudo de madera",
+      "Precio": 1,
+      "Moneda": "po",
+      "Bon. CA": 2,
+      "Pen. Velocidad": "—",
+      "Imp.": 1,
+      "Dureza": 3,
+      "PG": 12,
+      "UR": 6
+    },
+    {
+      "Escudo": "Escudo pavés",
+      "Precio": 10,
+      "Moneda": "po",
+      "Bon. CA": "2/4",
+      "Pen. Velocidad": "-5 pies (1,5 m)",
+      "Imp.": 4,
+      "Dureza": 5,
+      "PG": 20,
+      "UR": 10
+    },
+    {
+      "Escudo": "Rodela",
+      "Precio": 1,
+      "Moneda": "po",
+      "Bon. CA": 1,
+      "Pen. Velocidad": "—",
+      "Imp.": "L",
+      "Dureza": 3,
+      "PG": 6,
+      "UR": 3
+    }
+  ]
+}

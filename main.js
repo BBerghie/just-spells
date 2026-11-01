@@ -168,7 +168,16 @@ const applicationState = {
   effectiveAlchemicalItems: [],
   alchemicalEditorMode: null,
   editingAlchemicalItemId: null,
+  catalogs: {},
 };
+
+const GENERIC_CATALOGS = [
+  { type: "armor", label: "Armor" },
+  { type: "ranged-weapons", label: "Ranged Weapons" },
+  { type: "melee-weapons", label: "Melee Weapons" },
+  { type: "shields", label: "Shields" },
+  { type: "items", label: "Items" },
+];
 
 function requestSpellEdit(spellId) {
   const spell = applicationState.effectiveSpells.find(
@@ -736,7 +745,23 @@ async function loadAlchemicalItems() {
   }
 }
 
+let indexedDatasetsPromise;
+
 async function loadTypedDataset(expectedType) {
+  if (!indexedDatasetsPromise) {
+    indexedDatasetsPromise = fetchIndexedDatasets();
+  }
+  const datasets = await indexedDatasetsPromise;
+  const matchingDatasets = datasets.filter(
+    ({ dataset }) => dataset.type === expectedType && Array.isArray(dataset.data),
+  );
+  if (matchingDatasets.length === 0) {
+    throw new Error(`No resource datasets found for type "${expectedType}".`);
+  }
+  return matchingDatasets.flatMap(({ dataset }) => dataset.data);
+}
+
+async function fetchIndexedDatasets() {
   const indexResponse = await fetch("./resources/datasets.json");
   if (!indexResponse.ok) {
     throw new Error(`Unable to load the resource dataset index (${indexResponse.status}).`);
@@ -757,15 +782,206 @@ async function loadTypedDataset(expectedType) {
     }
     return { fileName, dataset: await response.json() };
   }));
+  return datasets;
+}
 
-  const matchingDatasets = datasets.filter(
-    ({ dataset }) => dataset.type === expectedType && Array.isArray(dataset.data),
+function setupGenericCatalogViews() {
+  const tabBar = document.querySelector("header .tab");
+  const main = document.querySelector("main");
+  GENERIC_CATALOGS.forEach(({ type, label }) => {
+    const tabName = `Catalog-${type}`;
+    const tabButton = document.createElement("button");
+    tabButton.className = "tablinks";
+    tabButton.type = "button";
+    tabButton.textContent = label;
+    tabButton.addEventListener("click", (event) => openTab(event, tabName));
+    tabBar.appendChild(tabButton);
+
+    const view = document.createElement("div");
+    view.id = tabName;
+    view.className = "tabcontent catalog-view";
+    view.style.display = "none";
+    const container = document.createElement("section");
+    container.className = "spellContainer";
+    const sidebar = document.createElement("section");
+    sidebar.className = "fixed fixedContainer no-print";
+    const controls = document.createElement("section");
+    controls.className = "button-row";
+    const search = document.createElement("input");
+    search.type = "search";
+    search.id = `search-${type}`;
+    search.placeholder = `Search ${label.toLowerCase()}...`;
+    search.setAttribute("aria-label", `Search ${label.toLowerCase()}`);
+    const searchLabel = document.createElement("label");
+    searchLabel.htmlFor = search.id;
+    searchLabel.textContent = "Search";
+    const printButton = document.createElement("button");
+    printButton.type = "button";
+    printButton.className = "print-border-toggle no-print";
+    const printAction = document.createElement("button");
+    printAction.type = "button";
+    printAction.textContent = "Print selected";
+    printAction.addEventListener("click", () => window.print());
+    const colorControl = document.createElement("div");
+    const colorPicker = document.createElement("input");
+    colorPicker.type = "color";
+    colorPicker.value = "#000000";
+    colorPicker.setAttribute("aria-label", "Card background color");
+    colorPicker.addEventListener("input", () => {
+      document.documentElement.style.setProperty("--card-background", colorPicker.value);
+    });
+    const colorLabel = document.createElement("label");
+    colorLabel.htmlFor = `color-${type}`;
+    colorPicker.id = colorLabel.htmlFor;
+    colorLabel.textContent = "Card color";
+    colorControl.append(colorPicker, colorLabel);
+    controls.append(search, searchLabel, printButton, printAction, colorControl);
+
+    const selectedSection = document.createElement("section");
+    selectedSection.className = "selected-spells";
+    const selectedHeading = document.createElement("h2");
+    selectedHeading.textContent = `Selected ${label.toLowerCase()}`;
+    const selectedList = document.createElement("ul");
+    selectedList.className = "selected-spells selected-catalog-items no-print";
+    selectedList.id = `selected-${type}`;
+    selectedSection.append(selectedHeading, selectedList);
+    sidebar.append(controls, selectedSection);
+
+    const content = document.createElement("section");
+    content.className = "spell-section";
+    const heading = document.createElement("h2");
+    heading.className = "no-print";
+    heading.textContent = label;
+    const pool = document.createElement("ul");
+    pool.className = "spell-list catalog-list";
+    pool.id = `pool-${type}`;
+    content.append(heading, pool);
+    container.append(sidebar, content);
+    view.appendChild(container);
+    main.appendChild(view);
+    search.addEventListener("input", () => filterGenericCatalog(type, search.value));
+  });
+}
+
+async function loadGenericCatalogs() {
+  await Promise.all(GENERIC_CATALOGS.map(async ({ type }) => {
+    const records = await loadTypedDataset(type);
+    applicationState.catalogs[type] = records.map((record, index) => ({
+      ...record,
+      id: `catalog-${type}-${index}`,
+    }));
+    renderGenericCatalog(type);
+  }));
+}
+
+function getGenericRecordTitle(record) {
+  return String(record.Nombre ?? record.Escudo ?? record.title ?? record.name ?? "Unnamed item");
+}
+
+function genericItemCardTemplate(record, catalogLabel) {
+  const template = document.createElement("div");
+  template.className = "front";
+  const body = document.createElement("div");
+  body.className = "body";
+  const title = document.createElement("h3");
+  title.className = "name lined srname";
+  title.textContent = getGenericRecordTitle(record);
+  const entries = Object.entries(record).filter(([key]) => key !== "id");
+  const titleEntry = entries.find(([key]) =>
+    ["nombre", "escudo", "title", "name"].includes(key.toLowerCase()),
   );
-  if (matchingDatasets.length === 0) {
-    throw new Error(`No resource datasets found for type "${expectedType}".`);
+  const descriptionEntries = entries.filter(([key]) => {
+    const normalizedKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    return normalizedKey === "descripcion" || normalizedKey === "description";
+  });
+  const attributes = entries.filter(([key, value]) => {
+    if (titleEntry && key === titleEntry[0]) return false;
+    if (descriptionEntries.some(([descriptionKey]) => key === descriptionKey)) return false;
+    return value !== null && value !== "" && value !== "—";
+  }).map(([label, value]) => [
+    label,
+    Array.isArray(value) ? value.join(", ") : typeof value === "object" ? JSON.stringify(value) : String(value),
+  ]);
+
+  body.appendChild(title);
+  for (let index = 0; index < attributes.length; index += 2) {
+    const first = attributes[index];
+    const second = attributes[index + 1];
+    body.appendChild(spellStatusTemplate(
+      first[0], first[1], second?.[0] ?? "", second?.[1] ?? "",
+    ));
   }
 
-  return matchingDatasets.flatMap(({ dataset }) => dataset.data);
+  descriptionEntries.forEach(([label, value]) => {
+    if (value === null || value === "") return;
+    const paragraph = document.createElement("p");
+    paragraph.className = "text";
+    if (label !== "description") {
+      const fieldLabel = document.createElement("b");
+      fieldLabel.textContent = `${label}: `;
+      paragraph.appendChild(fieldLabel);
+    }
+    paragraph.appendChild(document.createTextNode(String(value)));
+    body.appendChild(paragraph);
+  });
+
+  const category = document.createElement("b");
+  category.className = "class srclass";
+  category.textContent = catalogLabel.toUpperCase();
+  const level = record.Nivel ?? record.level;
+  const type = document.createElement("b");
+  type.className = "type srtype";
+  type.textContent = level === undefined || level === null ? "" : `LEVEL ${level}`;
+  template.append(body, category, type);
+  return template;
+}
+function renderGenericCatalog(type) {
+  const catalog = GENERIC_CATALOGS.find((entry) => entry.type === type);
+  const pool = document.getElementById(`pool-${type}`);
+  const selectedIds = new Set(
+    Array.from(pool.querySelectorAll(".card.selected"), (card) => card.id),
+  );
+  pool.replaceChildren();
+  applicationState.catalogs[type].forEach((record) => {
+    const card = document.createElement("li");
+    card.className = "card no-print generic-card";
+    card.id = record.id;
+    card.appendChild(genericItemCardTemplate(record, catalog.label));
+    card.dataset.search = Object.entries(record)
+      .filter(([key]) => key !== "id")
+      .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
+      .join(" ").toLowerCase();
+    if (selectedIds.has(card.id)) {
+      card.classList.add("selected");
+      card.classList.remove("no-print");
+    }
+    card.addEventListener("click", () => toggleGenericCatalogSelection(type, record, card));
+    pool.appendChild(card);
+  });
+}
+
+function toggleGenericCatalogSelection(type, record, card) {
+  const selectedList = document.getElementById(`selected-${type}`);
+  const selectedId = `selected-${record.id}`;
+  if (card.classList.contains("selected")) {
+    card.classList.remove("selected");
+    card.classList.add("no-print");
+    document.getElementById(selectedId)?.remove();
+    return;
+  }
+  card.classList.add("selected");
+  card.classList.remove("no-print");
+  const listItem = document.createElement("li");
+  listItem.id = selectedId;
+  listItem.textContent = getGenericRecordTitle(record);
+  selectedList.appendChild(listItem);
+}
+
+function filterGenericCatalog(type, query) {
+  const normalizedQuery = query.trim().toLowerCase();
+  document.querySelectorAll(`#pool-${type} .card`).forEach((card) => {
+    card.style.display = card.dataset.search.includes(normalizedQuery) ? "" : "none";
+  });
 }
 
 function renderAlchemicalItemPool() {
@@ -919,6 +1135,7 @@ function setupPrintBorderControls() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    setupGenericCatalogViews();
     setupSpellEditor();
     setupAlchemicalItemEditor();
     setupPrintBorderControls();
@@ -935,6 +1152,9 @@ document.addEventListener("DOMContentLoaded", function() {
         setupAlchemicalItemSearch();
         console.log("Alchemical items loaded successfully.");
         autoSizeText();
+        loadGenericCatalogs().catch((error) => {
+          console.error("Unable to load equipment catalogs.", error);
+        });
       });
     });
 
