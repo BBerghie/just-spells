@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./style.css?v=3" />
+        <link rel="stylesheet" href="./style.css?v=4" />
         <link rel="stylesheet" href="./style/spellCard.css?v=5" />
         <script type="text/javascript" src="./js/CardTemplate.js?v=2"></script>
-        <script type="text/javascript" src="./main.js?v=10"></script>
+        <script type="text/javascript" src="./main.js?v=12"></script>
         <title>Tarjetas de Pathfinder 2.ª edición</title>
     </head>
     <body>
@@ -15,6 +15,9 @@
             <div class="tab">
                 <button class="tablinks" data-catalog-tab="spells" onclick="openTab(event, 'Spells')">Conjuros</button>
                 <button class="tablinks" data-catalog-tab="alchemical-items" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
+                <button id="importDatasetButton" type="button" aria-controls="importDatasetFile" disabled>Importar JSON</button>
+                <input id="importDatasetFile" type="file" accept=".json,application/json" hidden />
+                <span id="importDatasetStatus" role="status" aria-live="polite"></span>
             </div>
         </header>
         <main>

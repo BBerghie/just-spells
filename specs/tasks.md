@@ -693,3 +693,19 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Existing one-card records keep their original titles and selection behavior.
 
 **Implementation note:** Added a shared DOM-measured paginator for all discovered types. It fills each card's existing body, splits overflowing text at word boundaries (falling back to character boundaries for unbroken text), repeats the title and footer, and groups continuation pages for selection and printing. Browser verification confirms Alucinación begins on card `(1/2)` and continues on `(2/2)`, with no third empty card or content overflow. Selecting or deselecting either page toggles the full set. JavaScript syntax checks pass. Print preview remains unverified because the browser tab became unresponsive when opening it; the local HTTP check was also blocked by sandbox access to port 8080.
+
+### DATA-IMPORT-001 — Import validated typed JSON datasets
+
+**Status:** IN PROGRESS
+
+**Goal:** Let users add a resource-format JSON dataset to its matching catalog for the current browser session.
+
+**Acceptance criteria:**
+
+- A global import button is available on every catalog view.
+- The imported dataset type must match a discovered catalog, and all records must match the bundled field names and value types.
+- Valid records are added to the matching catalog and persist across reloads in the same session.
+- Invalid JSON, unknown types, and invalid records are rejected without partially changing catalogs or session storage.
+- Imported records support the existing search, filters, editing, selection, and printing behavior.
+
+**Implementation note:** Added the shared header picker, type/schema validation, all-record validation before mutation, type-aware normalization, and session-backed import into the existing custom record stores. Browser loading confirms the enabled import button remains alongside all seven generated catalog tabs. Added `resources/test_spells_import.json`, an unindexed fixture containing three invented spells with the exact bundled spell schema for manual import checks. `node --check` passes for both JavaScript files, `git diff --check` passes, and every bundled dataset has consistent record fields. Direct valid/invalid file-picker and reload verification remains pending because the browser evaluation bridge does not expose file/session APIs.

@@ -198,6 +198,20 @@ All catalog types, including spells and alchemical items, are discovered from `r
 - Optional root `label`, `singularLabel`, and `createLabel` fields customize Spanish labels; sensible generic labels are used when they are absent.
 - Existing generic catalog edit/create/reset/delete session data continues to work.
 
+## R17 — Import typed JSON datasets for the browser session
+
+Users can import JSON files matching a bundled resource dataset. The import control is available from every catalog view. The root `type` must match a catalog type discovered from the bundled resource index, and every record must match that type's bundled field names and value types. A valid file adds all its records to that catalog and keeps them available in the current browser session through the existing versioned `sessionStorage` state. Invalid files are rejected without partially importing records.
+
+### Acceptance criteria
+
+- A shared import button and JSON file picker are available regardless of the active catalog tab.
+- The imported root object has a known `type` and a non-empty `data` array.
+- Every data entry is an object with exactly the expected fields for its type and compatible value types, as inferred from bundled datasets.
+- A valid dataset imports all records into the matching catalog, where they can be searched, filtered, selected, edited, and printed like other records.
+- Imported records are kept in `sessionStorage` and restored on reload in the same tab/session.
+- An invalid file shows a Spanish error message and leaves all catalogs and stored state unchanged.
+- Imported content is rendered through existing safe text-based card templates.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;
@@ -206,5 +220,5 @@ All catalog types, including spells and alchemical items, are discovered from `r
 - collaborative editing;
 - arbitrary HTML/WYSIWYG editing;
 - permanent local persistence via `localStorage`;
-- importing/exporting custom JSON files;
+- exporting custom JSON files;
 - a JavaScript framework or build tool migration.

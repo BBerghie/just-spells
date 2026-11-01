@@ -121,6 +121,8 @@ Store only user-generated session state needed to reconstruct edits/custom recor
 
 Generic equipment catalog edits are keyed by catalog type and source record ID in `editedCatalogRecords`; user-created catalog entries are stored per type in `customCatalogRecords`. On load, apply edits over source record copies and append custom records so bundled resource JSON remains immutable.
 
+Imported typed datasets are validated against the field names and value types discovered from bundled records. Their records are normalized through the corresponding spell/alchemical renderer model where needed, assigned session IDs, and appended to the existing per-type custom record arrays. Import validation completes for the entire file before state or session storage is changed.
+
 Session parsing must be defensive: invalid or incompatible stored data should not prevent the base application from loading.
 
 ## Security

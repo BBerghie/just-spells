@@ -191,6 +191,7 @@ const applicationState = {
   genericEditorTemplate: null,
   genericCatalogs: [],
   catalogDefinitions: [],
+  catalogSchemas: {},
 };
 
 const SPELL_CATALOG_TYPE = "spells";
@@ -882,6 +883,9 @@ function filterCards(type) {
 function setupGenericCatalogViews(catalogs) {
   const tabBar = document.querySelector("header .tab");
   const main = document.querySelector("main");
+  const importControls = [...tabBar.querySelectorAll(
+    "#importDatasetButton, #importDatasetFile, #importDatasetStatus",
+  )];
   tabBar.replaceChildren();
   main.querySelectorAll("[data-catalog-view]").forEach((view) => view.remove());
   catalogs.forEach(({ type, label, createLabel }) => {
@@ -981,6 +985,7 @@ function setupGenericCatalogViews(catalogs) {
     main.appendChild(view);
     search.addEventListener("input", () => filterCards(type));
   });
+  tabBar.append(...importControls);
   tabBar.querySelector(".tablinks")?.click();
 }
 
@@ -1001,6 +1006,17 @@ async function loadCatalogDefinitions() {
     };
   });
   applicationState.genericCatalogs = applicationState.catalogDefinitions;
+  applicationState.catalogSchemas = Object.fromEntries(catalogTypes.map((type) => {
+    const records = datasets
+      .filter(({ dataset }) => dataset.type === type && Array.isArray(dataset.data))
+      .flatMap(({ dataset }) => dataset.data);
+    const fields = [...new Set(records.flatMap((record) => isRecord(record) ? Object.keys(record) : []))];
+    const fieldTypes = Object.fromEntries(fields.map((field) => [field, new Set(
+      records.map((record) => record[field]).filter((value) => value !== null && value !== undefined)
+        .map((value) => Array.isArray(value) ? "array" : typeof value),
+    )]));
+    return [type, { fields: new Set(fields), fieldTypes }];
+  }));
   setupGenericCatalogViews(applicationState.genericCatalogs);
   applicationState.spellSession = loadSpellSession();
   await Promise.all(applicationState.genericCatalogs.map(async ({ type }) => {
@@ -1027,6 +1043,105 @@ async function loadCatalogDefinitions() {
     applicationState.catalogs[type] = [...sourceRecords, ...customRecords.map((record) => ({ ...record }))];
     renderGenericCatalog(type);
   }));
+  document.getElementById("importDatasetButton").disabled = false;
+}
+
+function createImportedRecordId(type) {
+  const uniquePart = globalThis.crypto?.randomUUID
+    ? globalThis.crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  return `imported-${type}-${uniquePart}`;
+}
+
+function validateImportedDataset(dataset) {
+  if (!isRecord(dataset) || typeof dataset.type !== "string") {
+    throw new Error("El archivo debe tener un tipo de catálogo en el campo «type».");
+  }
+  const schema = applicationState.catalogSchemas[dataset.type];
+  if (!schema) throw new Error(`El tipo «${dataset.type}» no existe en esta aplicación.`);
+  if (!Array.isArray(dataset.data) || dataset.data.length === 0) {
+    throw new Error("El campo «data» debe contener al menos un registro.");
+  }
+
+  dataset.data.forEach((record, index) => {
+    if (!isRecord(record)) throw new Error(`El registro ${index + 1} no es un objeto JSON.`);
+    const keys = Object.keys(record);
+    const missing = [...schema.fields].filter((field) => !Object.hasOwn(record, field));
+    const unexpected = keys.filter((field) => !schema.fields.has(field));
+    if (missing.length || unexpected.length) {
+      const details = [
+        missing.length ? `faltan: ${missing.join(", ")}` : "",
+        unexpected.length ? `sobran: ${unexpected.join(", ")}` : "",
+      ].filter(Boolean).join("; ");
+      throw new Error(`El registro ${index + 1} no coincide con los campos de «${dataset.type}» (${details}).`);
+    }
+    for (const [field, value] of Object.entries(record)) {
+      if (value === null) continue;
+      const actualType = Array.isArray(value) ? "array" : typeof value;
+      if (!schema.fieldTypes[field]?.has(actualType)) {
+        throw new Error(`El campo «${field}» del registro ${index + 1} tiene un tipo de valor no válido.`);
+      }
+    }
+  });
+  return dataset;
+}
+
+function importDatasetRecords(dataset) {
+  const type = dataset.type;
+  const importedRecords = dataset.data.map((record) => {
+    const id = createImportedRecordId(type);
+    if (type === SPELL_CATALOG_TYPE) return { ...normalizeSpell(record), id };
+    if (type === ALCHEMICAL_CATALOG_TYPE) return { ...normalizeAlchemicalItem(record), id };
+    return { ...record, id };
+  });
+  const sessionRecords = type === SPELL_CATALOG_TYPE
+    ? applicationState.spellSession.customSpells
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? applicationState.spellSession.customAlchemicalItems
+      : (applicationState.spellSession.customCatalogRecords[type] ??= []);
+  sessionRecords.push(...importedRecords);
+  if (!saveSpellSession(applicationState.spellSession)) {
+    const importedIds = new Set(importedRecords.map((record) => record.id));
+    if (type === SPELL_CATALOG_TYPE) {
+      applicationState.spellSession.customSpells = sessionRecords.filter((record) => !importedIds.has(record.id));
+    } else if (type === ALCHEMICAL_CATALOG_TYPE) {
+      applicationState.spellSession.customAlchemicalItems = sessionRecords.filter((record) => !importedIds.has(record.id));
+    } else {
+      applicationState.spellSession.customCatalogRecords[type] = sessionRecords.filter((record) => !importedIds.has(record.id));
+    }
+    throw new Error("No hay espacio disponible para guardar los registros en esta sesión del navegador.");
+  }
+  rebuildGenericCatalogRecords(type);
+  renderGenericCatalog(type);
+  const tab = document.querySelector(`[data-catalog-tab="${CSS.escape(type)}"]`);
+  tab?.click();
+  return importedRecords.length;
+}
+
+async function handleDatasetImport(file) {
+  const status = document.getElementById("importDatasetStatus");
+  if (!file) return;
+  status.textContent = "";
+  try {
+    const dataset = validateImportedDataset(JSON.parse(await file.text()));
+    const count = importDatasetRecords(dataset);
+    const label = getGenericCatalog(dataset.type)?.label ?? dataset.type;
+    status.textContent = `Se han importado ${count} registros en ${label}.`;
+  } catch (error) {
+    status.textContent = error instanceof SyntaxError
+      ? "El archivo no contiene JSON válido."
+      : error.message || "No se pudo importar el archivo JSON.";
+  }
+}
+
+function setupDatasetImport() {
+  const button = document.getElementById("importDatasetButton");
+  const fileInput = document.getElementById("importDatasetFile");
+  button.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    handleDatasetImport(fileInput.files?.[0]);
+    fileInput.value = "";
+  });
 }
 
 function updateDedicatedCatalogLabels() {
@@ -1805,6 +1920,7 @@ function setupPrintBorderControls() {
 
 document.addEventListener("DOMContentLoaded", function() {
     setupGenericCatalogEditor();
+    setupDatasetImport();
     setupPrintBorderControls();
     applicationState.spellSession = loadSpellSession();
     indexedDatasetsPromise = fetchIndexedDatasets();

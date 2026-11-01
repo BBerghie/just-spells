@@ -106,11 +106,36 @@ header h1::after {
 
 header .tab {
     display: flex;
+    align-items: center;
     max-width: 1800px;
     margin: 0 auto;
     gap: 0.5rem;
     overflow-x: auto;
     scrollbar-width: thin;
+}
+
+#importDatasetButton {
+    flex: 0 0 auto;
+    margin-left: auto;
+    border-color: var(--highlight);
+    background: #f5f1e7;
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+#importDatasetButton:hover:not(:disabled) {
+    background: #fff;
+}
+
+#importDatasetButton:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+#importDatasetStatus {
+    flex: 1 1 100%;
+    color: #fff;
+    font-size: 0.85rem;
 }
 
 .tablinks {
