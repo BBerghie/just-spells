@@ -1,5 +1,8 @@
 {
   "type": "ranged-weapons",
+  "label": "Armas a distancia",
+  "singularLabel": "arma a distancia",
+  "createLabel": "Crear arma a distancia",
   "data": [
     {
       "Nombre": "Ballesta",

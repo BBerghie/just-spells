@@ -1,5 +1,8 @@
 {
   "type": "spells",
+  "label": "Conjuros",
+  "singularLabel": "conjuro",
+  "createLabel": "Crear conjuro",
   "data": [
    {
       "englishTitle":"ENERGY ABSORPTION",

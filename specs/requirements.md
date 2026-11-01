@@ -118,7 +118,7 @@ The editable model preserves all fields currently rendered from `alchemical_item
 
 ## R11 — Printable card borders
 
-Selected spell and alchemical item cards must print with a visible outer border by default. The border uses the current shared card color selected in either view and must not rely only on browser background printing.
+Selected cards in every catalog must print with a visible outer border by default. The border uses the current shared card color and must not rely only on browser background printing.
 
 Users may switch to borderless printing to reproduce the previous PDF appearance. This preference is transient UI state: it is shared by both views, does not alter card or selection data, and resets to bordered mode after a reload.
 
@@ -127,8 +127,8 @@ Users may switch to borderless printing to reproduce the previous PDF appearance
 - Bordered printing is the default.
 - A solid CSS frame uses the current `--card-background` color in print preview and generated PDFs, including when browser background graphics are disabled.
 - Print CSS requests exact color reproduction for the colored card frame.
-- A control in both views switches between bordered and borderless printing and clearly communicates the available action.
-- Both controls remain synchronized because they change one shared print mode.
+- A control in every catalog view switches between bordered and borderless printing and clearly communicates the available action.
+- All controls remain synchronized because they change one shared print mode.
 - Borderless mode removes only the outer border/frame; card content and internal separators remain visible.
 - Only selected cards are printed in either mode.
 
@@ -170,6 +170,33 @@ Every card type must offer sidebar filters for its relevant structured fields, i
 - Selectors for array-valued fields match a record when its array contains the selected value.
 - Title search and all field filters combine, and clearing a filter restores the matching cards.
 - Filter controls use English labels and do not alter card selection or the source JSON data.
+
+## R15 — Edit and create equipment catalog records
+
+Each equipment and general item catalog must expose an edit action on every card and a create action in its sidebar. Changes and custom records are stored in the current browser session and must not mutate bundled JSON data.
+
+### Acceptance criteria
+
+- Armor, ranged weapon, melee weapon, shield, and general item cards can be edited through a form generated from their fields.
+- Each of those catalog sidebars offers a type-appropriate create action.
+- Saved source edits can be restored, and custom records can be deleted.
+- Edits and custom records are persisted in the existing versioned `sessionStorage` state and restored on reload.
+- Updated records remain searchable, filterable, selectable, and printable using the existing card rendering.
+- User-entered values continue to render as text, without executing HTML.
+
+## R16 — Discover catalog types and infer filters from indexed datasets
+
+All catalog types, including spells and alchemical items, are discovered from `resources/datasets.json` and root `type` fields. Adding a generic type must not require adding another hard-coded JavaScript catalog or filter definition.
+
+### Acceptance criteria
+
+- Each indexed dataset with a `data` array is represented in the discovered catalog definitions.
+- Generic tabs, search/sidebar controls, cards, edit/create forms, filters, selection, and printing are generated from the dataset type and records.
+- Filters for spells, alchemical items, and generic catalogs use the same field inference and filtering behavior.
+- Spell and alchemical cards use the same generated catalog views, card actions, selection, filters, and create/edit editor as every other type.
+- Type-specific card templates preserve the existing spell and alchemical card layouts within the shared catalog renderer.
+- Optional root `label`, `singularLabel`, and `createLabel` fields customize Spanish labels; sensible generic labels are used when they are absent.
+- Existing generic catalog edit/create/reset/delete session data continues to work.
 
 ## Out of scope for the first editing iteration
 

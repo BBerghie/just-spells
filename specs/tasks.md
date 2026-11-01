@@ -20,6 +20,52 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Implementation note:** Translated static and dynamically generated application labels, editor forms, filter names, card field labels, and accessible action names. Reserved title space for the `Editar` button and versioned the scripts so browsers reload the updated Spanish labels.
 
+### CATALOG-EDIT-001 — Add edit and create controls to equipment catalogs
+
+**Status:** DONE
+
+**Goal:** Let users edit source cards and create session-only records in armor, weapon, shield, and general item catalogs.
+
+**Acceptance criteria:**
+
+- Every generic catalog card has an Edit button, and its sidebar has a type-specific Create button.
+- Edits, restores, creation, and deletion use session storage and leave source JSON untouched.
+- Saved changes remain visible in search, filters, selection, and printing.
+- JavaScript syntax and browser loading are checked.
+
+**Implementation note:** Added type-specific create buttons, dynamic per-record forms, edit/restore/delete actions, and session-backed edit/custom-record state for all five equipment catalogs. Browser review confirmed edit and create controls on all 215 source cards, plus successful edit/restore and create/delete flows; `node --check main.js` and `git diff --check` pass.
+
+### DATA-004 — Discover generic catalog types from resources
+
+**Status:** DONE
+
+**Goal:** Discover every type from indexed JSON datasets and use one inferred filter system across all catalog views.
+
+**Acceptance criteria:**
+
+- Adding an indexed JSON type with records does not require a JavaScript catalog or filter registration.
+- Optional dataset label metadata supplies Spanish tab and create labels.
+- Spells, alchemical items, and generic catalog filters are inferred from their effective record fields.
+- All seven types use one generated view and editor; type-specific card templates preserve spell and alchemical layouts.
+
+**Implementation note:** All types are discovered from indexed datasets and use generated views, shared card actions, filters, selection, and editor forms. Spell and alchemical records retain specialized card templates within that shared flow. New dataset types need no JavaScript view, filter, or editor registration. The generated borderless-print control includes its initial label.
+
+### CATALOG-EDIT-002 — Use the shared catalog flow for every type
+
+**Status:** DONE
+
+**Goal:** Route spell and alchemical cards and editors through the same generated catalog system used by the newer types.
+
+**Acceptance criteria:**
+
+- All seven catalog views, card actions, selection lists, filters, create/edit forms, previews, and print controls are generated through the shared catalog flow.
+- Spell and alchemical cards retain their existing specialized visual templates.
+- Edited source records can be restored, and custom records can be deleted for all types.
+- Every generated borderless-print toggle has a visible Spanish label and stays synchronized.
+- Spell and alchemical title search, selection, deselection, and printing behavior continue working.
+
+**Implementation note:** The seven indexed types now share generated views and one dynamic editor with previews; spell and alchemical renderers plug into the common card flow. Browser checks covered all catalog counts and edit buttons, create/edit/preview/restore/delete for spell and alchemical records, search and selection toggles, and synchronized borderless-print labels. JavaScript syntax and whitespace checks passed.
+
 ## Presentation
 
 ### STYLE-001 — Refresh the application and card styles

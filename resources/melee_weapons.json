@@ -1,5 +1,8 @@
 {
   "type": "melee-weapons",
+  "label": "Armas cuerpo a cuerpo",
+  "singularLabel": "arma cuerpo a cuerpo",
+  "createLabel": "Crear arma cuerpo a cuerpo",
   "data": [
     {
       "Nombre": "Puño",

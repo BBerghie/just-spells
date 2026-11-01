@@ -6,32 +6,33 @@
         <link rel="stylesheet" href="./style.css?v=2" />
         <link rel="stylesheet" href="./style/spellCard.css?v=4" />
         <script type="text/javascript" src="./js/CardTemplate.js?v=2"></script>
-        <script type="text/javascript" src="./main.js?v=2"></script>
+        <script type="text/javascript" src="./main.js?v=8"></script>
         <title>Tarjetas de Pathfinder 2.ª edición</title>
     </head>
     <body>
         <header class="no-print">
             <h1 id="mainTitle">Tarjetas de Pathfinder 2.ª edición</h1>
             <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'Spells')">Conjuros</button>
-                <button class="tablinks" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
+                <button class="tablinks" data-catalog-tab="spells" onclick="openTab(event, 'Spells')">Conjuros</button>
+                <button class="tablinks" data-catalog-tab="alchemical-items" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
             </div>
         </header>
         <main>
-            <div id="Spells" class="tabcontent">
+            <div id="Spells" class="tabcontent" data-catalog-view="spells">
                 <section class="spellContainer">
                     <section class="fixed fixedContainer no-print">
                         <section class="button-row">
                             <input type="text"
                                    id="searchInputSpells"
+                                   data-catalog-search="spells"
                                    placeholder="Buscar por título..."
                             />
                             <label for="searchInputSpells">Búsqueda</label>
-                            <details class="field-filters" id="filters-spells">
+                            <details class="field-filters" id="filters-spells" data-catalog-filters="spells">
                                 <summary>Filtros</summary>
                                 <div class="field-filter-controls"></div>
                             </details>
-                            <button id="createSpellButton" class="no-print" type="button">Crear conjuro</button>
+                            <button id="createSpellButton" data-catalog-create="spells" class="no-print" type="button">Crear conjuro</button>
                             <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
                             <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
@@ -55,25 +56,26 @@
                     <!-- List of Spells -->
                     <section class="spell-section">
                         <h2 class="no-print">Lista de conjuros</h2>
-                        <ul id="spellPool" class="spell-list"></ul>
+                        <ul id="spellPool" class="spell-list" data-catalog-pool="spells"></ul>
                     </section>
                 </section>
             </div>
 
-            <div id="Alchemy" class="tabcontent">
+            <div id="Alchemy" class="tabcontent" data-catalog-view="alchemical-items">
                 <section class="spellContainer">
                     <section class="fixed fixedContainer no-print">
                         <section class="button-row">
                             <input type="text"
                                    id="searchInputAlchemy"
+                                   data-catalog-search="alchemical-items"
                                    placeholder="Buscar por título..."
                             />
                             <label for="searchInputAlchemy">Búsqueda</label>
-                            <details class="field-filters" id="filters-alchemical-items">
+                            <details class="field-filters" id="filters-alchemical-items" data-catalog-filters="alchemical-items">
                                 <summary>Filtros</summary>
                                 <div class="field-filter-controls"></div>
                             </details>
-                            <button id="createAlchemicalItemButton" class="no-print" type="button">Crear objeto alquímico</button>
+                            <button id="createAlchemicalItemButton" data-catalog-create="alchemical-items" class="no-print" type="button">Crear objeto alquímico</button>
                             <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
                             <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
@@ -96,7 +98,7 @@
                     <!-- List of Spells -->
                     <section class="spell-section">
                         <h2 class="no-print">Lista de Objetos Alquímicos</h2>
-                        <ul id="alchemicalItemPool" class="spell-list"></ul>
+                        <ul id="alchemicalItemPool" class="spell-list" data-catalog-pool="alchemical-items"></ul>
                     </section>
                 </section>
             </div>
@@ -185,6 +187,21 @@
                     <button id="previewAlchemicalItem" type="button">Vista previa</button>
                     <button type="submit">Guardar</button>
                     <button id="cancelAlchemicalItemEdit" type="button">Cancelar</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog id="genericCatalogEditorDialog" class="spell-editor no-print" aria-labelledby="genericCatalogEditorHeading">
+            <form id="genericCatalogEditorForm">
+                <h2 id="genericCatalogEditorHeading">Editar elemento</h2>
+                <div id="genericCatalogEditorFields" class="spell-editor-fields"></div>
+                <section id="genericCatalogEditorPreview" class="editor-preview" aria-labelledby="genericCatalogEditorPreviewHeading" aria-live="polite" hidden>
+                    <h3 id="genericCatalogEditorPreviewHeading">Vista previa de la tarjeta</h3>
+                    <div id="genericCatalogEditorPreviewCard" class="card selected editor-preview-card"></div>
+                </section>
+                <div class="spell-editor-actions">
+                    <button id="previewGenericCatalogRecord" type="button">Vista previa</button>
+                    <button type="submit">Guardar</button>
+                    <button id="cancelGenericCatalogEdit" type="button">Cancelar</button>
                 </div>
             </form>
         </dialog>

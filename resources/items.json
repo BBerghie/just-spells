@@ -1,5 +1,8 @@
 {
   "type": "items",
+  "label": "Objetos",
+  "singularLabel": "objeto",
+  "createLabel": "Crear objeto",
   "data": [
     {
       "Nombre": "Abrojos",

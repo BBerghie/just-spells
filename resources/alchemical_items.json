@@ -1,5 +1,8 @@
 {
   "type": "alchemical-items",
+  "label": "Objetos alquímicos",
+  "singularLabel": "objeto alquímico",
+  "createLabel": "Crear objeto alquímico",
   "data": [ {
     "englishTitle" : "ACID FLASK",
     "title" : "MATRAZ DE ÁCIDO",

@@ -1,5 +1,8 @@
 {
   "type": "shields",
+  "label": "Escudos",
+  "singularLabel": "escudo",
+  "createLabel": "Crear escudo",
   "data": [
     {
       "Escudo": "Escudo de acero",

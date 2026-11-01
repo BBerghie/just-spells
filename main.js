@@ -46,6 +46,8 @@ function createEmptySpellSession() {
     customSpells: [],
     editedAlchemicalItems: {},
     customAlchemicalItems: [],
+    editedCatalogRecords: {},
+    customCatalogRecords: {},
   };
 }
 
@@ -77,6 +79,16 @@ function normalizeSpellSession(value) {
     customAlchemicalItems: Array.isArray(value.customAlchemicalItems)
       ? value.customAlchemicalItems.filter(isRecord)
       : [],
+    editedCatalogRecords: isRecord(value.editedCatalogRecords)
+      ? Object.fromEntries(Object.entries(value.editedCatalogRecords).map(([type, edits]) => [
+          type, isRecord(edits) ? Object.fromEntries(Object.entries(edits).filter(([, record]) => isRecord(record))) : {},
+        ]))
+      : {},
+    customCatalogRecords: isRecord(value.customCatalogRecords)
+      ? Object.fromEntries(Object.entries(value.customCatalogRecords).map(([type, records]) => [
+          type, Array.isArray(records) ? records.filter(isRecord) : [],
+        ]))
+      : {},
   };
 }
 
@@ -172,55 +184,17 @@ const applicationState = {
   alchemicalEditorMode: null,
   editingAlchemicalItemId: null,
   catalogs: {},
+  sourceCatalogs: {},
+  genericEditorMode: null,
+  genericEditorType: null,
+  genericEditingRecordId: null,
+  genericEditorTemplate: null,
+  genericCatalogs: [],
+  catalogDefinitions: [],
 };
 
-const GENERIC_CATALOGS = [
-  { type: "armor", label: "Armaduras" },
-  { type: "ranged-weapons", label: "Armas a distancia" },
-  { type: "melee-weapons", label: "Armas cuerpo a cuerpo" },
-  { type: "shields", label: "Escudos" },
-  { type: "items", label: "Objetos" },
-];
-
-const CATALOG_FILTER_FIELDS = {
-  spells: [
-    ["actionType", "Acción"], ["type", "Tipo de conjuro"], ["level", "Nivel"],
-    ["traditions", "Tradiciones"], ["traits", "Rasgos"], ["castTime", "Tiempo de lanzamiento"],
-    ["range", "Alcance"], ["area", "Área"], ["duration", "Duración"],
-    ["trigger", "Desencadenante"], ["defense", "Defensa"], ["muse", "Musa"],
-  ],
-  "alchemical-items": [
-    ["level", "Nivel"], ["tags", "Rasgos"], ["price", "Precio"],
-    ["hands", "Manos"], ["bulk", "Volumen"], ["actions", "Acciones"],
-    ["action_type", "Activación"], ["saving_throw", "Tirada de salvación"],
-    ["onset", "Demora"], ["maximum_duration", "Duración máxima"],
-  ],
-  armor: [
-    ["Grupo", "Grupo"], ["Rasgos arm.", "Rasgos de armadura"], ["Tipo", "Tipo de armadura"],
-    ["Bon. CA", "Bonificador a la CA"], ["Fuerza", "Fuerza"], ["Pen. pruebas", "Penalizador a pruebas"],
-    ["Pen. Velocidad", "Penalizador a la velocidad"], ["Tope Des.", "Límite de Des."], ["Imp.", "Volumen"],
-  ],
-  "ranged-weapons": [
-    ["Rareza", "Rareza"], ["Tipo", "Tipo de arma"], ["Precio", "Precio"],
-    ["Daño", "Daño"], ["R. dist.", "Alcance"], ["Recarga", "Recarga"],
-    ["Imp.", "Volumen"], ["Manos", "Manos"], ["Grupo", "Grupo"],
-    ["Rasgos de arma", "Rasgos de arma"],
-  ],
-  "melee-weapons": [
-    ["Rareza", "Rareza"], ["Tipo", "Tipo de arma"], ["Precio", "Precio"],
-    ["Daño", "Daño"], ["Imp.", "Volumen"], ["Manos", "Manos"],
-    ["Grupo", "Grupo"], ["Rasgos de arma", "Rasgos de arma"],
-  ],
-  shields: [
-    ["Precio", "Precio"], ["Moneda", "Moneda"], ["Bon. CA", "Bonificador a la CA"],
-    ["Pen. Velocidad", "Penalizador a la velocidad"], ["Imp.", "Volumen"], ["Dureza", "Dureza"],
-    ["PG", "Puntos de golpe"], ["UR", "Umbral de rotura"],
-  ],
-  items: [
-    ["valor", "Precio"], ["moneda", "Moneda"], ["Impedimenta", "Volumen"],
-    ["Manos", "Manos"], ["Rareza", "Rareza"], ["Nivel", "Nivel"],
-  ],
-};
+const SPELL_CATALOG_TYPE = "spells";
+const ALCHEMICAL_CATALOG_TYPE = "alchemical-items";
 
 function requestSpellEdit(spellId) {
   const spell = applicationState.effectiveSpells.find(
@@ -555,7 +529,7 @@ function renderSpellPool() {
     spellPool.appendChild(card);
   });
 
-  refreshFieldFilters("spells", applicationState.effectiveSpells, "filters-spells");
+  refreshFieldFilters("spells", applicationState.effectiveSpells);
   filterSpellCards();
 }
 
@@ -807,7 +781,7 @@ async function loadTypedDataset(expectedType) {
 }
 
 async function fetchIndexedDatasets() {
-  const indexResponse = await fetch("./resources/datasets.json");
+  const indexResponse = await fetch("./resources/datasets.json", { cache: "no-cache" });
   if (!indexResponse.ok) {
     throw new Error(`Unable to load the resource dataset index (${indexResponse.status}).`);
   }
@@ -821,7 +795,7 @@ async function fetchIndexedDatasets() {
     (fileName) => typeof fileName === "string" && /^[\w-]+\.json$/.test(fileName),
   );
   const datasets = await Promise.all(fileNames.map(async (fileName) => {
-    const response = await fetch(`./resources/${encodeURIComponent(fileName)}`);
+    const response = await fetch(`./resources/${encodeURIComponent(fileName)}`, { cache: "no-cache" });
     if (!response.ok) {
       throw new Error(`Unable to load resource dataset ${fileName} (${response.status}).`);
     }
@@ -838,8 +812,10 @@ function getFieldValues(record, field) {
     .map((entry) => typeof entry === "object" ? JSON.stringify(entry) : String(entry));
 }
 
-function refreshFieldFilters(type, records, containerId) {
-  const container = document.querySelector(`#${containerId} .field-filter-controls`);
+function refreshFieldFilters(type, records) {
+  const container = document.querySelector(
+    `[data-catalog-filters="${CSS.escape(type)}"] .field-filter-controls`,
+  );
   if (!container) return;
   const previousValues = new Map(
     Array.from(container.querySelectorAll("[data-filter-field]"), (control) => [
@@ -849,7 +825,8 @@ function refreshFieldFilters(type, records, containerId) {
   );
   container.replaceChildren();
 
-  CATALOG_FILTER_FIELDS[type].forEach(([field, label]) => {
+  const filterFields = inferCatalogFilterFields(records);
+  filterFields.forEach(([field, label]) => {
     const uniqueValues = [...new Set(records.flatMap((record) => getFieldValues(record, field)))];
     if (uniqueValues.length <= 1) return;
     uniqueValues.sort((first, second) => first.localeCompare(second, undefined, { numeric: true }));
@@ -878,20 +855,17 @@ function refreshFieldFilters(type, records, containerId) {
 }
 
 function filterCards(type) {
-  const poolId = type === "spells"
-    ? "spellPool"
-    : type === "alchemical-items" ? "alchemicalItemPool" : `pool-${type}`;
-  const searchId = type === "spells"
-    ? "searchInputSpells"
-    : type === "alchemical-items" ? "searchInputAlchemy" : `search-${type}`;
-  const query = document.getElementById(searchId)?.value.trim().toLowerCase() ?? "";
-  const container = document.getElementById(`filters-${type}`);
+  const pool = document.querySelector(`[data-catalog-pool="${CSS.escape(type)}"]`);
+  const search = document.querySelector(`[data-catalog-search="${CSS.escape(type)}"]`);
+  const container = document.querySelector(`[data-catalog-filters="${CSS.escape(type)}"]`);
+  const query = search?.value.trim().toLowerCase() ?? "";
+  if (!pool) return;
   const fieldFilters = Array.from(
     container?.querySelectorAll("[data-filter-field]") ?? [],
     (control) => ({ field: control.dataset.filterField, value: control.value.trim().toLowerCase() }),
   ).filter(({ value }) => value);
 
-  document.querySelectorAll(`#${poolId} .card`).forEach((card) => {
+  pool.querySelectorAll(".card").forEach((card) => {
     const titleMatches = (card.dataset.search ?? "").includes(query);
     const record = card.catalogRecord;
     const fieldsMatch = fieldFilters.every(({ field, value }) => {
@@ -905,14 +879,17 @@ function filterCards(type) {
   });
 }
 
-function setupGenericCatalogViews() {
+function setupGenericCatalogViews(catalogs) {
   const tabBar = document.querySelector("header .tab");
   const main = document.querySelector("main");
-  GENERIC_CATALOGS.forEach(({ type, label }) => {
+  tabBar.replaceChildren();
+  main.querySelectorAll("[data-catalog-view]").forEach((view) => view.remove());
+  catalogs.forEach(({ type, label, createLabel }) => {
     const tabName = `Catalog-${type}`;
     const tabButton = document.createElement("button");
     tabButton.className = "tablinks";
     tabButton.type = "button";
+    tabButton.dataset.catalogTab = type;
     tabButton.textContent = label;
     tabButton.addEventListener("click", (event) => openTab(event, tabName));
     tabBar.appendChild(tabButton);
@@ -930,6 +907,7 @@ function setupGenericCatalogViews() {
     const search = document.createElement("input");
     search.type = "search";
     search.id = `search-${type}`;
+    search.dataset.catalogSearch = type;
     search.placeholder = `Buscar ${label.toLowerCase()}...`;
     search.setAttribute("aria-label", `Buscar ${label.toLowerCase()}`);
     const searchLabel = document.createElement("label");
@@ -938,6 +916,7 @@ function setupGenericCatalogViews() {
     const filters = document.createElement("details");
     filters.className = "field-filters";
     filters.id = `filters-${type}`;
+    filters.dataset.catalogFilters = type;
     const filtersSummary = document.createElement("summary");
     filtersSummary.textContent = "Filtros";
     const filterControls = document.createElement("div");
@@ -946,6 +925,11 @@ function setupGenericCatalogViews() {
     const printButton = document.createElement("button");
     printButton.type = "button";
     printButton.className = "print-border-toggle no-print";
+    printButton.textContent = "Imprimir sin bordes";
+    printButton.setAttribute("aria-pressed", "false");
+    printButton.addEventListener("click", () => {
+      setBorderlessPrint(!document.documentElement.classList.contains("print-borderless"));
+    });
     const printAction = document.createElement("button");
     printAction.type = "button";
     printAction.textContent = "Imprimir seleccionados";
@@ -963,7 +947,13 @@ function setupGenericCatalogViews() {
     colorPicker.id = colorLabel.htmlFor;
     colorLabel.textContent = "Color de las tarjetas";
     colorControl.append(colorPicker, colorLabel);
-    controls.append(search, searchLabel, filters, printButton, printAction, colorControl);
+    const createButton = document.createElement("button");
+    createButton.type = "button";
+    createButton.className = "no-print";
+    createButton.dataset.catalogCreate = type;
+    createButton.textContent = createLabel;
+    createButton.addEventListener("click", () => requestGenericRecordCreate(type));
+    controls.append(search, searchLabel, filters, createButton, printButton, printAction, colorControl);
 
     const selectedSection = document.createElement("section");
     selectedSection.className = "selected-spells";
@@ -983,28 +973,117 @@ function setupGenericCatalogViews() {
     const pool = document.createElement("ul");
     pool.className = "spell-list catalog-list";
     pool.id = `pool-${type}`;
+    pool.dataset.catalogPool = type;
+    view.dataset.catalogView = type;
     content.append(heading, pool);
     container.append(sidebar, content);
     view.appendChild(container);
     main.appendChild(view);
     search.addEventListener("input", () => filterCards(type));
   });
+  tabBar.querySelector(".tablinks")?.click();
 }
 
-async function loadGenericCatalogs() {
-  await Promise.all(GENERIC_CATALOGS.map(async ({ type }) => {
-    const records = await loadTypedDataset(type);
-    applicationState.catalogs[type] = records.map((record, index) => ({
-      ...record,
-      id: `catalog-${type}-${index}`,
-    }));
-    refreshFieldFilters(type, applicationState.catalogs[type], `filters-${type}`);
+async function loadCatalogDefinitions() {
+  const datasets = await indexedDatasetsPromise;
+  const catalogTypes = [...new Set(datasets
+    .filter(({ dataset }) => Array.isArray(dataset.data))
+    .map(({ dataset }) => dataset.type)
+    .filter(Boolean))];
+  applicationState.catalogDefinitions = catalogTypes.map((type) => {
+    const dataset = datasets.find((entry) => entry.dataset.type === type)?.dataset ?? {};
+    const label = dataset.label ?? `Catálogo (${type})`;
+    return {
+      type,
+      label,
+      singularLabel: dataset.singularLabel ?? "elemento",
+      createLabel: dataset.createLabel ?? "Crear elemento",
+    };
+  });
+  applicationState.genericCatalogs = applicationState.catalogDefinitions;
+  setupGenericCatalogViews(applicationState.genericCatalogs);
+  applicationState.spellSession = loadSpellSession();
+  await Promise.all(applicationState.genericCatalogs.map(async ({ type }) => {
+    const rawRecords = datasets
+      .filter(({ dataset }) => dataset.type === type && Array.isArray(dataset.data))
+      .flatMap(({ dataset }) => dataset.data);
+    const records = type === SPELL_CATALOG_TYPE
+      ? rawRecords.map(normalizeSpell)
+      : type === ALCHEMICAL_CATALOG_TYPE
+        ? rawRecords.map(normalizeAlchemicalItem)
+        : rawRecords.map((record, index) => ({ ...record, id: `catalog-${type}-${index}` }));
+    applicationState.sourceCatalogs[type] = records;
+    const edits = type === SPELL_CATALOG_TYPE
+      ? applicationState.spellSession.editedSpells
+      : type === ALCHEMICAL_CATALOG_TYPE
+        ? applicationState.spellSession.editedAlchemicalItems
+        : applicationState.spellSession.editedCatalogRecords[type] ?? {};
+    const sourceRecords = records.map((record) => ({ ...record, ...(edits[record.id] ?? {}), id: record.id }));
+    const customRecords = type === SPELL_CATALOG_TYPE
+      ? applicationState.spellSession.customSpells
+      : type === ALCHEMICAL_CATALOG_TYPE
+        ? applicationState.spellSession.customAlchemicalItems
+        : applicationState.spellSession.customCatalogRecords[type] ?? [];
+    applicationState.catalogs[type] = [...sourceRecords, ...customRecords.map((record) => ({ ...record }))];
     renderGenericCatalog(type);
   }));
 }
 
+function updateDedicatedCatalogLabels() {
+  applicationState.catalogDefinitions
+    .filter(({ type }) => DEDICATED_CATALOG_TYPES.has(type))
+    .forEach(({ type, label, createLabel }) => {
+      const view = document.querySelector(`[data-catalog-view="${CSS.escape(type)}"]`);
+      const tab = document.querySelector(`[data-catalog-tab="${CSS.escape(type)}"]`);
+      const createButton = document.querySelector(`[data-catalog-create="${CSS.escape(type)}"]`);
+      if (tab) tab.textContent = label;
+      if (createButton) createButton.textContent = createLabel;
+      const heading = view?.querySelector(".spell-section > h2");
+      if (heading) heading.textContent = `Lista de ${label.toLowerCase()}`;
+      const selectionHeading = view?.querySelector(".selected-spells h2, .selected-alchemical-items h2");
+      if (selectionHeading) selectionHeading.textContent = `${label} seleccionados`;
+    });
+}
+
 function getGenericRecordTitle(record) {
-  return String(record.Nombre ?? record.Escudo ?? record.title ?? record.name ?? "Objeto sin nombre");
+  const titleField = getGenericRecordTitleField(record);
+  return String((titleField && record[titleField]) ?? "Elemento sin nombre");
+}
+
+function normalizeCatalogFieldName(field) {
+  return field
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+function isCatalogTitleField(field) {
+  return ["nombre", "escudo", "title", "name", "english title", "en title"]
+    .includes(normalizeCatalogFieldName(field));
+}
+
+function getGenericRecordTitleField(record) {
+  const fields = Object.keys(record);
+  const knownTitle = fields.find((field) => ["nombre", "escudo", "title", "name"].includes(normalizeCatalogFieldName(field)))
+    ?? fields.find((field) => isCatalogTitleField(field) || field === "enTitle");
+  return knownTitle ?? Object.keys(record).find((field) =>
+    field !== "id" && typeof record[field] === "string" && record[field].trim(),
+  );
+}
+
+function isCatalogDescriptionField(field) {
+  return ["descripcion", "description"].includes(normalizeCatalogFieldName(field));
+}
+
+function inferCatalogFilterFields(records) {
+  const fields = [...new Set(records.flatMap((record) => Object.keys(record)))];
+  return fields
+    .filter((field) => field !== "id" && !isCatalogTitleField(field) && !isCatalogDescriptionField(field))
+    .map((field) => [field, translateCatalogField(field)]);
+}
+
+function getGenericCatalog(type) {
+  return applicationState.genericCatalogs.find((catalog) => catalog.type === type);
 }
 
 function translateCatalogField(label) {
@@ -1032,11 +1111,37 @@ function translateCatalogField(label) {
     "check penalty": "Penalizador a pruebas",
     "dex cap": "Límite de Des.",
     strength: "Fuerza",
+    valor: "Precio",
+    moneda: "Moneda",
+    "impedimenta": "Volumen",
+    "bon. ca": "Bonificador a la CA",
+    "pen. velocidad": "Penalizador a la velocidad",
+    "pen. pruebas": "Penalizador a pruebas",
+    "tope des.": "Límite de Des.",
+    "r. dist.": "Alcance",
+    "rasgos de arma": "Rasgos de arma",
+    "rasgos arm.": "Rasgos de armadura",
+    "pg": "Puntos de golpe",
+    "ur": "Umbral de rotura",
+    "action type": "Tipo de acción",
+    traditions: "Tradiciones",
+    "cast time": "Tiempo de lanzamiento",
+    objectives: "Objetivos",
+    heightenings: "Potenciaciones",
+    "english title": "Título en inglés",
+    tags: "Rasgos",
+    actions: "Acciones",
+    "saving throw": "Tirada de salvación",
+    onset: "Demora",
+    "maximum duration": "Duración máxima",
+    benefit: "Beneficio",
+    drawback: "Desventaja",
+    defense: "Defensa",
+    muse: "Musa",
+    trigger: "Desencadenante",
+    "level true": "Nivel sin clasificar",
   };
-  const normalizedLabel = label.normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
+  const normalizedLabel = normalizeCatalogFieldName(label);
   return translations[normalizedLabel] ?? label;
 }
 
@@ -1049,13 +1154,9 @@ function genericItemCardTemplate(record, catalogLabel) {
   title.className = "name lined srname";
   title.textContent = getGenericRecordTitle(record);
   const entries = Object.entries(record).filter(([key]) => key !== "id");
-  const titleEntry = entries.find(([key]) =>
-    ["nombre", "escudo", "title", "name"].includes(key.toLowerCase()),
-  );
-  const descriptionEntries = entries.filter(([key]) => {
-    const normalizedKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    return normalizedKey === "descripcion" || normalizedKey === "description";
-  });
+  const titleField = getGenericRecordTitleField(record);
+  const titleEntry = entries.find(([key]) => key === titleField);
+  const descriptionEntries = entries.filter(([key]) => isCatalogDescriptionField(key));
   const attributes = entries.filter(([key, value]) => {
     if (titleEntry && key === titleEntry[0]) return false;
     if (descriptionEntries.some(([descriptionKey]) => key === descriptionKey)) return false;
@@ -1099,8 +1200,9 @@ function genericItemCardTemplate(record, catalogLabel) {
   return template;
 }
 function renderGenericCatalog(type) {
-  const catalog = GENERIC_CATALOGS.find((entry) => entry.type === type);
+  const catalog = getGenericCatalog(type);
   const pool = document.getElementById(`pool-${type}`);
+  if (!catalog || !pool) return;
   const selectedIds = new Set(
     Array.from(pool.querySelectorAll(".card.selected"), (card) => card.id),
   );
@@ -1109,7 +1211,12 @@ function renderGenericCatalog(type) {
     const card = document.createElement("li");
     card.className = "card no-print generic-card";
     card.id = record.id;
-    card.appendChild(genericItemCardTemplate(record, catalog.label));
+    const cardContent = type === SPELL_CATALOG_TYPE
+      ? spellCardTemplate(record)
+      : type === ALCHEMICAL_CATALOG_TYPE
+        ? alchemicalItemCardTemplate(record)
+        : genericItemCardTemplate(record, catalog.label);
+    card.appendChild(cardContent);
     card.dataset.search = Object.entries(record)
       .filter(([key]) => key !== "id")
       .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
@@ -1120,13 +1227,243 @@ function renderGenericCatalog(type) {
       card.classList.remove("no-print");
     }
     card.addEventListener("click", () => toggleGenericCatalogSelection(type, record, card));
+    card.appendChild(createCardActionButton("Editar", `Editar ${getGenericRecordTitle(record)}`, () =>
+      requestGenericRecordEdit(type, record.id)));
+    if (isCatalogRecordEdited(type, record.id)) {
+      card.appendChild(createCardActionButton("Restaurar", `Restaurar ${getGenericRecordTitle(record)} a su versión original`, () =>
+        resetGenericRecordEdit(type, record.id)));
+    }
+    if (isCatalogRecordCustom(type, record.id)) {
+      card.appendChild(createCardActionButton("Eliminar", `Eliminar ${getGenericRecordTitle(record)}`, () =>
+        deleteGenericRecord(type, record.id)));
+    }
+    if (selectedIds.has(card.id)) {
+      const selectedTitle = document.getElementById(`selected-${record.id}`);
+      if (selectedTitle) selectedTitle.textContent = getGenericRecordTitle(record);
+    }
     pool.appendChild(card);
+  });
+  refreshFieldFilters(type, applicationState.catalogs[type]);
+  filterCards(type);
+  if (type === ALCHEMICAL_CATALOG_TYPE && document.querySelector(`[data-catalog-view="${CSS.escape(type)}"]`)?.style.display !== "none") {
+    autoSizeText(pool);
+  }
+}
+
+function isCatalogRecordEdited(type, recordId) {
+  const edits = type === SPELL_CATALOG_TYPE
+    ? applicationState.spellSession.editedSpells
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? applicationState.spellSession.editedAlchemicalItems
+      : applicationState.spellSession.editedCatalogRecords[type] ?? {};
+  return Object.prototype.hasOwnProperty.call(edits, recordId);
+}
+
+function isCatalogRecordCustom(type, recordId) {
+  const records = type === SPELL_CATALOG_TYPE
+    ? applicationState.spellSession.customSpells
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? applicationState.spellSession.customAlchemicalItems
+      : applicationState.spellSession.customCatalogRecords[type] ?? [];
+  return records.some((record) => record.id === recordId);
+}
+
+function requestGenericRecordCreate(type) {
+  const catalog = getGenericCatalog(type);
+  const template = applicationState.catalogs[type]?.[0] ?? { Nombre: "" };
+  openGenericRecordEditor(type, "create", null, template, `Crear ${catalog.singularLabel.toLowerCase()}`);
+}
+
+function requestGenericRecordEdit(type, recordId) {
+  const record = applicationState.catalogs[type]?.find((item) => item.id === recordId);
+  if (!record) return;
+  const catalog = getGenericCatalog(type);
+  openGenericRecordEditor(type, "edit", recordId, record, `Editar ${catalog.singularLabel.toLowerCase()}`);
+}
+
+function openGenericRecordEditor(type, mode, recordId, record, heading) {
+  const form = document.getElementById("genericCatalogEditorForm");
+  const fields = document.getElementById("genericCatalogEditorFields");
+  applicationState.genericEditorMode = mode;
+  applicationState.genericEditorType = type;
+  applicationState.genericEditingRecordId = recordId;
+  applicationState.genericEditorTemplate = Object.fromEntries(
+    Object.entries(record).filter(([key]) => key !== "id"),
+  );
+  fields.replaceChildren();
+  Object.entries(applicationState.genericEditorTemplate).forEach(([key, value]) => {
+    const label = document.createElement("label");
+    label.textContent = translateCatalogField(key);
+    const isLongText = isCatalogDescriptionField(key) || ["heightenings", "trigger", "benefit", "drawback", "minor", "lesser", "moderate", "greater", "major", "level_true", "stage1", "stage2", "stage3", "stage4"].includes(key);
+    const isActionField = ["actionType", "actions"].includes(key);
+    const control = document.createElement(isLongText ? "textarea" : isActionField ? "select" : "input");
+    control.name = key;
+    if (control instanceof HTMLInputElement) control.type = "text";
+    if (isActionField) {
+      [["", "Ninguna"], ["one-action", "Una acción"], ["two-actions", "Dos acciones"], ["three-actions", "Tres acciones"], ["reaction", "Reacción"], ["free-action", "Acción gratuita"]]
+        .forEach(([optionValue, optionLabel]) => control.add(new Option(optionLabel, optionValue)));
+    }
+    const separator = type === ALCHEMICAL_CATALOG_TYPE && ["minor", "lesser", "moderate", "greater", "major", "level_true"].includes(key) ? "\n" : ", ";
+    control.value = mode === "create" ? "" : Array.isArray(value) ? value.join(separator) : value ?? "";
+    label.appendChild(control);
+    fields.appendChild(label);
+  });
+  document.getElementById("genericCatalogEditorHeading").textContent = heading;
+  clearCatalogEditorPreview();
+  document.getElementById("genericCatalogEditorDialog").showModal();
+}
+
+function getGenericEditorValues(form) {
+  const values = {};
+  Object.entries(applicationState.genericEditorTemplate ?? {}).forEach(([key, original]) => {
+    const raw = String(new FormData(form).get(key) ?? "").trim();
+    if (Array.isArray(original)) {
+      const separator = applicationState.genericEditorType === ALCHEMICAL_CATALOG_TYPE && ["minor", "lesser", "moderate", "greater", "major", "level_true"].includes(key) ? /\r?\n/ : /,/;
+      values[key] = raw.split(separator).map((item) => item.trim()).filter(Boolean);
+    }
+    else if (typeof original === "number" && raw !== "" && Number.isFinite(Number(raw))) values[key] = Number(raw);
+    else values[key] = raw;
+  });
+  return values;
+}
+
+function saveGenericCatalogRecord(form) {
+  const { genericEditorMode: mode, genericEditorType: type, genericEditingRecordId: recordId } = applicationState;
+  if (!type || !mode) return;
+  const values = getGenericEditorValues(form);
+  if (type === SPELL_CATALOG_TYPE) {
+    if (mode === "create") {
+      values.id = `custom-spell-${globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}`;
+      applicationState.spellSession.customSpells.push(values);
+    } else if (applicationState.spellSession.customSpells.some((record) => record.id === recordId)) {
+      applicationState.spellSession.customSpells = applicationState.spellSession.customSpells.map((record) => record.id === recordId ? { id: recordId, ...values } : record);
+    } else applicationState.spellSession.editedSpells[recordId] = values;
+  } else if (type === ALCHEMICAL_CATALOG_TYPE) {
+    if (mode === "create") {
+      values.id = createCustomAlchemicalItemId();
+      applicationState.spellSession.customAlchemicalItems.push(values);
+    } else if (applicationState.spellSession.customAlchemicalItems.some((record) => record.id === recordId)) {
+      applicationState.spellSession.customAlchemicalItems = applicationState.spellSession.customAlchemicalItems.map((record) => record.id === recordId ? { id: recordId, ...values } : record);
+    } else applicationState.spellSession.editedAlchemicalItems[recordId] = values;
+  } else {
+  const customRecords = applicationState.spellSession.customCatalogRecords[type] ??= [];
+  if (mode === "create") {
+    const id = `custom-${type}-${globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}`;
+    customRecords.push({ id, ...values });
+  } else if (customRecords.some((record) => record.id === recordId)) {
+    const index = customRecords.findIndex((record) => record.id === recordId);
+    customRecords[index] = { id: recordId, ...values };
+  } else {
+    (applicationState.spellSession.editedCatalogRecords[type] ??= {})[recordId] = values;
+  }
+  }
+  saveSpellSession(applicationState.spellSession);
+  closeGenericCatalogEditor();
+  rebuildGenericCatalogRecords(type);
+  renderGenericCatalog(type);
+}
+
+function rebuildGenericCatalogRecords(type) {
+  const source = applicationState.sourceCatalogs[type] ?? [];
+  const edits = type === SPELL_CATALOG_TYPE
+    ? applicationState.spellSession.editedSpells
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? applicationState.spellSession.editedAlchemicalItems
+      : applicationState.spellSession.editedCatalogRecords[type] ?? {};
+  const customRecords = type === SPELL_CATALOG_TYPE
+    ? applicationState.spellSession.customSpells
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? applicationState.spellSession.customAlchemicalItems
+      : applicationState.spellSession.customCatalogRecords[type] ?? [];
+  applicationState.catalogs[type] = [
+    ...source.map((record) => ({ ...record, ...(edits[record.id] ?? {}), id: record.id })),
+    ...customRecords.map((record) => ({ ...record })),
+  ];
+}
+
+function clearCatalogEditorPreview() {
+  const preview = document.getElementById("genericCatalogEditorPreview");
+  const card = document.getElementById("genericCatalogEditorPreviewCard");
+  if (preview) preview.hidden = true;
+  card?.replaceChildren();
+}
+
+function previewGenericCatalogRecord(form) {
+  const type = applicationState.genericEditorType;
+  const record = getGenericEditorValues(form);
+  const definition = getGenericCatalog(type);
+  const card = type === SPELL_CATALOG_TYPE
+    ? spellCardTemplate(record)
+    : type === ALCHEMICAL_CATALOG_TYPE
+      ? alchemicalItemCardTemplate(record)
+      : genericItemCardTemplate(record, definition.label);
+  const previewCard = document.getElementById("genericCatalogEditorPreviewCard");
+  previewCard.replaceChildren(card);
+  document.getElementById("genericCatalogEditorPreview").hidden = false;
+  if (type === ALCHEMICAL_CATALOG_TYPE) autoSizeText(previewCard);
+}
+
+function closeGenericCatalogEditor() {
+  const dialog = document.getElementById("genericCatalogEditorDialog");
+  if (dialog.open) dialog.close();
+  document.getElementById("genericCatalogEditorForm").reset();
+  applicationState.genericEditorMode = null;
+  applicationState.genericEditorType = null;
+  applicationState.genericEditingRecordId = null;
+  applicationState.genericEditorTemplate = null;
+  clearCatalogEditorPreview();
+}
+
+function resetGenericRecordEdit(type, recordId) {
+  if (type === SPELL_CATALOG_TYPE) {
+    delete applicationState.spellSession.editedSpells[recordId];
+  } else if (type === ALCHEMICAL_CATALOG_TYPE) {
+    delete applicationState.spellSession.editedAlchemicalItems[recordId];
+  } else {
+  delete applicationState.spellSession.editedCatalogRecords[type]?.[recordId];
+  }
+  saveSpellSession(applicationState.spellSession);
+  rebuildGenericCatalogRecords(type);
+  renderGenericCatalog(type);
+}
+
+function deleteGenericRecord(type, recordId) {
+  if (type === SPELL_CATALOG_TYPE) {
+    applicationState.spellSession.customSpells = applicationState.spellSession.customSpells.filter((record) => record.id !== recordId);
+  } else if (type === ALCHEMICAL_CATALOG_TYPE) {
+    applicationState.spellSession.customAlchemicalItems = applicationState.spellSession.customAlchemicalItems.filter((record) => record.id !== recordId);
+  } else {
+  applicationState.spellSession.customCatalogRecords[type] =
+    (applicationState.spellSession.customCatalogRecords[type] ?? []).filter((record) => record.id !== recordId);
+  }
+  document.getElementById(`selected-${recordId}`)?.remove();
+  saveSpellSession(applicationState.spellSession);
+  applicationState.catalogs[type] = applicationState.catalogs[type].filter((record) => record.id !== recordId);
+  renderGenericCatalog(type);
+}
+
+function setupGenericCatalogEditor() {
+  const dialog = document.getElementById("genericCatalogEditorDialog");
+  const form = document.getElementById("genericCatalogEditorForm");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveGenericCatalogRecord(form);
+  });
+  document.getElementById("cancelGenericCatalogEdit").addEventListener("click", closeGenericCatalogEditor);
+  document.getElementById("previewGenericCatalogRecord").addEventListener("click", () => previewGenericCatalogRecord(form));
+  dialog.addEventListener("close", () => {
+    applicationState.genericEditorMode = null;
+    applicationState.genericEditorType = null;
+    applicationState.genericEditingRecordId = null;
+    applicationState.genericEditorTemplate = null;
+    clearCatalogEditorPreview();
   });
 }
 
 function toggleGenericCatalogSelection(type, record, card) {
   const selectedList = document.getElementById(`selected-${type}`);
   const selectedId = `selected-${record.id}`;
+  const title = getGenericRecordTitle(record);
   if (card.classList.contains("selected")) {
     card.classList.remove("selected");
     card.classList.add("no-print");
@@ -1137,7 +1474,7 @@ function toggleGenericCatalogSelection(type, record, card) {
   card.classList.remove("no-print");
   const listItem = document.createElement("li");
   listItem.id = selectedId;
-  listItem.textContent = getGenericRecordTitle(record);
+  listItem.textContent = title;
   selectedList.appendChild(listItem);
 }
 
@@ -1182,11 +1519,7 @@ function renderAlchemicalItemPool() {
       }
       pool.appendChild(card);
     });
-  refreshFieldFilters(
-    "alchemical-items",
-    applicationState.effectiveAlchemicalItems,
-    "filters-alchemical-items",
-  );
+  refreshFieldFilters("alchemical-items", applicationState.effectiveAlchemicalItems);
   filterAlchemicalItemCards();
   autoSizeText();
 }
@@ -1194,7 +1527,10 @@ function renderAlchemicalItemPool() {
 function createCardActionButton(label, ariaLabel, action) {
   const button = document.createElement("button");
   button.type = "button";
-  button.classList.add("spell-edit-button", "no-print");
+  const actionClass = label === "Restaurar"
+    ? "spell-reset-button"
+    : label === "Eliminar" ? "spell-delete-button" : "spell-edit-button";
+  button.classList.add(actionClass, "no-print");
   button.textContent = label;
   button.setAttribute("aria-label", ariaLabel);
   button.addEventListener("click", (event) => {
@@ -1282,27 +1618,12 @@ function setupPrintBorderControls() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    setupGenericCatalogViews();
-    setupSpellEditor();
-    setupAlchemicalItemEditor();
+    setupGenericCatalogEditor();
     setupPrintBorderControls();
-    document
-      .getElementById("createSpellButton")
-      .addEventListener("click", requestSpellCreate);
-    document
-      .getElementById("createAlchemicalItemButton")
-      .addEventListener("click", requestAlchemicalItemCreate);
-    loadSpells().then(() => {
-        setupSpellSearch();
-        console.log("Spells loaded successfully.");
-      loadAlchemicalItems().then(() => {
-        setupAlchemicalItemSearch();
-        console.log("Alchemical items loaded successfully.");
-        autoSizeText();
-        loadGenericCatalogs().catch((error) => {
-          console.error("Unable to load equipment catalogs.", error);
-        });
-      });
+    applicationState.spellSession = loadSpellSession();
+    indexedDatasetsPromise = fetchIndexedDatasets();
+    loadCatalogDefinitions().catch((error) => {
+      console.error("Unable to load indexed catalogs.", error);
     });
 
 
