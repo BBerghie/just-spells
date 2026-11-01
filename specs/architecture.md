@@ -40,6 +40,8 @@ DOM card elements
     +--> print
 ```
 
+Each view defines relevant filter fields alongside the title search. Field controls are generated from the effective records: fields with 2–19 distinct values use a select, and fields with 20 or more values use text matching. All active controls are applied together to the rendered pool.
+
 ## Target architecture for editing
 
 The editing feature should introduce a small explicit client-side state layer without introducing a framework.

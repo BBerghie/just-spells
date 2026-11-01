@@ -32,6 +32,9 @@ function normalizeSpell(rawSpell) {
     type: rawSpell.type,
     range: rawSpell.range,
     duration: rawSpell.duration,
+    traits: Array.isArray(rawSpell.traits) ? [...rawSpell.traits] : [],
+    muse: rawSpell.muse ?? "",
+    defense: rawSpell.defense ?? "",
   };
 }
 
@@ -178,6 +181,46 @@ const GENERIC_CATALOGS = [
   { type: "shields", label: "Shields" },
   { type: "items", label: "Items" },
 ];
+
+const CATALOG_FILTER_FIELDS = {
+  spells: [
+    ["actionType", "Action"], ["type", "Spell type"], ["level", "Level"],
+    ["traditions", "Traditions"], ["traits", "Traits"], ["castTime", "Cast time"],
+    ["range", "Range"], ["area", "Area"], ["duration", "Duration"],
+    ["trigger", "Trigger"], ["defense", "Defense"], ["muse", "Muse"],
+  ],
+  "alchemical-items": [
+    ["level", "Level"], ["tags", "Tags"], ["price", "Price"],
+    ["hands", "Hands"], ["bulk", "Bulk"], ["actions", "Actions"],
+    ["action_type", "Activation"], ["saving_throw", "Saving throw"],
+    ["onset", "Onset"], ["maximum_duration", "Maximum duration"],
+  ],
+  armor: [
+    ["Grupo", "Group"], ["Rasgos arm.", "Armor traits"], ["Tipo", "Armor type"],
+    ["Bon. CA", "AC bonus"], ["Fuerza", "Strength"], ["Pen. pruebas", "Check penalty"],
+    ["Pen. Velocidad", "Speed penalty"], ["Tope Des.", "Dex cap"], ["Imp.", "Bulk"],
+  ],
+  "ranged-weapons": [
+    ["Rareza", "Rarity"], ["Tipo", "Weapon type"], ["Precio", "Price"],
+    ["Daño", "Damage"], ["R. dist.", "Range"], ["Recarga", "Reload"],
+    ["Imp.", "Bulk"], ["Manos", "Hands"], ["Grupo", "Group"],
+    ["Rasgos de arma", "Weapon traits"],
+  ],
+  "melee-weapons": [
+    ["Rareza", "Rarity"], ["Tipo", "Weapon type"], ["Precio", "Price"],
+    ["Daño", "Damage"], ["Imp.", "Bulk"], ["Manos", "Hands"],
+    ["Grupo", "Group"], ["Rasgos de arma", "Weapon traits"],
+  ],
+  shields: [
+    ["Precio", "Price"], ["Moneda", "Currency"], ["Bon. CA", "AC bonus"],
+    ["Pen. Velocidad", "Speed penalty"], ["Imp.", "Bulk"], ["Dureza", "Hardness"],
+    ["PG", "Hit points"], ["UR", "Broken threshold"],
+  ],
+  items: [
+    ["valor", "Price"], ["moneda", "Currency"], ["Impedimenta", "Bulk"],
+    ["Manos", "Hands"], ["Rareza", "Rarity"], ["Nivel", "Level"],
+  ],
+};
 
 function requestSpellEdit(spellId) {
   const spell = applicationState.effectiveSpells.find(
@@ -452,6 +495,7 @@ function renderSpellPool() {
     // dataset to search by spTitle & enTitle
     card.dataset.search =
       `${spell.title} ${spell.enTitle}`.toLowerCase();
+    card.dataset.filterData = JSON.stringify(spell);
 
     // select a spell event listener
     card.addEventListener("click", () => selectSpell(spell, card.id));
@@ -511,6 +555,7 @@ function renderSpellPool() {
     spellPool.appendChild(card);
   });
 
+  refreshFieldFilters("spells", applicationState.effectiveSpells, "filters-spells");
   filterSpellCards();
 }
 
@@ -785,6 +830,81 @@ async function fetchIndexedDatasets() {
   return datasets;
 }
 
+function getFieldValues(record, field) {
+  const value = record[field];
+  const entries = Array.isArray(value) ? value : [value];
+  return entries
+    .filter((entry) => entry !== undefined && entry !== null && entry !== "")
+    .map((entry) => typeof entry === "object" ? JSON.stringify(entry) : String(entry));
+}
+
+function refreshFieldFilters(type, records, containerId) {
+  const container = document.querySelector(`#${containerId} .field-filter-controls`);
+  if (!container) return;
+  const previousValues = new Map(
+    Array.from(container.querySelectorAll("[data-filter-field]"), (control) => [
+      control.dataset.filterField,
+      control.value,
+    ]),
+  );
+  container.replaceChildren();
+
+  CATALOG_FILTER_FIELDS[type].forEach(([field, label]) => {
+    const uniqueValues = [...new Set(records.flatMap((record) => getFieldValues(record, field)))];
+    if (uniqueValues.length <= 1) return;
+    uniqueValues.sort((first, second) => first.localeCompare(second, undefined, { numeric: true }));
+
+    const fieldLabel = document.createElement("label");
+    fieldLabel.className = "field-filter";
+    fieldLabel.textContent = label;
+    let control;
+    if (uniqueValues.length < 20) {
+      control = document.createElement("select");
+      control.add(new Option("All", ""));
+      uniqueValues.forEach((value) => control.add(new Option(value, value)));
+    } else {
+      control = document.createElement("input");
+      control.type = "search";
+      control.placeholder = `Filter ${label.toLowerCase()}...`;
+    }
+    control.dataset.filterField = field;
+    control.setAttribute("aria-label", label);
+    control.value = previousValues.get(field) ?? "";
+    control.addEventListener("input", () => filterCards(type));
+    control.addEventListener("change", () => filterCards(type));
+    fieldLabel.appendChild(control);
+    container.appendChild(fieldLabel);
+  });
+}
+
+function filterCards(type) {
+  const poolId = type === "spells"
+    ? "spellPool"
+    : type === "alchemical-items" ? "alchemicalItemPool" : `pool-${type}`;
+  const searchId = type === "spells"
+    ? "searchInputSpells"
+    : type === "alchemical-items" ? "searchInputAlchemy" : `search-${type}`;
+  const query = document.getElementById(searchId)?.value.trim().toLowerCase() ?? "";
+  const container = document.getElementById(`filters-${type}`);
+  const fieldFilters = Array.from(
+    container?.querySelectorAll("[data-filter-field]") ?? [],
+    (control) => ({ field: control.dataset.filterField, value: control.value.trim().toLowerCase() }),
+  ).filter(({ value }) => value);
+
+  document.querySelectorAll(`#${poolId} .card`).forEach((card) => {
+    const titleMatches = (card.dataset.search ?? "").includes(query);
+    const record = JSON.parse(card.dataset.filterData ?? "{}");
+    const fieldsMatch = fieldFilters.every(({ field, value }) => {
+      const control = container.querySelector(`[data-filter-field="${CSS.escape(field)}"]`);
+      const rawValue = control.tagName === "SELECT"
+        ? getFieldValues(record, field).some((entry) => entry.toLowerCase() === value)
+        : getFieldValues(record, field).join(" ").toLowerCase().includes(value);
+      return rawValue;
+    });
+    card.style.display = titleMatches && fieldsMatch ? "" : "none";
+  });
+}
+
 function setupGenericCatalogViews() {
   const tabBar = document.querySelector("header .tab");
   const main = document.querySelector("main");
@@ -815,6 +935,14 @@ function setupGenericCatalogViews() {
     const searchLabel = document.createElement("label");
     searchLabel.htmlFor = search.id;
     searchLabel.textContent = "Search";
+    const filters = document.createElement("details");
+    filters.className = "field-filters";
+    filters.id = `filters-${type}`;
+    const filtersSummary = document.createElement("summary");
+    filtersSummary.textContent = "Filters";
+    const filterControls = document.createElement("div");
+    filterControls.className = "field-filter-controls";
+    filters.append(filtersSummary, filterControls);
     const printButton = document.createElement("button");
     printButton.type = "button";
     printButton.className = "print-border-toggle no-print";
@@ -835,7 +963,7 @@ function setupGenericCatalogViews() {
     colorPicker.id = colorLabel.htmlFor;
     colorLabel.textContent = "Card color";
     colorControl.append(colorPicker, colorLabel);
-    controls.append(search, searchLabel, printButton, printAction, colorControl);
+    controls.append(search, searchLabel, filters, printButton, printAction, colorControl);
 
     const selectedSection = document.createElement("section");
     selectedSection.className = "selected-spells";
@@ -859,7 +987,7 @@ function setupGenericCatalogViews() {
     container.append(sidebar, content);
     view.appendChild(container);
     main.appendChild(view);
-    search.addEventListener("input", () => filterGenericCatalog(type, search.value));
+    search.addEventListener("input", () => filterCards(type));
   });
 }
 
@@ -870,6 +998,7 @@ async function loadGenericCatalogs() {
       ...record,
       id: `catalog-${type}-${index}`,
     }));
+    refreshFieldFilters(type, applicationState.catalogs[type], `filters-${type}`);
     renderGenericCatalog(type);
   }));
 }
@@ -951,6 +1080,7 @@ function renderGenericCatalog(type) {
       .filter(([key]) => key !== "id")
       .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
       .join(" ").toLowerCase();
+    card.dataset.filterData = JSON.stringify(record);
     if (selectedIds.has(card.id)) {
       card.classList.add("selected");
       card.classList.remove("no-print");
@@ -977,13 +1107,6 @@ function toggleGenericCatalogSelection(type, record, card) {
   selectedList.appendChild(listItem);
 }
 
-function filterGenericCatalog(type, query) {
-  const normalizedQuery = query.trim().toLowerCase();
-  document.querySelectorAll(`#pool-${type} .card`).forEach((card) => {
-    card.style.display = card.dataset.search.includes(normalizedQuery) ? "" : "none";
-  });
-}
-
 function renderAlchemicalItemPool() {
   const pool = document.getElementById("alchemicalItemPool");
   const selectedIds = new Set(
@@ -995,6 +1118,8 @@ function renderAlchemicalItemPool() {
       card.classList.add("card", "no-print");
       card.appendChild(alchemicalItemCardTemplate(alchemicalItem));
       card.id = alchemicalItem.id;
+      card.dataset.search = `${alchemicalItem.title} ${alchemicalItem.englishTitle}`.toLowerCase();
+      card.dataset.filterData = JSON.stringify(alchemicalItem);
       if (selectedIds.has(card.id)) {
         card.classList.add("selected");
         card.classList.remove("no-print");
@@ -1023,6 +1148,11 @@ function renderAlchemicalItemPool() {
       }
       pool.appendChild(card);
     });
+  refreshFieldFilters(
+    "alchemical-items",
+    applicationState.effectiveAlchemicalItems,
+    "filters-alchemical-items",
+  );
   filterAlchemicalItemCards();
   autoSizeText();
 }
@@ -1086,31 +1216,14 @@ function setupSpellSearch() {
 }
 
 function filterSpellCards() {
-  const searchInput = document.getElementById("searchInputSpells");
-  const query = searchInput.value.toLowerCase().trim();
-
-  // get all cards
-  const cards = document.querySelectorAll("#spellPool .card");
-
-  // iterate over all, save and print matches.
-  cards.forEach((card) => {
-    const title =
-      card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
-
-    const matches = title.includes(query);
-    card.style.display = matches ? "" : "none";
-  });
+  filterCards("spells");
 }
 function setupAlchemicalItemSearch() {
   const searchInput = document.getElementById("searchInputAlchemy");
   searchInput.addEventListener("input", filterAlchemicalItemCards);
 }
 function filterAlchemicalItemCards() {
-  const query = document.getElementById("searchInputAlchemy").value.toLowerCase().trim();
-  document.querySelectorAll("#alchemicalItemPool .card").forEach((card) => {
-    const title = card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
-    card.style.display = title.includes(query) ? "" : "none";
-  });
+  filterCards("alchemical-items");
 }
 
 function setBorderlessPrint(borderless) {

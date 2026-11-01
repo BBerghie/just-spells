@@ -17,6 +17,7 @@ The application currently:
 - renders the records as printable cards;
 - provides separate spell, alchemical item, armor, ranged weapon, melee weapon, shield, and general item views;
 - searches cards by title;
+- filters cards by type-specific structured fields;
 - lets the user select cards for printing;
 - allows the card background color to be changed;
 - uses the browser print dialog to print selected cards.

@@ -15,6 +15,37 @@
 
 }
 
+.field-filters {
+    width: 95%;
+    margin: 0.5rem 0;
+}
+
+.field-filters summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.field-filter-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+
+.field-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.field-filter select,
+.field-filter input {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
 
 .search {
     input {

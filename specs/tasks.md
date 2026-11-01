@@ -6,6 +6,21 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ## Dataset loading
 
+### FILTER-001 — Add field filters to every card type
+
+**Status:** DONE
+
+**Goal:** Add relevant sidebar filters to spell, alchemical item, armor, weapon, shield, and general item views.
+
+**Acceptance criteria:**
+
+- Every card type offers filters for its useful structured fields alongside title search.
+- Fields with 2–19 distinct values use selectors; fields with 20 or more use text inputs.
+- Array-valued fields match any contained value, and active filters combine with each other and title search.
+- Clearing filters restores matching cards without changing selection.
+
+**Implementation note:** Added a shared filter renderer and matcher, with field definitions for all seven catalog types. Filter choices are derived from effective records so session edits and custom spell/alchemical records are included. `node --check main.js` and `git diff --check` pass. Browser verification confirmed selector filtering for spell level and alchemical hand count, text filtering for spell traits, melee weapon traits, and item price, combined title/field filtering, and clearing a filter to restore all 103 general items. No browser console errors were reported.
+
 ### DATA-003 — Add equipment and general item catalogs
 
 **Status:** IN PROGRESS

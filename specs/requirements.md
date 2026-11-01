@@ -158,6 +158,18 @@ The application must expose the indexed armor, ranged weapon, melee weapon, shie
 - Catalog cards support selection, deselection, and selected-only printing.
 - Existing spell and alchemical item views continue to load through the shared dataset index.
 
+## R14 — Filter cards by type-specific fields
+
+Every card type must offer sidebar filters for its relevant structured fields, in addition to its title search. For any field with fewer than 20 distinct non-empty values in the current dataset, use a select control; fields with 20 or more values use a text search control. Applying multiple filters narrows the results by all selected criteria.
+
+### Acceptance criteria
+
+- Spell, alchemical item, armor, ranged weapon, melee weapon, shield, and general item views expose relevant field filters in their sidebars.
+- Fields with 2–19 distinct values use a selector; fields with 20 or more distinct values use a text filter.
+- Selectors for array-valued fields match a record when its array contains the selected value.
+- Title search and all field filters combine, and clearing a filter restores the matching cards.
+- Filter controls use English labels and do not alter card selection or the source JSON data.
+
 ## Out of scope for the first editing iteration
 
 - backend persistence;
