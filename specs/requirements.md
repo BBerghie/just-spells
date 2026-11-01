@@ -78,16 +78,17 @@ Editing features must not break the current primary workflow.
 - Only selected cards are included in print output.
 - Background color customization continues to affect cards.
 
-## R8 — English project UI for changed/new interface text
+## R8 — Spanish application interface
 
-New or modified application chrome must be written in English.
+All user-visible application text must be written in Spanish.
 
 Pathfinder dataset content is not application chrome and may remain in its source language.
 
 ### Acceptance criteria
 
-- New buttons, labels, dialogs, validation messages, and console messages are in English.
-- When an existing UI section is substantially modified by a task, nearby application labels should be normalized to English where reasonable and within task scope.
+- Navigation, buttons, labels, dialogs, filters, card field labels, placeholders, accessibility labels, and messages are in Spanish.
+- Pathfinder game data loaded from JSON keeps its original language.
+- Source identifiers, comments, specs, and developer-facing console messages remain in English.
 
 ## R9 — Alchemical item editing is a follow-up feature
 
@@ -124,7 +125,7 @@ Users may switch to borderless printing to reproduce the previous PDF appearance
 ### Acceptance criteria
 
 - Bordered printing is the default.
-- A real CSS border uses the current `--card-background` color in print preview and generated PDFs.
+- A solid CSS frame uses the current `--card-background` color in print preview and generated PDFs, including when browser background graphics are disabled.
 - Print CSS requests exact color reproduction for the colored card frame.
 - A control in both views switches between bordered and borderless printing and clearly communicates the available action.
 - Both controls remain synchronized because they change one shared print mode.

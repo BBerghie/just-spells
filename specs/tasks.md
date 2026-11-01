@@ -4,6 +4,22 @@ Statuses: `TODO`, `IN PROGRESS`, `DONE`, `BLOCKED`.
 
 The tasks are intentionally small. Complete and validate one task before starting the next.
 
+## Interface language and layout
+
+### UI-001 — Translate the interface and align card actions
+
+**Status:** DONE
+
+**Goal:** Display application chrome in Spanish and keep card editing controls clear of card titles.
+
+**Acceptance criteria:**
+
+- Visible navigation, search, filters, editor controls, and generic catalog labels are in Spanish.
+- Card action buttons do not overlap the card title.
+- Pathfinder dataset content remains in its original language.
+
+**Implementation note:** Translated static and dynamically generated application labels, editor forms, filter names, card field labels, and accessible action names. Reserved title space for the `Editar` button and versioned the scripts so browsers reload the updated Spanish labels.
+
 ## Presentation
 
 ### STYLE-001 — Refresh the application and card styles
@@ -428,7 +444,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Acceptance criteria:**
 
-- Selected cards have a real CSS border with an explicit width, style, and `var(--card-background)` color in bordered print mode.
+- Selected cards have a solid print frame with an explicit width and `var(--card-background)` color that remains visible when browser background graphics are disabled.
 - Print CSS requests exact color reproduction with the standard and WebKit print-color-adjust properties.
 - Card dimensions and page layout account for the border with `box-sizing: border-box` and do not unexpectedly add pages or clip content.
 - Internal colored separators and action icons continue to render correctly.
@@ -437,7 +453,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Validation:** Select multiple spell and alchemical cards, choose a non-black color, and verify the border in print preview and a generated PDF with browser background graphics both enabled and disabled where the browser permits.
 
-**Implementation note:** Print media now gives selected cards a real 2px solid border using `var(--card-background)`, keeps it within existing dimensions with `box-sizing: border-box`, and requests exact color reproduction through standard and WebKit properties. The rule is shared by both card types and leaves the existing selected-only print filtering intact.
+**Implementation note:** Print media gives selected cards a 0.48rem solid frame using `var(--card-background)`, matching the screen frame thickness and keeping it inside existing dimensions with `box-sizing: border-box`. The card content uses the frame's inner edge so it is not inset twice. Exact color reproduction is requested through standard and WebKit properties; the rule is shared by both card types and leaves selected-only filtering intact.
 
 ---
 
@@ -468,7 +484,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### PRINT-004 — Run print regression checks
 
-**Status:** DONE
+**Status:** IN PROGRESS
 
 **Goal:** Verify the complete print-border behavior and existing browse/print workflows after implementation.
 
@@ -486,7 +502,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Changed JavaScript passes `node --check` and changed CSS has no obvious parsing errors in supported browsers.
 - The manual validation result and any browser-specific limitation are recorded in the relevant task implementation notes.
 
-**Implementation note:** JavaScript syntax checks, `git diff --check`, deterministic toggle-state checks, local HTTP serving, and a headless Firefox render completed successfully. The installed Firefox supports headless screenshots but provides no command-line print/PDF operation, and no Chromium/WebDriver tooling is installed. Interactive print preview and generated-PDF checks—including background-graphics variations—remain blocked on an interactive browser environment. The implementation therefore must not be marked fully validated until those manual checks pass.
+**Implementation note:** The selected card's print frame now uses a 0.48rem solid border matching the on-screen frame, so its chosen color is not dependent on background graphics. The local browser loaded and parsed the updated print CSS; spell and alchemical cards share the rule. Interactive print preview/PDF checks with background graphics enabled and disabled remain to be completed manually.
 
 ---
 

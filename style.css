@@ -594,10 +594,14 @@ main {
 
     .card.selected {
         box-sizing: border-box;
-        border: 2px solid var(--card-background) !important;
+        border: 0.48rem solid var(--card-background) !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         break-inside: avoid-page;
+    }
+
+    .card.selected .front {
+        padding: 0;
     }
 
     .print-borderless .card.selected {
@@ -605,5 +609,9 @@ main {
         background: transparent !important;
         -webkit-print-color-adjust: economy;
         print-color-adjust: economy;
+    }
+
+    .print-borderless .card.selected .front {
+        padding: 0.48rem;
     }
 }

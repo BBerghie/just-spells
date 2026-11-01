@@ -81,6 +81,10 @@
     vertical-align: middle;
 }
 
+.card:has(.spell-edit-button) .name {
+    padding-right: 3.5rem;
+}
+
 .card .name img {
     width: 1rem;
     margin: auto;

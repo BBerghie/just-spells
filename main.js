@@ -175,50 +175,50 @@ const applicationState = {
 };
 
 const GENERIC_CATALOGS = [
-  { type: "armor", label: "Armor" },
-  { type: "ranged-weapons", label: "Ranged Weapons" },
-  { type: "melee-weapons", label: "Melee Weapons" },
-  { type: "shields", label: "Shields" },
-  { type: "items", label: "Items" },
+  { type: "armor", label: "Armaduras" },
+  { type: "ranged-weapons", label: "Armas a distancia" },
+  { type: "melee-weapons", label: "Armas cuerpo a cuerpo" },
+  { type: "shields", label: "Escudos" },
+  { type: "items", label: "Objetos" },
 ];
 
 const CATALOG_FILTER_FIELDS = {
   spells: [
-    ["actionType", "Action"], ["type", "Spell type"], ["level", "Level"],
-    ["traditions", "Traditions"], ["traits", "Traits"], ["castTime", "Cast time"],
-    ["range", "Range"], ["area", "Area"], ["duration", "Duration"],
-    ["trigger", "Trigger"], ["defense", "Defense"], ["muse", "Muse"],
+    ["actionType", "Acción"], ["type", "Tipo de conjuro"], ["level", "Nivel"],
+    ["traditions", "Tradiciones"], ["traits", "Rasgos"], ["castTime", "Tiempo de lanzamiento"],
+    ["range", "Alcance"], ["area", "Área"], ["duration", "Duración"],
+    ["trigger", "Desencadenante"], ["defense", "Defensa"], ["muse", "Musa"],
   ],
   "alchemical-items": [
-    ["level", "Level"], ["tags", "Tags"], ["price", "Price"],
-    ["hands", "Hands"], ["bulk", "Bulk"], ["actions", "Actions"],
-    ["action_type", "Activation"], ["saving_throw", "Saving throw"],
-    ["onset", "Onset"], ["maximum_duration", "Maximum duration"],
+    ["level", "Nivel"], ["tags", "Rasgos"], ["price", "Precio"],
+    ["hands", "Manos"], ["bulk", "Volumen"], ["actions", "Acciones"],
+    ["action_type", "Activación"], ["saving_throw", "Tirada de salvación"],
+    ["onset", "Demora"], ["maximum_duration", "Duración máxima"],
   ],
   armor: [
-    ["Grupo", "Group"], ["Rasgos arm.", "Armor traits"], ["Tipo", "Armor type"],
-    ["Bon. CA", "AC bonus"], ["Fuerza", "Strength"], ["Pen. pruebas", "Check penalty"],
-    ["Pen. Velocidad", "Speed penalty"], ["Tope Des.", "Dex cap"], ["Imp.", "Bulk"],
+    ["Grupo", "Grupo"], ["Rasgos arm.", "Rasgos de armadura"], ["Tipo", "Tipo de armadura"],
+    ["Bon. CA", "Bonificador a la CA"], ["Fuerza", "Fuerza"], ["Pen. pruebas", "Penalizador a pruebas"],
+    ["Pen. Velocidad", "Penalizador a la velocidad"], ["Tope Des.", "Límite de Des."], ["Imp.", "Volumen"],
   ],
   "ranged-weapons": [
-    ["Rareza", "Rarity"], ["Tipo", "Weapon type"], ["Precio", "Price"],
-    ["Daño", "Damage"], ["R. dist.", "Range"], ["Recarga", "Reload"],
-    ["Imp.", "Bulk"], ["Manos", "Hands"], ["Grupo", "Group"],
-    ["Rasgos de arma", "Weapon traits"],
+    ["Rareza", "Rareza"], ["Tipo", "Tipo de arma"], ["Precio", "Precio"],
+    ["Daño", "Daño"], ["R. dist.", "Alcance"], ["Recarga", "Recarga"],
+    ["Imp.", "Volumen"], ["Manos", "Manos"], ["Grupo", "Grupo"],
+    ["Rasgos de arma", "Rasgos de arma"],
   ],
   "melee-weapons": [
-    ["Rareza", "Rarity"], ["Tipo", "Weapon type"], ["Precio", "Price"],
-    ["Daño", "Damage"], ["Imp.", "Bulk"], ["Manos", "Hands"],
-    ["Grupo", "Group"], ["Rasgos de arma", "Weapon traits"],
+    ["Rareza", "Rareza"], ["Tipo", "Tipo de arma"], ["Precio", "Precio"],
+    ["Daño", "Daño"], ["Imp.", "Volumen"], ["Manos", "Manos"],
+    ["Grupo", "Grupo"], ["Rasgos de arma", "Rasgos de arma"],
   ],
   shields: [
-    ["Precio", "Price"], ["Moneda", "Currency"], ["Bon. CA", "AC bonus"],
-    ["Pen. Velocidad", "Speed penalty"], ["Imp.", "Bulk"], ["Dureza", "Hardness"],
-    ["PG", "Hit points"], ["UR", "Broken threshold"],
+    ["Precio", "Precio"], ["Moneda", "Moneda"], ["Bon. CA", "Bonificador a la CA"],
+    ["Pen. Velocidad", "Penalizador a la velocidad"], ["Imp.", "Volumen"], ["Dureza", "Dureza"],
+    ["PG", "Puntos de golpe"], ["UR", "Umbral de rotura"],
   ],
   items: [
-    ["valor", "Price"], ["moneda", "Currency"], ["Impedimenta", "Bulk"],
-    ["Manos", "Hands"], ["Rareza", "Rarity"], ["Nivel", "Level"],
+    ["valor", "Precio"], ["moneda", "Moneda"], ["Impedimenta", "Volumen"],
+    ["Manos", "Manos"], ["Rareza", "Rareza"], ["Nivel", "Nivel"],
   ],
 };
 
@@ -237,7 +237,7 @@ function requestSpellEdit(spellId) {
   const dialog = document.getElementById("spellEditorDialog");
   const form = document.getElementById("spellEditorForm");
   clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
-  document.getElementById("spellEditorHeading").textContent = "Edit spell";
+  document.getElementById("spellEditorHeading").textContent = "Editar conjuro";
   const values = {
     title: spell.title,
     enTitle: spell.enTitle,
@@ -270,7 +270,7 @@ function requestSpellCreate() {
   applicationState.editingSpellId = null;
   clearCardPreview("spellEditorPreview", "spellEditorPreviewCard");
   form.reset();
-  document.getElementById("spellEditorHeading").textContent = "Create spell";
+  document.getElementById("spellEditorHeading").textContent = "Crear conjuro";
   dialog.showModal();
 }
 
@@ -503,8 +503,8 @@ function renderSpellPool() {
     const editButton = document.createElement("button");
     editButton.type = "button";
     editButton.classList.add("spell-edit-button", "no-print");
-    editButton.textContent = "Edit";
-    editButton.setAttribute("aria-label", `Edit ${spell.title}`);
+    editButton.textContent = "Editar";
+    editButton.setAttribute("aria-label", `Editar ${spell.title}`);
     editButton.addEventListener("click", (event) => {
       event.stopPropagation();
       requestSpellEdit(spell.id);
@@ -520,10 +520,10 @@ function renderSpellPool() {
       const resetButton = document.createElement("button");
       resetButton.type = "button";
       resetButton.classList.add("spell-reset-button", "no-print");
-      resetButton.textContent = "Reset";
+      resetButton.textContent = "Restaurar";
       resetButton.setAttribute(
         "aria-label",
-        `Reset ${spell.title} to its source version`,
+        `Restaurar ${spell.title} a su versión original`,
       );
       resetButton.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -540,10 +540,10 @@ function renderSpellPool() {
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.classList.add("spell-delete-button", "no-print");
-      deleteButton.textContent = "Delete";
+      deleteButton.textContent = "Eliminar";
       deleteButton.setAttribute(
         "aria-label",
-        `Delete custom spell ${spell.title}`,
+        `Eliminar el conjuro personalizado ${spell.title}`,
       );
       deleteButton.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -645,7 +645,7 @@ function requestAlchemicalItemEdit(itemId) {
       : value ?? "";
   });
   document.getElementById("alchemicalItemEditorHeading").textContent =
-    "Edit alchemical item";
+    "Editar objeto alquímico";
   document.getElementById("alchemicalItemEditorDialog").showModal();
 }
 
@@ -658,7 +658,7 @@ function requestAlchemicalItemCreate() {
   );
   document.getElementById("alchemicalItemEditorForm").reset();
   document.getElementById("alchemicalItemEditorHeading").textContent =
-    "Create alchemical item";
+    "Crear objeto alquímico";
   document.getElementById("alchemicalItemEditorDialog").showModal();
 }
 
@@ -860,12 +860,12 @@ function refreshFieldFilters(type, records, containerId) {
     let control;
     if (uniqueValues.length < 20) {
       control = document.createElement("select");
-      control.add(new Option("All", ""));
+      control.add(new Option("Todos", ""));
       uniqueValues.forEach((value) => control.add(new Option(value, value)));
     } else {
       control = document.createElement("input");
       control.type = "search";
-      control.placeholder = `Filter ${label.toLowerCase()}...`;
+      control.placeholder = `Filtrar por ${label.toLowerCase()}...`;
     }
     control.dataset.filterField = field;
     control.setAttribute("aria-label", label);
@@ -930,16 +930,16 @@ function setupGenericCatalogViews() {
     const search = document.createElement("input");
     search.type = "search";
     search.id = `search-${type}`;
-    search.placeholder = `Search ${label.toLowerCase()}...`;
-    search.setAttribute("aria-label", `Search ${label.toLowerCase()}`);
+    search.placeholder = `Buscar ${label.toLowerCase()}...`;
+    search.setAttribute("aria-label", `Buscar ${label.toLowerCase()}`);
     const searchLabel = document.createElement("label");
     searchLabel.htmlFor = search.id;
-    searchLabel.textContent = "Search";
+    searchLabel.textContent = "Búsqueda";
     const filters = document.createElement("details");
     filters.className = "field-filters";
     filters.id = `filters-${type}`;
     const filtersSummary = document.createElement("summary");
-    filtersSummary.textContent = "Filters";
+    filtersSummary.textContent = "Filtros";
     const filterControls = document.createElement("div");
     filterControls.className = "field-filter-controls";
     filters.append(filtersSummary, filterControls);
@@ -948,27 +948,27 @@ function setupGenericCatalogViews() {
     printButton.className = "print-border-toggle no-print";
     const printAction = document.createElement("button");
     printAction.type = "button";
-    printAction.textContent = "Print selected";
+    printAction.textContent = "Imprimir seleccionados";
     printAction.addEventListener("click", () => window.print());
     const colorControl = document.createElement("div");
     const colorPicker = document.createElement("input");
     colorPicker.type = "color";
     colorPicker.value = "#000000";
-    colorPicker.setAttribute("aria-label", "Card background color");
+    colorPicker.setAttribute("aria-label", "Color de fondo de las tarjetas");
     colorPicker.addEventListener("input", () => {
       document.documentElement.style.setProperty("--card-background", colorPicker.value);
     });
     const colorLabel = document.createElement("label");
     colorLabel.htmlFor = `color-${type}`;
     colorPicker.id = colorLabel.htmlFor;
-    colorLabel.textContent = "Card color";
+    colorLabel.textContent = "Color de las tarjetas";
     colorControl.append(colorPicker, colorLabel);
     controls.append(search, searchLabel, filters, printButton, printAction, colorControl);
 
     const selectedSection = document.createElement("section");
     selectedSection.className = "selected-spells";
     const selectedHeading = document.createElement("h2");
-    selectedHeading.textContent = `Selected ${label.toLowerCase()}`;
+    selectedHeading.textContent = `Selección: ${label.toLowerCase()}`;
     const selectedList = document.createElement("ul");
     selectedList.className = "selected-spells selected-catalog-items no-print";
     selectedList.id = `selected-${type}`;
@@ -1004,7 +1004,40 @@ async function loadGenericCatalogs() {
 }
 
 function getGenericRecordTitle(record) {
-  return String(record.Nombre ?? record.Escudo ?? record.title ?? record.name ?? "Unnamed item");
+  return String(record.Nombre ?? record.Escudo ?? record.title ?? record.name ?? "Objeto sin nombre");
+}
+
+function translateCatalogField(label) {
+  const translations = {
+    name: "Nombre",
+    title: "Título",
+    description: "Descripción",
+    price: "Precio",
+    currency: "Moneda",
+    bulk: "Volumen",
+    hands: "Manos",
+    rarity: "Rareza",
+    level: "Nivel",
+    type: "Tipo",
+    damage: "Daño",
+    range: "Alcance",
+    reload: "Recarga",
+    group: "Grupo",
+    traits: "Rasgos",
+    hardness: "Dureza",
+    "hit points": "Puntos de golpe",
+    "broken threshold": "Umbral de rotura",
+    "ac bonus": "Bonificador a la CA",
+    "speed penalty": "Penalizador a la velocidad",
+    "check penalty": "Penalizador a pruebas",
+    "dex cap": "Límite de Des.",
+    strength: "Fuerza",
+  };
+  const normalizedLabel = label.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+  return translations[normalizedLabel] ?? label;
 }
 
 function genericItemCardTemplate(record, catalogLabel) {
@@ -1037,7 +1070,8 @@ function genericItemCardTemplate(record, catalogLabel) {
     const first = attributes[index];
     const second = attributes[index + 1];
     body.appendChild(spellStatusTemplate(
-      first[0], first[1], second?.[0] ?? "", second?.[1] ?? "",
+      translateCatalogField(first[0]), first[1],
+      second ? translateCatalogField(second[0]) : "", second?.[1] ?? "",
     ));
   }
 
@@ -1047,7 +1081,7 @@ function genericItemCardTemplate(record, catalogLabel) {
     paragraph.className = "text";
     if (label !== "description") {
       const fieldLabel = document.createElement("b");
-      fieldLabel.textContent = `${label}: `;
+      fieldLabel.textContent = `${translateCatalogField(label)}: `;
       paragraph.appendChild(fieldLabel);
     }
     paragraph.appendChild(document.createTextNode(String(value)));
@@ -1060,7 +1094,7 @@ function genericItemCardTemplate(record, catalogLabel) {
   const level = record.Nivel ?? record.level;
   const type = document.createElement("b");
   type.className = "type srtype";
-  type.textContent = level === undefined || level === null ? "" : `LEVEL ${level}`;
+  type.textContent = level === undefined || level === null ? "" : `NIVEL ${level}`;
   template.append(body, category, type);
   return template;
 }
@@ -1127,14 +1161,14 @@ function renderAlchemicalItemPool() {
         if (selectedTitle) selectedTitle.textContent = alchemicalItem.title;
       }
       card.addEventListener("click", () => selectAlchemicalItem(alchemicalItem, card.id));
-      const editButton = createCardActionButton("Edit", `Edit ${alchemicalItem.title}`, () =>
+      const editButton = createCardActionButton("Editar", `Editar ${alchemicalItem.title}`, () =>
         requestAlchemicalItemEdit(alchemicalItem.id));
       card.appendChild(editButton);
       if (Object.prototype.hasOwnProperty.call(
         applicationState.spellSession.editedAlchemicalItems, alchemicalItem.id,
       )) {
         card.appendChild(createCardActionButton(
-          "Reset", `Reset ${alchemicalItem.title} to its source version`,
+          "Restaurar", `Restaurar ${alchemicalItem.title} a su versión original`,
           () => resetAlchemicalItemEdit(alchemicalItem.id),
         ));
       }
@@ -1142,7 +1176,7 @@ function renderAlchemicalItemPool() {
         (item) => item.id === alchemicalItem.id,
       )) {
         card.appendChild(createCardActionButton(
-          "Delete", `Delete custom alchemical item ${alchemicalItem.title}`,
+          "Eliminar", `Eliminar el objeto alquímico personalizado ${alchemicalItem.title}`,
           () => deleteCustomAlchemicalItem(alchemicalItem.id),
         ));
       }
@@ -1230,8 +1264,8 @@ function setBorderlessPrint(borderless) {
   document.documentElement.classList.toggle("print-borderless", borderless);
   document.querySelectorAll(".print-border-toggle").forEach((button) => {
     button.textContent = borderless
-      ? "Print with borders"
-      : "Print without borders";
+      ? "Imprimir con bordes"
+      : "Imprimir sin bordes";
     button.setAttribute("aria-pressed", String(borderless));
   });
 }

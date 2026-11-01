@@ -3,15 +3,15 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./style.css" />
-        <link rel="stylesheet" href="./style/spellCard.css?v=2" />
-        <script type="text/javascript" src="./js/CardTemplate.js"></script>
-        <script type="text/javascript" src="./main.js"></script>
-        <title>A simple Path Finder spell cards maker</title>
+        <link rel="stylesheet" href="./style.css?v=2" />
+        <link rel="stylesheet" href="./style/spellCard.css?v=4" />
+        <script type="text/javascript" src="./js/CardTemplate.js?v=2"></script>
+        <script type="text/javascript" src="./main.js?v=2"></script>
+        <title>Tarjetas de Pathfinder 2.ª edición</title>
     </head>
     <body>
         <header class="no-print">
-            <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
+            <h1 id="mainTitle">Tarjetas de Pathfinder 2.ª edición</h1>
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'Spells')">Conjuros</button>
                 <button class="tablinks" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
@@ -28,12 +28,12 @@
                             />
                             <label for="searchInputSpells">Búsqueda</label>
                             <details class="field-filters" id="filters-spells">
-                                <summary>Filters</summary>
+                                <summary>Filtros</summary>
                                 <div class="field-filter-controls"></div>
                             </details>
-                            <button id="createSpellButton" class="no-print" type="button">Create spell</button>
-                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Print without borders</button>
-                            <button onclick="window.print()">Imprimir</button>
+                            <button id="createSpellButton" class="no-print" type="button">Crear conjuro</button>
+                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
+                            <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
                                 <input type="color" id="colorPickerSpells" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
                                 <label for="colorPickerSpells">Elegir color de fondo</label>
@@ -70,12 +70,12 @@
                             />
                             <label for="searchInputAlchemy">Búsqueda</label>
                             <details class="field-filters" id="filters-alchemical-items">
-                                <summary>Filters</summary>
+                                <summary>Filtros</summary>
                                 <div class="field-filter-controls"></div>
                             </details>
-                            <button id="createAlchemicalItemButton" class="no-print" type="button">Create alchemical item</button>
-                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Print without borders</button>
-                            <button onclick="window.print()">Imprimir</button>
+                            <button id="createAlchemicalItemButton" class="no-print" type="button">Crear objeto alquímico</button>
+                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Imprimir sin bordes</button>
+                            <button onclick="window.print()">Imprimir seleccionados</button>
                             <div>
                                 <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
                                 <label for="colorPickerAlchemy">Elegir color de fondo</label>
@@ -103,88 +103,88 @@
         </main>
         <dialog id="spellEditorDialog" class="spell-editor no-print" aria-labelledby="spellEditorHeading">
             <form id="spellEditorForm">
-                <h2 id="spellEditorHeading">Edit spell</h2>
+                <h2 id="spellEditorHeading">Editar conjuro</h2>
                 <div class="spell-editor-fields">
-                    <label>Title <input name="title" type="text" /></label>
-                    <label>English title <input name="enTitle" type="text" /></label>
-                    <label>Action type
+                    <label>Título <input name="title" type="text" /></label>
+                    <label>Título en inglés <input name="enTitle" type="text" /></label>
+                    <label>Tipo de acción
                         <select name="actionType">
-                            <option value="">None</option>
-                            <option value="one-action">One action</option>
-                            <option value="two-actions">Two actions</option>
-                            <option value="three-actions">Three actions</option>
-                            <option value="reaction">Reaction</option>
-                            <option value="free-action">Free action</option>
+                            <option value="">Ninguna</option>
+                            <option value="one-action">Una acción</option>
+                            <option value="two-actions">Dos acciones</option>
+                            <option value="three-actions">Tres acciones</option>
+                            <option value="reaction">Reacción</option>
+                            <option value="free-action">Acción gratuita</option>
                         </select>
                     </label>
-                    <label>Type <input name="type" type="text" /></label>
-                    <label>Level <input name="level" type="text" /></label>
-                    <label>Traditions <input name="traditions" type="text" /></label>
-                    <label>Cast time <input name="castTime" type="text" /></label>
-                    <label>Range <input name="range" type="text" /></label>
-                    <label>Area <input name="area" type="text" /></label>
-                    <label>Duration <input name="duration" type="text" /></label>
-                    <label>Objectives <input name="objectives" type="text" /></label>
-                    <label>Trigger <textarea name="trigger" rows="3"></textarea></label>
-                    <label class="spell-editor-wide">Description <textarea name="description" rows="7"></textarea></label>
-                    <label class="spell-editor-wide">Heightenings <textarea name="heightenings" rows="4"></textarea></label>
+                    <label>Tipo <input name="type" type="text" /></label>
+                    <label>Nivel <input name="level" type="text" /></label>
+                    <label>Tradiciones <input name="traditions" type="text" /></label>
+                    <label>Tiempo de lanzamiento <input name="castTime" type="text" /></label>
+                    <label>Alcance <input name="range" type="text" /></label>
+                    <label>Área <input name="area" type="text" /></label>
+                    <label>Duración <input name="duration" type="text" /></label>
+                    <label>Objetivos <input name="objectives" type="text" /></label>
+                    <label>Desencadenante <textarea name="trigger" rows="3"></textarea></label>
+                    <label class="spell-editor-wide">Descripción <textarea name="description" rows="7"></textarea></label>
+                    <label class="spell-editor-wide">Potenciaciones <textarea name="heightenings" rows="4"></textarea></label>
                 </div>
                 <section id="spellEditorPreview" class="editor-preview" aria-labelledby="spellEditorPreviewHeading" aria-live="polite" hidden>
-                    <h3 id="spellEditorPreviewHeading">Card preview</h3>
+                    <h3 id="spellEditorPreviewHeading">Vista previa de la tarjeta</h3>
                     <div id="spellEditorPreviewCard" class="card selected editor-preview-card"></div>
                 </section>
                 <div class="spell-editor-actions">
-                    <button id="previewSpell" type="button">Preview</button>
-                    <button id="saveSpellEdit" type="submit">Save</button>
-                    <button id="cancelSpellEdit" type="button">Cancel</button>
+                    <button id="previewSpell" type="button">Vista previa</button>
+                    <button id="saveSpellEdit" type="submit">Guardar</button>
+                    <button id="cancelSpellEdit" type="button">Cancelar</button>
                 </div>
             </form>
         </dialog>
         <dialog id="alchemicalItemEditorDialog" class="spell-editor no-print" aria-labelledby="alchemicalItemEditorHeading">
             <form id="alchemicalItemEditorForm">
-                <h2 id="alchemicalItemEditorHeading">Edit alchemical item</h2>
-                <p class="editor-help">Separate tags with commas. Enter each item tier component on a separate line.</p>
+                <h2 id="alchemicalItemEditorHeading">Editar objeto alquímico</h2>
+                <p class="editor-help">Separa los rasgos con comas. Escribe cada componente del nivel en una línea distinta.</p>
                 <div class="spell-editor-fields">
-                    <label>Title <input name="title" type="text" /></label>
-                    <label>English title <input name="englishTitle" type="text" /></label>
-                    <label>Level <input name="level" type="text" /></label>
-                    <label>Tags <input name="tags" type="text" /></label>
-                    <label>Price <input name="price" type="text" /></label>
-                    <label>Hands <input name="hands" type="text" /></label>
-                    <label>Bulk <input name="bulk" type="text" /></label>
-                    <label>Action type
+                    <label>Título <input name="title" type="text" /></label>
+                    <label>Título en inglés <input name="englishTitle" type="text" /></label>
+                    <label>Nivel <input name="level" type="text" /></label>
+                    <label>Rasgos <input name="tags" type="text" /></label>
+                    <label>Precio <input name="price" type="text" /></label>
+                    <label>Manos <input name="hands" type="text" /></label>
+                    <label>Volumen <input name="bulk" type="text" /></label>
+                    <label>Tipo de acción
                         <select name="actions">
-                            <option value="">None</option><option value="one-action">One action</option>
-                            <option value="two-actions">Two actions</option><option value="three-actions">Three actions</option>
-                            <option value="reaction">Reaction</option><option value="free-action">Free action</option>
+                            <option value="">Ninguna</option><option value="one-action">Una acción</option>
+                            <option value="two-actions">Dos acciones</option><option value="three-actions">Tres acciones</option>
+                            <option value="reaction">Reacción</option><option value="free-action">Acción gratuita</option>
                         </select>
                     </label>
-                    <label>Activation <input name="action_type" type="text" /></label>
-                    <label>Saving throw <input name="saving_throw" type="text" /></label>
-                    <label>Onset <input name="onset" type="text" /></label>
-                    <label>Maximum duration <input name="maximum_duration" type="text" /></label>
-                    <label class="spell-editor-wide">Description <textarea name="description" rows="5"></textarea></label>
-                    <label>Benefit <textarea name="benefit" rows="3"></textarea></label>
-                    <label>Drawback <textarea name="drawback" rows="3"></textarea></label>
-                    <label>Minor tier <textarea name="minor" rows="3"></textarea></label>
-                    <label>Lesser tier <textarea name="lesser" rows="3"></textarea></label>
-                    <label>Moderate tier <textarea name="moderate" rows="3"></textarea></label>
-                    <label>Greater tier <textarea name="greater" rows="3"></textarea></label>
-                    <label>Major tier <textarea name="major" rows="3"></textarea></label>
-                    <label>Unclassified tier <textarea name="level_true" rows="3"></textarea></label>
-                    <label>Stage 1 <textarea name="stage1" rows="2"></textarea></label>
-                    <label>Stage 2 <textarea name="stage2" rows="2"></textarea></label>
-                    <label>Stage 3 <textarea name="stage3" rows="2"></textarea></label>
-                    <label>Stage 4 <textarea name="stage4" rows="2"></textarea></label>
+                    <label>Activación <input name="action_type" type="text" /></label>
+                    <label>Tirada de salvación <input name="saving_throw" type="text" /></label>
+                    <label>Demora <input name="onset" type="text" /></label>
+                    <label>Duración máxima <input name="maximum_duration" type="text" /></label>
+                    <label class="spell-editor-wide">Descripción <textarea name="description" rows="5"></textarea></label>
+                    <label>Beneficio <textarea name="benefit" rows="3"></textarea></label>
+                    <label>Desventaja <textarea name="drawback" rows="3"></textarea></label>
+                    <label>Nivel menor <textarea name="minor" rows="3"></textarea></label>
+                    <label>Nivel inferior <textarea name="lesser" rows="3"></textarea></label>
+                    <label>Nivel moderado <textarea name="moderate" rows="3"></textarea></label>
+                    <label>Nivel superior <textarea name="greater" rows="3"></textarea></label>
+                    <label>Nivel mayor <textarea name="major" rows="3"></textarea></label>
+                    <label>Nivel sin clasificar <textarea name="level_true" rows="3"></textarea></label>
+                    <label>Etapa 1 <textarea name="stage1" rows="2"></textarea></label>
+                    <label>Etapa 2 <textarea name="stage2" rows="2"></textarea></label>
+                    <label>Etapa 3 <textarea name="stage3" rows="2"></textarea></label>
+                    <label>Etapa 4 <textarea name="stage4" rows="2"></textarea></label>
                 </div>
                 <section id="alchemicalItemEditorPreview" class="editor-preview" aria-labelledby="alchemicalItemEditorPreviewHeading" aria-live="polite" hidden>
-                    <h3 id="alchemicalItemEditorPreviewHeading">Card preview</h3>
+                    <h3 id="alchemicalItemEditorPreviewHeading">Vista previa de la tarjeta</h3>
                     <div id="alchemicalItemEditorPreviewCard" class="card selected editor-preview-card"></div>
                 </section>
                 <div class="spell-editor-actions">
-                    <button id="previewAlchemicalItem" type="button">Preview</button>
-                    <button type="submit">Save</button>
-                    <button id="cancelAlchemicalItemEdit" type="button">Cancel</button>
+                    <button id="previewAlchemicalItem" type="button">Vista previa</button>
+                    <button type="submit">Guardar</button>
+                    <button id="cancelAlchemicalItemEdit" type="button">Cancelar</button>
                 </div>
             </form>
         </dialog>
