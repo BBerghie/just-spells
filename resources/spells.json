@@ -1,4 +1,6 @@
-[
+{
+  "type": "spells",
+  "data": [
    {
       "englishTitle":"ENERGY ABSORPTION",
       "title":"ABSORCIÓN DE ENERGÍA",
@@ -12704,3 +12706,4 @@
       "heightenings":"Potenciado (+1) El daño por sangrado con un fallo crítico se incrementa en 1d4."
    }
 ]
+}

@@ -1,0 +1,7 @@
+{
+  "type": "dataset-index",
+  "files": [
+    "spells.json",
+    "alchemical_items.json"
+  ]
+}

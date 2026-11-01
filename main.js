@@ -399,8 +399,7 @@ function setupSpellEditor() {
 
 async function loadSpells() {
   try {
-    const res = await fetch("./resources/spells.json");
-    const rawSpells = await res.json();
+    const rawSpells = await loadTypedDataset("spells");
 
     applicationState.spellSession = loadSpellSession();
     applicationState.sourceSpells = rawSpells.map(normalizeSpell);
@@ -725,8 +724,7 @@ function setupAlchemicalItemEditor() {
 
 async function loadAlchemicalItems() {
   try {
-    const res = await fetch("./resources/alchemical_items.json");
-    const rawItems = await res.json();
+    const rawItems = await loadTypedDataset("alchemical-items");
     applicationState.sourceAlchemicalItems = rawItems.map(normalizeAlchemicalItem);
     applicationState.effectiveAlchemicalItems = buildEffectiveAlchemicalItems(
       applicationState.sourceAlchemicalItems, applicationState.spellSession,
@@ -736,6 +734,38 @@ async function loadAlchemicalItems() {
   } catch (error) {
     console.error("Unable to load alchemical items.", error);
   }
+}
+
+async function loadTypedDataset(expectedType) {
+  const indexResponse = await fetch("./resources/datasets.json");
+  if (!indexResponse.ok) {
+    throw new Error(`Unable to load the resource dataset index (${indexResponse.status}).`);
+  }
+
+  const index = await indexResponse.json();
+  if (index.type !== "dataset-index" || !Array.isArray(index.files)) {
+    throw new Error("Invalid resource dataset index format.");
+  }
+
+  const fileNames = index.files.filter(
+    (fileName) => typeof fileName === "string" && /^[\w-]+\.json$/.test(fileName),
+  );
+  const datasets = await Promise.all(fileNames.map(async (fileName) => {
+    const response = await fetch(`./resources/${encodeURIComponent(fileName)}`);
+    if (!response.ok) {
+      throw new Error(`Unable to load resource dataset ${fileName} (${response.status}).`);
+    }
+    return { fileName, dataset: await response.json() };
+  }));
+
+  const matchingDatasets = datasets.filter(
+    ({ dataset }) => dataset.type === expectedType && Array.isArray(dataset.data),
+  );
+  if (matchingDatasets.length === 0) {
+    throw new Error(`No resource datasets found for type "${expectedType}".`);
+  }
+
+  return matchingDatasets.flatMap(({ dataset }) => dataset.data);
 }
 
 function renderAlchemicalItemPool() {

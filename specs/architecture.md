@@ -11,15 +11,16 @@ Just Spells is a static client-side application.
 - `style/spellCard.css` contains card styles.
 - `main.js` loads data, renders card lists, handles selection/search/tabs, and contains some utility behavior.
 - `js/CardTemplate.js` contains card rendering helpers/templates.
-- `resources/spells.json` is the bundled spell dataset.
-- `resources/alchemical_items.json` is the bundled alchemical item dataset.
+- `resources/datasets.json` indexes the JSON dataset filenames for static hosting.
+- Each indexed dataset declares a root `type` and stores its records under `data`; loaders merge every dataset matching the requested type.
+- The index file itself uses `{ "type": "dataset-index", "files": [...] }`.
 
 ### Runtime data flow
 
 Current flow:
 
 ```text
-Bundled JSON
+Dataset index -> typed bundled JSON (`type` and `data`)
     |
     v
 fetch()

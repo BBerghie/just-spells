@@ -113,7 +113,7 @@ The editable model preserves all fields currently rendered from `alchemical_item
 - Edited/custom titles participate in source-title and English-title search.
 - Selection, deselection, selected-list labels, printing, and background color continue to work after re-rendering.
 - User-entered values are rendered as text and cannot inject executable markup.
-- The bundled alchemical JSON schema and files are not changed.
+- The alchemical dataset is identified by its root `type` field and keeps its records under `data`.
 
 ## R11 — Printable card borders
 

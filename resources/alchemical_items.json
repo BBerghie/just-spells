@@ -1,4 +1,6 @@
-[ {
+{
+  "type": "alchemical-items",
+  "data": [ {
     "englishTitle" : "ACID FLASK",
     "title" : "MATRAZ DE ÁCIDO",
     "level" : "1",
@@ -2001,3 +2003,4 @@
     "stage3" : "",
     "stage4" : ""
   } ]
+}

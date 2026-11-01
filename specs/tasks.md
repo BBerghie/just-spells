@@ -4,6 +4,37 @@ Statuses: `TODO`, `IN PROGRESS`, `DONE`, `BLOCKED`.
 
 The tasks are intentionally small. Complete and validate one task before starting the next.
 
+## Dataset loading
+
+### DATA-002 — Combine all datasets by declared type
+
+**Status:** DONE
+
+**Goal:** Load every indexed JSON dataset whose root `type` matches the requested section and merge its records into that section's main list.
+
+**Acceptance criteria:**
+
+- A static dataset index lists the JSON files in `resources` without requiring server-side directory enumeration.
+- Spell and alchemical loaders fetch all indexed files and combine each matching dataset's `data` records.
+- Files of another type do not enter the section's list; a missing matching type produces a clear load error.
+- Existing single-dataset files remain valid inputs.
+
+**Implementation note:** Added `resources/datasets.json` as a static-hosting-compatible file index. `loadTypedDataset(type)` fetches its listed JSON files in parallel, filters by root `type`, then concatenates the `data` arrays.
+
+### DATA-001 — Select datasets by their declared type
+
+**Status:** DONE
+
+**Goal:** Identify each bundled dataset from its root `type` field rather than inferring the dataset type from its filename.
+
+**Acceptance criteria:**
+
+- Spell and alchemical item JSON use a root object with a `type` discriminator and a `data` array.
+- Each section validates the expected discriminator before normalizing and rendering its records.
+- An HTTP or dataset format error is reported without silently loading the wrong data.
+
+**Implementation note:** Added `type: "spells"` and `type: "alchemical-items"` wrappers to the bundled JSON files and a shared typed dataset loader. The root JSON schema intentionally changed from an array to `{ type, data }`; per-record fields remain unchanged.
+
 ## Foundation
 
 ### JS-001 — Document and normalize the spell data model

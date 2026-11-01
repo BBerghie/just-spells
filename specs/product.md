@@ -12,8 +12,8 @@ Pathfinder spell and item descriptions are useful during play but are not always
 
 The application currently:
 
-- loads spell data from `resources/spells.json`;
-- loads alchemical item data from `resources/alchemical_items.json`;
+- loads and combines all indexed JSON datasets of type `spells`;
+- loads and combines all indexed JSON datasets of type `alchemical-items`;
 - renders the records as printable cards;
 - provides separate spell and alchemical item views;
 - searches cards by title;
