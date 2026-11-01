@@ -1152,7 +1152,10 @@ function genericItemCardTemplate(record, catalogLabel) {
   body.className = "body";
   const title = document.createElement("h3");
   title.className = "name lined srname";
-  title.textContent = getGenericRecordTitle(record);
+  const titleText = document.createElement("span");
+  titleText.className = "card-title-text";
+  titleText.textContent = getGenericRecordTitle(record);
+  title.appendChild(titleText);
   const entries = Object.entries(record).filter(([key]) => key !== "id");
   const titleField = getGenericRecordTitleField(record);
   const titleEntry = entries.find(([key]) => key === titleField);
@@ -1199,49 +1202,230 @@ function genericItemCardTemplate(record, catalogLabel) {
   template.append(body, category, type);
   return template;
 }
+
+function createCatalogCardContent(record, type, catalogLabel) {
+  if (type === SPELL_CATALOG_TYPE) return spellCardTemplate(record);
+  if (type === ALCHEMICAL_CATALOG_TYPE) return alchemicalItemCardTemplate(record);
+  return genericItemCardTemplate(record, catalogLabel);
+}
+
+function getCardMeasurementRack() {
+  let rack = document.getElementById("card-measurement-rack");
+  if (!rack) {
+    rack = document.createElement("ul");
+    rack.id = "card-measurement-rack";
+    rack.className = "spell-list no-print";
+    rack.setAttribute("aria-hidden", "true");
+    Object.assign(rack.style, {
+      position: "fixed",
+      top: "0",
+      left: "-100000px",
+      height: "1px",
+      overflow: "visible",
+      visibility: "hidden",
+      pointerEvents: "none",
+    });
+    document.body.appendChild(rack);
+  }
+
+  const visiblePool = [...document.querySelectorAll(".catalog-view .spell-list")]
+    .find((pool) => pool.clientWidth > 0);
+  rack.style.width = `${visiblePool?.clientWidth || Math.max(272, window.innerWidth - 360)}px`;
+  return rack;
+}
+
+function getCardTextNodes(element) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  return nodes;
+}
+
+function truncateAfterTextNode(root, textNode) {
+  let current = textNode;
+  while (current !== root) {
+    let sibling = current.nextSibling;
+    while (sibling) {
+      const nextSibling = sibling.nextSibling;
+      sibling.remove();
+      sibling = nextSibling;
+    }
+    current = current.parentNode;
+  }
+}
+
+function splitCardContentBlock(block, body) {
+  const textNodes = getCardTextNodes(block);
+  const candidates = textNodes
+    .filter((node) => node.data.trim() && !node.parentElement?.closest("strong, b, em"))
+    .sort((first, second) => second.data.length - first.data.length);
+  const target = candidates[0];
+  if (!target) return null;
+
+  const originalText = target.data;
+  const words = originalText.match(/\S+\s*/g) ?? [];
+  let prefix = "";
+  let remainder = "";
+
+  if (words.length > 1) {
+    let low = 0;
+    let high = words.length;
+    while (low < high) {
+      const middle = Math.ceil((low + high) / 2);
+      target.data = words.slice(0, middle).join("");
+      if (body.scrollHeight <= body.clientHeight + 1) low = middle;
+      else high = middle - 1;
+    }
+    prefix = words.slice(0, low).join("");
+    remainder = words.slice(low).join("");
+  }
+
+  if (!prefix && originalText.length > 1) {
+    const characters = Array.from(originalText);
+    let low = 1;
+    let high = characters.length - 1;
+    while (low <= high) {
+      const middle = Math.ceil((low + high) / 2);
+      target.data = characters.slice(0, middle).join("");
+      if (body.scrollHeight <= body.clientHeight + 1) low = middle + 1;
+      else high = middle - 1;
+    }
+    const splitIndex = Math.max(1, high);
+    prefix = characters.slice(0, splitIndex).join("");
+    remainder = characters.slice(splitIndex).join("");
+  }
+
+  if (!prefix || !remainder) {
+    target.data = originalText;
+    return null;
+  }
+
+  target.data = prefix;
+  const continuation = block.cloneNode(true);
+  const continuationTextNodes = getCardTextNodes(continuation);
+  const targetIndex = textNodes.indexOf(target);
+  const continuationTarget = continuationTextNodes[targetIndex];
+  if (!continuationTarget) return null;
+  continuationTarget.data = remainder;
+  const continuationItem = continuationTarget.parentElement?.closest("li");
+  continuationTextNodes.slice(0, targetIndex).forEach((node) => {
+    const item = node.parentElement?.closest("li");
+    if (item && item !== continuationItem) item.remove();
+    else if (!node.parentElement?.closest("strong, b, em")) node.data = "";
+  });
+  truncateAfterTextNode(block, target);
+  return continuation;
+}
+
+function paginateCatalogRecord(record, type, catalogLabel) {
+  const template = createCatalogCardContent(record, type, catalogLabel);
+  const templateBody = template.querySelector(".body");
+  const title = templateBody.querySelector(".name");
+  const titleText = title.querySelector(".card-title-text");
+  const originalTitle = titleText?.textContent ?? getGenericRecordTitle(record);
+  if (titleText) titleText.textContent = `${originalTitle} (888/888)`;
+
+  const contentBlocks = [...templateBody.children].slice(1);
+  const measurementRack = getCardMeasurementRack();
+  const createPage = () => {
+    const card = document.createElement("li");
+    card.className = "card generic-card";
+    const content = template.cloneNode(true);
+    const body = content.querySelector(".body");
+    const pageTitle = title.cloneNode(true);
+    body.replaceChildren(pageTitle);
+    card.appendChild(content);
+    measurementRack.appendChild(card);
+    return card;
+  };
+  const overflows = (body) => body.scrollHeight > body.clientHeight + 1;
+  const hasBodyContent = (body) => body.children.length > 1;
+
+  const pages = [];
+  let page = createPage();
+  for (const sourceBlock of contentBlocks) {
+    let pendingBlock = sourceBlock.cloneNode(true);
+    while (pendingBlock) {
+      const body = page.querySelector(".body");
+      body.appendChild(pendingBlock);
+      if (!overflows(body)) break;
+
+      body.removeChild(pendingBlock);
+      const hasPriorContent = hasBodyContent(body);
+      body.appendChild(pendingBlock);
+      const continuation = splitCardContentBlock(pendingBlock, body);
+      if (continuation) {
+        pages.push(page);
+        page = createPage();
+        pendingBlock = continuation;
+        continue;
+      }
+
+      if (hasPriorContent) {
+        body.removeChild(pendingBlock);
+        pages.push(page);
+        page = createPage();
+        continue;
+      }
+      break;
+    }
+  }
+  pages.push(page);
+  measurementRack.replaceChildren();
+
+  pages.forEach((card, index) => {
+    const pageTitle = card.querySelector(".card-title-text");
+    if (pageTitle) {
+      pageTitle.textContent = pages.length > 1
+        ? `${originalTitle} (${index + 1}/${pages.length})`
+        : originalTitle;
+    }
+  });
+  return pages;
+}
+
 function renderGenericCatalog(type) {
   const catalog = getGenericCatalog(type);
   const pool = document.getElementById(`pool-${type}`);
   if (!catalog || !pool) return;
   const selectedIds = new Set(
-    Array.from(pool.querySelectorAll(".card.selected"), (card) => card.id),
+    Array.from(pool.querySelectorAll(".card.selected"), (card) => card.dataset.catalogRecordId ?? card.id),
   );
   pool.replaceChildren();
   applicationState.catalogs[type].forEach((record) => {
-    const card = document.createElement("li");
-    card.className = "card no-print generic-card";
-    card.id = record.id;
-    const cardContent = type === SPELL_CATALOG_TYPE
-      ? spellCardTemplate(record)
-      : type === ALCHEMICAL_CATALOG_TYPE
-        ? alchemicalItemCardTemplate(record)
-        : genericItemCardTemplate(record, catalog.label);
-    card.appendChild(cardContent);
-    card.dataset.search = Object.entries(record)
-      .filter(([key]) => key !== "id")
-      .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
-      .join(" ").toLowerCase();
-    card.catalogRecord = record;
-    if (selectedIds.has(card.id)) {
-      card.classList.add("selected");
-      card.classList.remove("no-print");
-    }
-    card.addEventListener("click", () => toggleGenericCatalogSelection(type, record, card));
-    card.appendChild(createCardActionButton("Editar", `Editar ${getGenericRecordTitle(record)}`, () =>
-      requestGenericRecordEdit(type, record.id)));
-    if (isCatalogRecordEdited(type, record.id)) {
-      card.appendChild(createCardActionButton("Restaurar", `Restaurar ${getGenericRecordTitle(record)} a su versión original`, () =>
-        resetGenericRecordEdit(type, record.id)));
-    }
-    if (isCatalogRecordCustom(type, record.id)) {
-      card.appendChild(createCardActionButton("Eliminar", `Eliminar ${getGenericRecordTitle(record)}`, () =>
-        deleteGenericRecord(type, record.id)));
-    }
-    if (selectedIds.has(card.id)) {
+    const pages = paginateCatalogRecord(record, type, catalog.label);
+    pages.forEach((card, pageIndex) => {
+      card.id = pageIndex === 0 ? record.id : `${record.id}-page-${pageIndex + 1}`;
+      card.classList.add("no-print");
+      card.dataset.catalogRecordId = record.id;
+      card.dataset.pageNumber = String(pageIndex + 1);
+      card.dataset.pageCount = String(pages.length);
+      card.dataset.search = Object.entries(record)
+        .filter(([key]) => key !== "id")
+        .map(([, value]) => Array.isArray(value) ? value.join(" ") : String(value ?? ""))
+        .join(" ").toLowerCase();
+      card.catalogRecord = record;
+      if (selectedIds.has(record.id)) {
+        card.classList.add("selected");
+        card.classList.remove("no-print");
+      }
+      card.addEventListener("click", () => toggleGenericCatalogSelection(type, record, card));
+      card.appendChild(createCardActionButton("Editar", `Editar ${getGenericRecordTitle(record)}`, () =>
+        requestGenericRecordEdit(type, record.id)));
+      if (isCatalogRecordEdited(type, record.id)) {
+        card.appendChild(createCardActionButton("Restaurar", `Restaurar ${getGenericRecordTitle(record)} a su versión original`, () =>
+          resetGenericRecordEdit(type, record.id)));
+      }
+      if (isCatalogRecordCustom(type, record.id)) {
+        card.appendChild(createCardActionButton("Eliminar", `Eliminar ${getGenericRecordTitle(record)}`, () =>
+          deleteGenericRecord(type, record.id)));
+      }
+      pool.appendChild(card);
+    });
+    if (selectedIds.has(record.id)) {
       const selectedTitle = document.getElementById(`selected-${record.id}`);
       if (selectedTitle) selectedTitle.textContent = getGenericRecordTitle(record);
     }
-    pool.appendChild(card);
   });
   refreshFieldFilters(type, applicationState.catalogs[type]);
   filterCards(type);
@@ -1392,15 +1576,11 @@ function previewGenericCatalogRecord(form) {
   const type = applicationState.genericEditorType;
   const record = getGenericEditorValues(form);
   const definition = getGenericCatalog(type);
-  const card = type === SPELL_CATALOG_TYPE
-    ? spellCardTemplate(record)
-    : type === ALCHEMICAL_CATALOG_TYPE
-      ? alchemicalItemCardTemplate(record)
-      : genericItemCardTemplate(record, definition.label);
+  const cards = paginateCatalogRecord(record, type, definition.label);
   const previewCard = document.getElementById("genericCatalogEditorPreviewCard");
-  previewCard.replaceChildren(card);
+  previewCard.replaceChildren(...cards);
+  cards.forEach((card) => card.classList.add("selected"));
   document.getElementById("genericCatalogEditorPreview").hidden = false;
-  if (type === ALCHEMICAL_CATALOG_TYPE) autoSizeText(previewCard);
 }
 
 function closeGenericCatalogEditor() {
@@ -1464,14 +1644,20 @@ function toggleGenericCatalogSelection(type, record, card) {
   const selectedList = document.getElementById(`selected-${type}`);
   const selectedId = `selected-${record.id}`;
   const title = getGenericRecordTitle(record);
-  if (card.classList.contains("selected")) {
-    card.classList.remove("selected");
-    card.classList.add("no-print");
+  const recordCards = [...card.parentElement.querySelectorAll(".card")]
+    .filter((candidate) => candidate.dataset.catalogRecordId === record.id);
+  if (recordCards.some((recordCard) => recordCard.classList.contains("selected"))) {
+    recordCards.forEach((recordCard) => {
+      recordCard.classList.remove("selected");
+      recordCard.classList.add("no-print");
+    });
     document.getElementById(selectedId)?.remove();
     return;
   }
-  card.classList.add("selected");
-  card.classList.remove("no-print");
+  recordCards.forEach((recordCard) => {
+    recordCard.classList.add("selected");
+    recordCard.classList.remove("no-print");
+  });
   const listItem = document.createElement("li");
   listItem.id = selectedId;
   listItem.textContent = title;

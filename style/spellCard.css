@@ -93,6 +93,11 @@
     margin: 0;
 }
 
+.card .name .card-title-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
 .card .status {
     margin: 0;
     padding: 0;

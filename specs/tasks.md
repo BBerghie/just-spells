@@ -676,3 +676,20 @@ The tasks are intentionally small. Complete and validate one task before startin
 **Goal:** Keep card actions within the title row, align titles and action symbols, and avoid tab-switch layout flashes.
 
 **Implementation note:** Card title rows now use centered flex alignment, edit actions fit inside the row, and card borders and color controls share the same initial color. Tab switching uses direct element/class updates without synchronous text autosizing. Catalog filtering now reuses each card's record object instead of serializing and reparsing it on each keystroke.
+
+### CARD-PAGES-001 — Continue overflowing card text on numbered cards
+
+**Status:** IN PROGRESS
+
+**Goal:** Keep long record text readable by continuing overflowing content on additional cards.
+
+**Acceptance criteria:**
+
+- Text that exceeds a card's content area continues on additional cards with the same title and repeated card framing.
+- Multi-card titles show their page number and total, such as `(1/2)` and `(2/2)`.
+- Continuation cards remain searchable with their record, and selecting or deselecting one selects or deselects every card in the set.
+- Printing selected records includes every continuation page.
+- Editor previews use the same continuation layout as catalog cards.
+- Existing one-card records keep their original titles and selection behavior.
+
+**Implementation note:** Added a shared DOM-measured paginator for all discovered types. It fills each card's existing body, splits overflowing text at word boundaries (falling back to character boundaries for unbroken text), repeats the title and footer, and groups continuation pages for selection and printing. Browser verification confirms Alucinación begins on card `(1/2)` and continues on `(2/2)`, with no third empty card or content overflow. Selecting or deselecting either page toggles the full set. JavaScript syntax checks pass. Print preview remains unverified because the browser tab became unresponsive when opening it; the local HTTP check was also blocked by sandbox access to port 8080.
