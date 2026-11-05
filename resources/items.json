@@ -1,0 +1,1038 @@
+{
+  "type": "items",
+  "label": "Objetos",
+  "singularLabel": "objeto",
+  "createLabel": "Crear objeto",
+  "data": [
+    {
+      "Nombre": "Abrojos",
+      "valor": 3,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Estas púas de metal de cuatro puntas pueden dañar los pies de una criatura. Puedes esparcir abrojos en una casilla vacía adyacente a ti con una acción de Interactuar. La primera criatura que se mueve a dicha casilla tiene que superar una prueba de Acrobacias CD 14 o sufrir 1d4 daño perforante y 1 daño persistente por sangrado. Una criatura que sufre daño persistente por sangrado debido a los abrojos sufre un penalizador -5 a su Velocidad. Invertir una acción de Interactuar para quitarse los abrojos reduce la CD para detener el sangrado. Una vez que una criatura haya sufrido daño debido a los abrojos, se habrán gastado los suficientes como para que otras criaturas que muevan a dicha casilla estén seguras. Los abrojos desplegados se pueden recuperar y reutilizar si ninguna criatura sufre daño debido a los mismos. De lo contrario, se gastan tantos que no se puede recuperar nada."
+    },
+    {
+      "Nombre": "Aceite (1 pinta [0,5l])",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Puedes utilizar el aceite para encender linternas, pero también puedes prenderle fuego a 1 pinta (0,5 l) de aceite y lanzarla. Debes primero invertir una acción de Interactuar preparando el aceite, y después lanzarlo con otra acción como un ataque a distancia. Si aciertas, salpica a la criatura o a un solo cuadrado de 5 pies (1,5 m) de lado al que designas como objetivo. Has de tener éxito en una prueba plana CD 10 para que el aceite se encienda con éxito cuando impacta. Si el aceite se enciende, el objetivo sufre 1d6 daño por fuego."
+    },
+    {
+      "Nombre": "Alforjas",
+      "valor": 2,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Las alforjas vienen por parejas. Cada una puede contener hasta Impedimenta 3 en objetos, pero la primera Impedimenta 1 de objetos en cada una no cuenta contra el límite de Impedimenta de tu montura. El valor de Impedimenta que se da es para unas alforjas puestas en una montura. Si las llevas tú o las llevas guardadas, cuentan como Impedimenta 1 en lugar de ligera."
+    },
+    {
+      "Nombre": "Antorcha",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una antorcha emite luz brillante en un radio de 20 pies (6 m) y luz tenue en los siguientes 20 pies (6 m) durante 1 hora. Se puede usar como arma improvisada que inflige 1d4 daño contundente mas 1 daño por fuego."
+    },
+    {
+      "Nombre": "Arreos",
+      "valor": 4,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Los arreos incluyen todo el equipo necesario para equipar a un animal de monta, incluyendo una silla de montar, brida y bocado y estribos si es necesario. Los animales especialmente grandes o de forma extraña podrían requerir sillas de montar especializadas. Este material podría ser más caro o más difícil de encontrar, a criterio del DJ. El valor de Impedimenta que se da es para unos arreos puestos en una criatura. Si se transportan, la Impedimenta se incrementa a 2."
+    },
+    {
+      "Nombre": "Balanza de mercader",
+      "valor": 2,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Brújula",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una brújula te ayuda a Sentir la dirección o a orientarte, si estás en un lugar donde los campos magnéticos son uniformes. Sin una de ellas, sufres un penalizador -2 por objeto a dichas pruebas (similar a estar usando un objeto de baja calidad). Una brújula de lente y dial te concede un bonificador +1 por objeto a estas pruebas."
+    },
+    {
+      "Nombre": "Brújula de lente y dial",
+      "valor": 20,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Cadena (10 pies [3 m])",
+      "valor": 4,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Capa de duelo",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Te puedes quitar una capa de duelo que llevas puesta y enrollarla alrededor de tu brazo con una acción de Interactuar. Mientras llevas la capa de duelo de esa forma, esa mano y ese brazo están ocupados y no puedes sostener nada más. Mientras lo haces, puedes invertir una acción para sostenerla en una posición protectora, lo que te concede un bonificador +1 por circunstancia a la CA y a las pruebas de Engaño para Fintar hasta el inicio de tu siguiente turno."
+    },
+    {
+      "Nombre": "Catalejo",
+      "valor": 20,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un catalejo típico te permite ver ocho veces más lejos de lo normal. Un catalejo de gran calidad suma un bonificador +1 por objeto a las pruebas de Percepción para ver detalles a distancia."
+    },
+    {
+      "Nombre": "Catalejo de gran calidad",
+      "valor": 80,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 4,
+      "Descripcion": "Un catalejo típico te permite ver ocho veces más lejos de lo normal. Un catalejo de gran calidad suma un bonificador +1 por objeto a las pruebas de Percepción para ver detalles a distancia."
+    },
+    {
+      "Nombre": "Cerradura barata",
+      "valor": 2,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Forzar una cerradura barata requiere dos pruebas con éxito de Latrocinio CD 15, una sencilla requiere tres éxitos a CD 20, una normal requiere cuatro éxitos a CD 25, una buena requiere cinco éxitos a CD 30 y una superior, seis éxitos a CD 40."
+    },
+    {
+      "Nombre": "Cerradura sencilla",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 1,
+      "Descripcion": "Forzar una cerradura barata requiere dos pruebas con éxito de Latrocinio CD 15, una sencilla requiere tres éxitos a CD 20, una normal requiere cuatro éxitos a CD 25, una buena requiere cinco éxitos a CD 30 y una superior, seis éxitos a CD 40."
+    },
+    {
+      "Nombre": "Cerradura normal",
+      "valor": 15,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Forzar una cerradura barata requiere dos pruebas con éxito de Latrocinio CD 15, una sencilla requiere tres éxitos a CD 20, una normal requiere cuatro éxitos a CD 25, una buena requiere cinco éxitos a CD 30 y una superior, seis éxitos a CD 40."
+    },
+    {
+      "Nombre": "Cerradura buena",
+      "valor": 200,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 9,
+      "Descripcion": "Forzar una cerradura barata requiere dos pruebas con éxito de Latrocinio CD 15, una sencilla requiere tres éxitos a CD 20, una normal requiere cuatro éxitos a CD 25, una buena requiere cinco éxitos a CD 30 y una superior, seis éxitos a CD 40."
+    },
+    {
+      "Nombre": "Cerradura superior",
+      "valor": 4500,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 17,
+      "Descripcion": "Forzar una cerradura barata requiere dos pruebas con éxito de Latrocinio CD 15, una sencilla requiere tres éxitos a CD 20, una normal requiere cuatro éxitos a CD 25, una buena requiere cinco éxitos a CD 30 y una superior, seis éxitos a CD 40."
+    },
+    {
+      "Nombre": "Cofre",
+      "valor": 6,
+      "moneda": "pp",
+      "Impedimenta": 2,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un cofre de madera puede almacenar hasta Impedimenta 8 en objetos."
+    },
+    {
+      "Nombre": "Cuerda (50 pies [15 m])",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Diario de erudito",
+      "valor": 6,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Poco Común",
+      "Nivel": 3,
+      "Descripcion": "Los diarios de erudito son poco comunes. Cada uno de ellos es un libro de tamaño folio sobre un tema específico, como por ejemplo los vampiros o la historia de una sola población o de un barrio de una ciudad. Si inviertes 1 minuto consultando un diario de erudito antes de hacer una prueba de habilidad para Recordar conocimiento acerca del tema, obtienes un bonificador +1 por objeto a la prueba. Un compendio de diarios cuesta cinco veces lo que un solo diario y se ha de sostener a dos manos; cada compendio contiene diversos diarios y concede su bonificador sobre un tema más amplio, como por ejemplo todos los muertos vivientes o una ciudad entera. El DJ es quien determina qué diarios de erudito hay disponibles en cualquier lugar."
+    },
+    {
+      "Nombre": "Compendio de diarios de erudito",
+      "valor": 30,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Poco Común",
+      "Nivel": 3,
+      "Descripcion": "Los diarios de erudito son poco comunes. Cada uno de ellos es un libro de tamaño folio sobre un tema específico, como por ejemplo los vampiros o la historia de una sola población o de un barrio de una ciudad. Si inviertes 1 minuto consultando un diario de erudito antes de hacer una prueba de habilidad para Recordar conocimiento acerca del tema, obtienes un bonificador +1 por objeto a la prueba. Un compendio de diarios cuesta cinco veces lo que un solo diario y se ha de sostener a dos manos; cada compendio contiene diversos diarios y concede su bonificador sobre un tema más amplio, como por ejemplo todos los muertos vivientes o una ciudad entera. El DJ es quien determina qué diarios de erudito hay disponibles en cualquier lugar."
+    },
+    {
+      "Nombre": "Equipo de aventurero",
+      "valor": 15,
+      "moneda": "pp",
+      "Impedimenta": 1,
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Éste es el conjunto inicial para un aventurero y contiene los objetos esenciales para la exploración y la supervivencia. El valor de Impedimenta es para el conjunto del equipo, pero consulta la descripción de los objetos individuales si es necesario. El equipo contiene los siguientes objetos: una mochila (que contiene los demás objetos), 10 trozos de tiza, pedernal y yesca, 50 pies (15 m) de cuerda, raciones para 2 semanas, jabón, 5 antorchas y un odre."
+    },
+    {
+      "Nombre": "Equipo de reparaciones",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un equipo de reparaciones te permite llevar a cabo reparaciones sencillas cuando viajas. Contiene un yunque portátil, tenazas, herramientas de carpintero, una piedra de amolar y aceites para tratar el cuero y la madera. Puedes utilizar un equipo de reparaciones para Reparar objetos utilizando la habilidad Artesanía. Un equipo de reparaciones soberbio te concede un bonificador +1 por objeto a la prueba. Puedes reemplazar un equipo de reparaciones gastado por uno nuevo como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Equipo de reparaciones soberbio",
+      "valor": 25,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Un equipo de reparaciones te permite llevar a cabo reparaciones sencillas cuando viajas. Contiene un yunque portátil, tenazas, herramientas de carpintero, una piedra de amolar y aceites para tratar el cuero y la madera. Puedes utilizar un equipo de reparaciones para Reparar objetos utilizando la habilidad Artesanía. Un equipo de reparaciones soberbio te concede un bonificador +1 por objeto a la prueba. Puedes reemplazar un equipo de reparaciones gastado por uno nuevo como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Escala (10 pies [3 m])",
+      "valor": 3,
+      "moneda": "pc",
+      "Impedimenta": 3,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Espejo",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Garfio de abordaje",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Puedes lanzar un garfio de abordaje con una cuerda atada al mismo para hacer más fácil una escalada. Para anclar un garfio de abordaje, haz una tirada de ataque a distancia utilizando tu competencia con armas sencillas contra una CD que depende del objetivo, típicamente por lo menos CD 20. Este ataque tiene el rasgo secreto. Con un éxito, tu garfio queda firmemente anclado, aunque con un fallo crítico parece como si fuera a aguantar, pero en realidad se suelta cuando estás a media subida."
+    },
+    {
+      "Nombre": "Grilletes baratos",
+      "valor": 3,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Puedes ponerle unos grilletes a alguien con su consentimiento o si está a tu merced como una actividad de exploración que dura entre 10 y 30 segundos dependiendo del tamaño de la criatura y de cuántos grilletes le pongas. Una criatura de dos piernas con las piernas ligadas sufre un penalizador -15 pies (4,5 m) por circunstancia a sus Velocidades y una criatura de dos manos con ellas ligadas tiene que tener éxito en una prueba plana CD 5 cada vez que utiliza una acción de manipular, o la acción falla. Esta CD puede ser mayor dependiendo de con qué fuerza se han ajustado los grilletes para inmovilizar las manos. Una criatura atada a un objeto estacionario está inmovilizada. Para las criaturas con más o menos extremidades, el DJ es quien determina qué efectos tienen los grilletes, si lo tienen. Liberar a una criatura de unos grilletes baratos requiere dos éxitos en sendas pruebas de Latrocinio CD 17, unos sencillos requieren tres éxitos a CD 22, unos normales requieren cuatro éxitos a CD 27, unos buenos requieren cinco éxitos a CD 32 y unos superiores requieren seis a CD 42."
+    },
+    {
+      "Nombre": "Grilletes sencillos",
+      "valor": 3,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 1,
+      "Descripcion": "Puedes ponerle unos grilletes a alguien con su consentimiento o si está a tu merced como una actividad de exploración que dura entre 10 y 30 segundos dependiendo del tamaño de la criatura y de cuántos grilletes le pongas. Una criatura de dos piernas con las piernas ligadas sufre un penalizador -15 pies (4,5 m) por circunstancia a sus Velocidades y una criatura de dos manos con ellas ligadas tiene que tener éxito en una prueba plana CD 5 cada vez que utiliza una acción de manipular, o la acción falla. Esta CD puede ser mayor dependiendo de con qué fuerza se han ajustado los grilletes para inmovilizar las manos. Una criatura atada a un objeto estacionario está inmovilizada. Para las criaturas con más o menos extremidades, el DJ es quien determina qué efectos tienen los grilletes, si lo tienen. Liberar a una criatura de unos grilletes baratos requiere dos éxitos en sendas pruebas de Latrocinio CD 17, unos sencillos requieren tres éxitos a CD 22, unos normales requieren cuatro éxitos a CD 27, unos buenos requieren cinco éxitos a CD 32 y unos superiores requieren seis a CD 42."
+    },
+    {
+      "Nombre": "Grilletes normales",
+      "valor": 20,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Puedes ponerle unos grilletes a alguien con su consentimiento o si está a tu merced como una actividad de exploración que dura entre 10 y 30 segundos dependiendo del tamaño de la criatura y de cuántos grilletes le pongas. Una criatura de dos piernas con las piernas ligadas sufre un penalizador -15 pies (4,5 m) por circunstancia a sus Velocidades y una criatura de dos manos con ellas ligadas tiene que tener éxito en una prueba plana CD 5 cada vez que utiliza una acción de manipular, o la acción falla. Esta CD puede ser mayor dependiendo de con qué fuerza se han ajustado los grilletes para inmovilizar las manos. Una criatura atada a un objeto estacionario está inmovilizada. Para las criaturas con más o menos extremidades, el DJ es quien determina qué efectos tienen los grilletes, si lo tienen. Liberar a una criatura de unos grilletes baratos requiere dos éxitos en sendas pruebas de Latrocinio CD 17, unos sencillos requieren tres éxitos a CD 22, unos normales requieren cuatro éxitos a CD 27, unos buenos requieren cinco éxitos a CD 32 y unos superiores requieren seis a CD 42."
+    },
+    {
+      "Nombre": "Grilletes buenos",
+      "valor": 250,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 9,
+      "Descripcion": "Puedes ponerle unos grilletes a alguien con su consentimiento o si está a tu merced como una actividad de exploración que dura entre 10 y 30 segundos dependiendo del tamaño de la criatura y de cuántos grilletes le pongas. Una criatura de dos piernas con las piernas ligadas sufre un penalizador -15 pies (4,5 m) por circunstancia a sus Velocidades y una criatura de dos manos con ellas ligadas tiene que tener éxito en una prueba plana CD 5 cada vez que utiliza una acción de manipular, o la acción falla. Esta CD puede ser mayor dependiendo de con qué fuerza se han ajustado los grilletes para inmovilizar las manos. Una criatura atada a un objeto estacionario está inmovilizada. Para las criaturas con más o menos extremidades, el DJ es quien determina qué efectos tienen los grilletes, si lo tienen. Liberar a una criatura de unos grilletes baratos requiere dos éxitos en sendas pruebas de Latrocinio CD 17, unos sencillos requieren tres éxitos a CD 22, unos normales requieren cuatro éxitos a CD 27, unos buenos requieren cinco éxitos a CD 32 y unos superiores requieren seis a CD 42."
+    },
+    {
+      "Nombre": "Grilletes superiores",
+      "valor": 5000,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 17,
+      "Descripcion": "Puedes ponerle unos grilletes a alguien con su consentimiento o si está a tu merced como una actividad de exploración que dura entre 10 y 30 segundos dependiendo del tamaño de la criatura y de cuántos grilletes le pongas. Una criatura de dos piernas con las piernas ligadas sufre un penalizador -15 pies (4,5 m) por circunstancia a sus Velocidades y una criatura de dos manos con ellas ligadas tiene que tener éxito en una prueba plana CD 5 cada vez que utiliza una acción de manipular, o la acción falla. Esta CD puede ser mayor dependiendo de con qué fuerza se han ajustado los grilletes para inmovilizar las manos. Una criatura atada a un objeto estacionario está inmovilizada. Para las criaturas con más o menos extremidades, el DJ es quien determina qué efectos tienen los grilletes, si lo tienen. Liberar a una criatura de unos grilletes baratos requiere dos éxitos en sendas pruebas de Latrocinio CD 17, unos sencillos requieren tres éxitos a CD 22, unos normales requieren cuatro éxitos a CD 27, unos buenos requieren cinco éxitos a CD 32 y unos superiores requieren seis a CD 42."
+    },
+    {
+      "Nombre": "Herramienta larga",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta entrada es un cajón de sastre para las herramientas de mano básicas que no tienen un propósito aventurero específico. Una azada, una pala o un martillo pilón son herramientas largas, y un berbiquí, un gancho para hielo o una paleta son herramientas cortas. Una herramienta se suele poder utilizar como arma improvisada, infligiendo 1d4 daño para una corta o 1d6 para una larga. El DJ es quien determina el tipo de daño apropiado o ajusta la cantidad si es necesario."
+    },
+    {
+      "Nombre": "Herramienta corta",
+      "valor": 4,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": "1 o 2",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta entrada es un cajón de sastre para las herramientas de mano básicas que no tienen un propósito aventurero específico. Una azada, una pala o un martillo pilón son herramientas largas, y un berbiquí, un gancho para hielo o una paleta son herramientas cortas. Una herramienta se suele poder utilizar como arma improvisada, infligiendo 1d4 daño para una corta o 1d6 para una larga. El DJ es quien determina el tipo de daño apropiado o ajusta la cantidad si es necesario."
+    },
+    {
+      "Nombre": "Instrumento musical de mano",
+      "valor": 8,
+      "moneda": "pp",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Los instrumentos de mano incluyen gaitas, un carillón pequeño, tamboriles, violines y violas, flautas dulces y traveseras, arpas pequeñas, laúdes, trompetas e instrumentos de tamaño similar. El DJ podría establecer que un instrumento de mano especialmente grande (como una tuba) tiene una Impedimenta mayor. Los instrumentos pesados, como los tambores grandes, un carillón completo y los instrumentos de teclado son menos portátiles y por lo general requieren permanecer estacionarios cuando se tocan. Un instrumento de virtuoso está más finamente construido y concede un bonificador +1 por objeto a las pruebas de Interpretación utilizándolo."
+    },
+    {
+      "Nombre": "Instrumento musical de mano de virtuoso",
+      "valor": 50,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Los instrumentos de mano incluyen gaitas, un carillón pequeño, tamboriles, violines y violas, flautas dulces y traveseras, arpas pequeñas, laúdes, trompetas e instrumentos de tamaño similar. El DJ podría establecer que un instrumento de mano especialmente grande (como una tuba) tiene una Impedimenta mayor. Los instrumentos pesados, como los tambores grandes, un carillón completo y los instrumentos de teclado son menos portátiles y por lo general requieren permanecer estacionarios cuando se tocan. Un instrumento de virtuoso está más finamente construido y concede un bonificador +1 por objeto a las pruebas de Interpretación utilizándolo."
+    },
+    {
+      "Nombre": "Instrumento musical pesado",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": "16 2",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Los instrumentos de mano incluyen gaitas, un carillón pequeño, tamboriles, violines y violas, flautas dulces y traveseras, arpas pequeñas, laúdes, trompetas e instrumentos de tamaño similar. El DJ podría establecer que un instrumento de mano especialmente grande (como una tuba) tiene una Impedimenta mayor. Los instrumentos pesados, como los tambores grandes, un carillón completo y los instrumentos de teclado son menos portátiles y por lo general requieren permanecer estacionarios cuando se tocan. Un instrumento de virtuoso está más finamente construido y concede un bonificador +1 por objeto a las pruebas de Interpretación utilizándolo."
+    },
+    {
+      "Nombre": "Instrumento musical pesado de virtuoso",
+      "valor": 100,
+      "moneda": "po",
+      "Impedimenta": 16,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Los instrumentos de mano incluyen gaitas, un carillón pequeño, tamboriles, violines y violas, flautas dulces y traveseras, arpas pequeñas, laúdes, trompetas e instrumentos de tamaño similar. El DJ podría establecer que un instrumento de mano especialmente grande (como una tuba) tiene una Impedimenta mayor. Los instrumentos pesados, como los tambores grandes, un carillón completo y los instrumentos de teclado son menos portátiles y por lo general requieren permanecer estacionarios cuando se tocan. Un instrumento de virtuoso está más finamente construido y concede un bonificador +1 por objeto a las pruebas de Interpretación utilizándolo."
+    },
+    {
+      "Nombre": "Jabón",
+      "valor": 2,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Jarra",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Juego de herramientas de alquimista",
+      "valor": 3,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta colección móvil de viales y productos químicos se puede utilizar para tareas alquímicas sencillas. Si llevas puesto tu juego de herramientas de alquimista, puedes quitarlas y ponerlas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Juego de herramientas de artesano",
+      "valor": 4,
+      "moneda": "po",
+      "Impedimenta": 2,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Necesitas este juego de herramientas para crear objetos a partir de materia prima con la habilidad Artesanía. Un juego de herramientas de artesano excelentes te concede un bonificador +1 por objeto a la prueba. Hacen falta juegos diferentes para trabajos diferentes, a juicio del DJ; por ejemplo un juego de herramientas de herrero es diferente al de un carpintero. Si llevas puesto tu juego de herramientas de artesano, puedes quitarlas y ponerlas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Juego de herramientas de artesano excelentes",
+      "valor": 50,
+      "moneda": "po",
+      "Impedimenta": 2,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Necesitas este juego de herramientas para crear objetos a partir de materia prima con la habilidad Artesanía. Un juego de herramientas de artesano excelentes te concede un bonificador +1 por objeto a la prueba. Hacen falta juegos diferentes para trabajos diferentes, a juicio del DJ; por ejemplo un juego de herramientas de herrero es diferente al de un carpintero. Si llevas puesto tu juego de herramientas de artesano, puedes quitarlas y ponerlas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Juego de herramientas de ladrón",
+      "valor": 3,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Necesitas un juego de herramientas de ladrón para Forzar cerraduras o Inutilizar mecanismos (de algunos tipos) mediante la habilidad Latrocinio. Unas herramientas de ladrón infiltrador añaden un bonificador +1 por objeto a las pruebas para Forzar cerraduras e Inutilizar mecanismos. Si se rompe el juego puedes repararlo cambiando las ganzúas por otras de repuesto; esto no requiere utilizar la acción de Reparar. Si llevas puestas tus herramientas de ladrón, puedes poner y sacar cosas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Ganzúas de repuesto",
+      "valor": 3,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Necesitas un juego de herramientas de ladrón para Forzar cerraduras o Inutilizar mecanismos (de algunos tipos) mediante la habilidad Latrocinio. Unas herramientas de ladrón infiltrador añaden un bonificador +1 por objeto a las pruebas para Forzar cerraduras e Inutilizar mecanismos. Si se rompe el juego puedes repararlo cambiando las ganzúas por otras de repuesto; esto no requiere utilizar la acción de Reparar. Si llevas puestas tus herramientas de ladrón, puedes poner y sacar cosas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Juego de herramientas de ladrón infiltrador",
+      "valor": 50,
+      "moneda": "po",
+      "Impedimenta": "L 1",
+      "Manos": "2*",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Necesitas un juego de herramientas de ladrón para Forzar cerraduras o Inutilizar mecanismos (de algunos tipos) mediante la habilidad Latrocinio. Unas herramientas de ladrón infiltrador añaden un bonificador +1 por objeto a las pruebas para Forzar cerraduras e Inutilizar mecanismos. Si se rompe el juego puedes repararlo cambiando las ganzúas por otras de repuesto; esto no requiere utilizar la acción de Reparar. Si llevas puestas tus herramientas de ladrón, puedes poner y sacar cosas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Ganzúas de infiltrador",
+      "valor": 3,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Necesitas un juego de herramientas de ladrón para Forzar cerraduras o Inutilizar mecanismos (de algunos tipos) mediante la habilidad Latrocinio. Unas herramientas de ladrón infiltrador añaden un bonificador +1 por objeto a las pruebas para Forzar cerraduras e Inutilizar mecanismos. Si se rompe el juego puedes repararlo cambiando las ganzúas por otras de repuesto; esto no requiere utilizar la acción de Reparar. Si llevas puestas tus herramientas de ladrón, puedes poner y sacar cosas como parte de la acción que las utiliza."
+    },
+    {
+      "Nombre": "Laboratorio de alquimista",
+      "valor": 5,
+      "moneda": "po",
+      "Impedimenta": "6 2",
+      "Manos": null,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Necesitas un laboratorio de alquimista para Elaborar sustancias alquímicas durante el tiempo libre. Un laboratorio de alquimista mejorado te concede un bonificador +1 por objeto a las pruebas de Artesanía para elaborar sustancias alquímicas."
+    },
+    {
+      "Nombre": "Laboratorio de alquimista mejorado",
+      "valor": 55,
+      "moneda": "po",
+      "Impedimenta": "6 2",
+      "Manos": null,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Necesitas un laboratorio de alquimista para Elaborar sustancias alquímicas durante el tiempo libre. Un laboratorio de alquimista mejorado te concede un bonificador +1 por objeto a las pruebas de Artesanía para elaborar sustancias alquímicas."
+    },
+    {
+      "Nombre": "Libro básico de artesano",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Este libro contiene las fórmulas (pág. 294) para Elaborar todos los objetos comunes de nivel 0 de este Capítulo."
+    },
+    {
+      "Nombre": "Libro de conjuros (en blanco)",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un libro de conjuros contiene el conocimiento escrito necesario para aprender y preparar diversos conjuros, algo necesario para los magos (que suelen obtener uno gratis) y un lujo útil para otros lanzadores de conjuros que buscan aprender conjuros adicionales. Cada libro puede albergar hasta 100 conjuros. El Precio indicado es para un libro en blanco."
+    },
+    {
+      "Nombre": "Libro de fórmulas (en blanco)",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un libro de fórmulas contiene las fórmulas necesarias para crear objetos diferentes al equipo común de este capítulo; los personajes de la clase alquimista (Manual de juego 2) suelen obtener uno gratuitamente. Cada libro de fórmulas puede albergar la fórmula de hasta 100 objetos diferentes. Las fórmulas también pueden aparecer en hojas de pergamino, tablillas y casi cualquier otro medio; no hay necesidad de que las copies a un libro específico si las puedes tener a mano para consultarlas."
+    },
+    {
+      "Nombre": "Linterna de ojo de buey",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una linterna emite luz brillante y requiere 1 pinta (0,5 l) de aceite para funcionar durante 6 horas. Una linterna de ojo de buey emite su luz en un cono de 60 pies (18 m), y luz tenue en los siguientes 60 pies (18 m). Una linterna sorda emite luz en un radio de 30 pies (9 m), y luz tenue en los siguientes 30 pies (9 m) y va equipada con obturadores que puedes cerrar para bloquear la luz. Abrir o cerrar los obturadores requiere una acción de Interactuar."
+    },
+    {
+      "Nombre": "Linterna sorda",
+      "valor": 7,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una linterna emite luz brillante y requiere 1 pinta (0,5 l) de aceite para funcionar durante 6 horas. Una linterna de ojo de buey emite su luz en un cono de 60 pies (18 m), y luz tenue en los siguientes 60 pies (18 m). Una linterna sorda emite luz en un radio de 30 pies (9 m), y luz tenue en los siguientes 30 pies (9 m) y va equipada con obturadores que puedes cerrar para bloquear la luz. Abrir o cerrar los obturadores requiere una acción de Interactuar."
+    },
+    {
+      "Nombre": "Lupa",
+      "valor": 40,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Esta lente de calidad que se puede empuñar te concede un bonificador +1 por objeto a las pruebas de Percepción para notar detalles minúsculos de documentos, telas, etc."
+    },
+    {
+      "Nombre": "Mapa topográfico",
+      "valor": 10,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Poco Común",
+      "Nivel": 3,
+      "Descripcion": "Los mapas son poco comunes. La mayoría de los que puedes encontrar son sencillos y funcionales. Un mapa topográfico detalla una sola ubicación con un nivel de detalle excelente. Uno de estos mapas te concede un bonificador +1 por objeto a las pruebas de Supervivencia y a cualquier prueba de habilidad para Recordar conocimiento, si está relacionada con la ubicación detallada en el mapa. Los mapas a veces se presentan en forma de atlas, que contienen cierto número de mapas de la misma calidad, a menudo sobre temas similares. Un atlas cuesta cinco veces más que un solo mapa y requiere ambas manos para utilizarlo. El DJ es quien determina qué mapas hay disponibles en cualquier lugar."
+    },
+    {
+      "Nombre": "Atlas topográfico",
+      "valor": 50,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Poco Común",
+      "Nivel": 3,
+      "Descripcion": "Los mapas son poco comunes. La mayoría de los que puedes encontrar son sencillos y funcionales. Un mapa topográfico detalla una sola ubicación con un nivel de detalle excelente. Uno de estos mapas te concede un bonificador +1 por objeto a las pruebas de Supervivencia y a cualquier prueba de habilidad para Recordar conocimiento, si está relacionada con la ubicación detallada en el mapa. Los mapas a veces se presentan en forma de atlas, que contienen cierto número de mapas de la misma calidad, a menudo sobre temas similares. Un atlas cuesta cinco veces más que un solo mapa y requiere ambas manos para utilizarlo. El DJ es quien determina qué mapas hay disponibles en cualquier lugar."
+    },
+    {
+      "Nombre": "Martillo",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Material de cocina",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "2 2",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Material de curas",
+      "valor": 5,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Este conjunto de vendajes, hierbas y suturas es necesario para las pruebas de Medicina a fin de administrar Primeros auxilios, Tratar enfermedades, Tratar veneno o Tratar heridas. El material mejorado te proporciona un bonificador +1 por objeto a dichas pruebas. Si llevas puesto tu material de curas, puedes meter y sacar cosas como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Material de curas mejorado",
+      "valor": 50,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Este conjunto de vendajes, hierbas y suturas es necesario para las pruebas de Medicina a fin de administrar Primeros auxilios, Tratar enfermedades, Tratar veneno o Tratar heridas. El material mejorado te proporciona un bonificador +1 por objeto a dichas pruebas. Si llevas puesto tu material de curas, puedes meter y sacar cosas como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Material de detective",
+      "valor": 25,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": "1 o 2*",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Este morral de cuero contiene unos cuantos viales vacíos, unas pinzas, paños de lino pequeños, un juego de calibradores de bronce y un bramante anudado para medir distancias, varios trozos de tiza, una pluma y un bloc de notas en blanco. Todos los componentes del material de detective son de calidad excelente y por lo tanto suman un bonificador +1 por objeto a las pruebas para investigar la escena de un crimen, una pista o detalles similares. Como otros juegos de herramientas, el material de detective utiliza una mano si se lleva puesto y ambas de lo contrario."
+    },
+    {
+      "Nombre": "Material de disfraz",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta cajita de madera contiene cosméticos, vello facial falso, goma líquida y unas cuantas pelucas sencillas. Por lo general necesitas material de disfraz para Imitar a otra persona mediante el uso de la habilidad Engaño. Un material de élite suma un bonificador +1 por objeto a las pruebas relevantes. Si has fabricado un gran número de disfraces, puedes completar tu suministro de cosméticos con otros de repuesto adecuados al tipo de tu material de disfraz. Si lo llevas puesto, puedes poner y quitar el material como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Cosméticos de repuesto",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta cajita de madera contiene cosméticos, vello facial falso, goma líquida y unas cuantas pelucas sencillas. Por lo general necesitas material de disfraz para Imitar a otra persona mediante el uso de la habilidad Engaño. Un material de élite suma un bonificador +1 por objeto a las pruebas relevantes. Si has fabricado un gran número de disfraces, puedes completar tu suministro de cosméticos con otros de repuesto adecuados al tipo de tu material de disfraz. Si lo llevas puesto, puedes poner y quitar el material como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Material de disfraz de élite",
+      "valor": 40,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Esta cajita de madera contiene cosméticos, vello facial falso, goma líquida y unas cuantas pelucas sencillas. Por lo general necesitas material de disfraz para Imitar a otra persona mediante el uso de la habilidad Engaño. Un material de élite suma un bonificador +1 por objeto a las pruebas relevantes. Si has fabricado un gran número de disfraces, puedes completar tu suministro de cosméticos con otros de repuesto adecuados al tipo de tu material de disfraz. Si lo llevas puesto, puedes poner y quitar el material como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Cosméticos de élite",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Esta cajita de madera contiene cosméticos, vello facial falso, goma líquida y unas cuantas pelucas sencillas. Por lo general necesitas material de disfraz para Imitar a otra persona mediante el uso de la habilidad Engaño. Un material de élite suma un bonificador +1 por objeto a las pruebas relevantes. Si has fabricado un gran número de disfraces, puedes completar tu suministro de cosméticos con otros de repuesto adecuados al tipo de tu material de disfraz. Si lo llevas puesto, puedes poner y quitar el material como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Material de escalada",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esta cajita de madera contiene cosméticos, vello facial falso, goma líquida y unas cuantas pelucas sencillas. Por lo general necesitas material de disfraz para Imitar a otra persona mediante el uso de la habilidad Engaño. Un material de élite suma un bonificador +1 por objeto a las pruebas relevantes. Si has fabricado un gran número de disfraces, puedes completar tu suministro de cosméticos con otros de repuesto adecuados al tipo de tu material de disfraz. Si lo llevas puesto, puedes poner y quitar el material como parte de la acción que lo utiliza."
+    },
+    {
+      "Nombre": "Material de escalada extrema",
+      "valor": 40,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Este morral contiene 50 pies (15 m) de cuerda, poleas, una docena de pitones, un martillo, un garfio de abordaje y un juego de crampones. El material de escalada te permite fijarte a la pared que estás Trepando, moviéndote la mitad de lo habitual (mínimo 5 pies [1,5 m]) y permitiéndote hacer una prueba plana CD 5 siempre que fallas críticamente para evitar una caída. Obtienes un bonificador +1 por objeto a las pruebas de Atletismo para Trepar si utilizas material de escalada extrema. Uno de estos morrales contiene material para tan sólo un escalador; cada uno necesita el suyo. Si lo llevas puesto, puedes acceder a él como parte de la acción de Trepar."
+    },
+    {
+      "Nombre": "Material de escritura",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Utilizando material de escritura, puedes redactar correspondencia e inscribir pergaminos. Un juego incluye papel y sobres, con una gran variedad de papeles y pergaminos, así como tinta, un cálamo o pluma, lacre y un sello sencillo. Si has escrito mucho, puedes rellenar el juego con tinta y papel de repuesto."
+    },
+    {
+      "Nombre": "Papel y tinta de repuesto",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Utilizando material de escritura, puedes redactar correspondencia e inscribir pergaminos. Un juego incluye papel y sobres, con una gran variedad de papeles y pergaminos, así como tinta, un cálamo o pluma, lacre y un sello sencillo. Si has escrito mucho, puedes rellenar el juego con tinta y papel de repuesto."
+    },
+    {
+      "Nombre": "Material de pesca",
+      "valor": 8,
+      "moneda": "pp",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Esto incluye una caña de pescar plegable, anzuelos, sedal, cebos y una red de pesca. El material de pesca profesional concede un bonificador +1 por objeto a las pruebas para pescar."
+    },
+    {
+      "Nombre": "Material de pesca profesiona",
+      "valor": 20,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Esto incluye una caña de pescar plegable, anzuelos, sedal, cebos y una red de pesca. El material de pesca profesional concede un bonificador +1 por objeto a las pruebas para pescar."
+    },
+    {
+      "Nombre": "Mochila",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una mochila contiene hasta Impedimenta 4 de objetos y los primeros 2 puntos de Impedimenta de dichos objetos no cuentan contra tu límite. Si, en lugar de llevar la mochila a la espalda, la sostienes o la llevas guardada, su Impedimenta es ligera en lugar de insignificante."
+    },
+    {
+      "Nombre": "Odre",
+      "valor": 5,
+      "moneda": "pc",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Cuando está lleno, un odre contiene aproximadamente la cantidad necesaria de agua de 1 día para una criatura Pequeña o Mediana."
+    },
+    {
+      "Nombre": "Oreja de bronce",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una oreja de bronce es un tubo corto y acampanado con un extremo lo suficientemente estrecho para introducirlo cómodamente en un oído. Cuando se usa para escuchar a través de una puerta, ventana, pared delgada o barrera similar, si la barrera incrementaría normalmente la CD de tu prueba de Percepción para oír sonidos al otro lado, sólo lo hace en la mitad de lo normal. No es adecuada para mejorar tu audición en general, porque para eso va mejor un audífono (pág. 293)."
+    },
+    {
+      "Nombre": "Palanqueta",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Cuando se Abre a la fuerza un objeto que no se puede agarrar fácilmente, una palanqueta hace más fácil obtener el brazo de palanca necesario. Sin una palanqueta, la prueba de Atletismo para Abrir algo a la fuerza sufre un penalizador -2 por objeto. Una palanqueta reforzada te concede un bonificador +1 por objeto a las pruebas de Atletismo para Abrir por la fuerza cualquier cosa que se puede abrir así."
+    },
+    {
+      "Nombre": "Palanqueta reforzada",
+      "valor": 20,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Cuando se Abre a la fuerza un objeto que no se puede agarrar fácilmente, una palanqueta hace más fácil obtener el brazo de palanca necesario. Sin una palanqueta, la prueba de Atletismo para Abrir algo a la fuerza sufre un penalizador -2 por objeto. Una palanqueta reforzada te concede un bonificador +1 por objeto a las pruebas de Atletismo para Abrir por la fuerza cualquier cosa que se puede abrir así."
+    },
+    {
+      "Nombre": "Pedernal y yesca",
+      "valor": 5,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "El pedernal y la yesca se utilizan para encender fuego si tienes tiempo para utilizar una chispa aunque usarlos suele alargarse, de forma que el método no es práctico durante un encuentro. Incluso en las condiciones ideales, utilizar el pedernal y la yesca para encender una llama requiere el uso de por lo menos 3 acciones, y a menudo mucho más."
+    },
+    {
+      "Nombre": "Periscopio",
+      "valor": 25,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 2,
+      "Descripcion": "Esto es un tubo de 2 pies (60 cm) de longitud con dos espejos angulados, uno en cada extremo. Cuando los espejos están correctamente alineados, puedes mirar alrededor de un obstáculo desde detrás de una cobertura. Esto no proporciona una línea de efecto suficiente para designar como objetivo a una criatura alrededor de una esquina."
+    },
+    {
+      "Nombre": "Pértiga de 10 pies (3 m)",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Cuando empuñas esta larga pértiga puedes Buscar para sondear una casilla hasta a 10 pies (3 m) de distancia. La pértiga no es lo suficientemente recia como para utilizarla como arma."
+    },
+    {
+      "Nombre": "Pitón",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Estas pequeñas púas se pueden utilizar como anclajes para trepar con más facilidad. Para fijar un pitón, tienes que sostenerlo en una mano y utilizar un martillo para clavarlo con la otra. Puedes fijar una cuerda al pitón clavado para no caer al suelo si sufres un fallo crítico mientras Trepas."
+    },
+    {
+      "Nombre": "Raciones (1 semana)",
+      "valor": 4,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Red",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Puedes utilizar una red, o bien sola, o bien amarrada a una cuerda. Cuando está amarrada a una cuerda, puedes utilizar la red para Apresar a una criatura Mediana o más pequeña a una distancia de hasta 10 pies (3 m) en lugar de sólo a criaturas adyacentes. Puedes continuar Apresando para mantener tu presa sobre el objetivo, si éste permanece a 10 pies (3 m) o menos y continúas sosteniendo la red. La criatura apresada obtiene un bonificador +2 por circunstancia a sus pruebas de Huir si no estás adyacente a ella y puede hacer una prueba de Atletismo CD 16 para Abrir la red por la fuerza. Una vez el objetivo deja de estar apresado, la red es engorrosa hasta que se vuelve a doblar mediante una acción de Interactuar con el rasgo concentrar que requiere dos manos; si se utiliza sin haber sido doblada, las pruebas de Apresar hechas con la red sufren un penalizador -2. Cuando la red no está amarrada puedes hacer una tirada de ataque a distancia utilizando tu competencia en armas sencillas contra una criatura Mediana o más pequeña a 20 pies (6 m) o menos. Con un impacto, el objetivo queda desprevenido y sufre un penalizador -10 pies (3 m) por circunstancia a sus Velocidades hasta que Huye y, con un impacto crítico, también queda inmovilizado hasta que Huye. La CD de Huir es 16. Una criatura adyacente al objetivo puede Interactuar para quitarle la red."
+    },
+    {
+      "Nombre": "Reloj de arena",
+      "valor": 3,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Ropa normal",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "La ropa normal es funcional y tiene un corte básico, como la de campesino, la de monje o la de trabajo. La ropa de explorador es lo suficientemente recia como para poderla reforzar y que te proteja, aunque no se puede considerar armadura. Hay muchas formas, aunque las más comunes se parecen a las vestimentas de clérigo, los adornos de monje o los ropajes de mago, puesto que los miembros de dichas clases es probable que eviten llevar armadura. Para más información sobre la ropa de explorador, consulta las págs. 272 a 273. La ropa de más calidad o la ropa para climas específicos es más cara."
+    },
+    {
+      "Nombre": "Ropa de explorador",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "La ropa normal es funcional y tiene un corte básico, como la de campesino, la de monje o la de trabajo. La ropa de explorador es lo suficientemente recia como para poderla reforzar y que te proteja, aunque no se puede considerar armadura. Hay muchas formas, aunque las más comunes se parecen a las vestimentas de clérigo, los adornos de monje o los ropajes de mago, puesto que los miembros de dichas clases es probable que eviten llevar armadura. Para más información sobre la ropa de explorador, consulta las págs. 272 a 273. La ropa de más calidad o la ropa para climas específicos es más cara."
+    },
+    {
+      "Nombre": "Ropa de calidad",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "La ropa normal es funcional y tiene un corte básico, como la de campesino, la de monje o la de trabajo. La ropa de explorador es lo suficientemente recia como para poderla reforzar y que te proteja, aunque no se puede considerar armadura. Hay muchas formas, aunque las más comunes se parecen a las vestimentas de clérigo, los adornos de monje o los ropajes de mago, puesto que los miembros de dichas clases es probable que eviten llevar armadura. Para más información sobre la ropa de explorador, consulta las págs. 272 a 273. La ropa de más calidad o la ropa para climas específicos es más cara."
+    },
+    {
+      "Nombre": "Ropa de calidad y diseño",
+      "valor": 55,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "La ropa normal es funcional y tiene un corte básico, como la de campesino, la de monje o la de trabajo. La ropa de explorador es lo suficientemente recia como para poderla reforzar y que te proteja, aunque no se puede considerar armadura. Hay muchas formas, aunque las más comunes se parecen a las vestimentas de clérigo, los adornos de monje o los ropajes de mago, puesto que los miembros de dichas clases es probable que eviten llevar armadura. Para más información sobre la ropa de explorador, consulta las págs. 272 a 273. La ropa de más calidad o la ropa para climas específicos es más cara."
+    },
+    {
+      "Nombre": "Ropa de invierno",
+      "valor": 4,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "La ropa normal es funcional y tiene un corte básico, como la de campesino, la de monje o la de trabajo. La ropa de explorador es lo suficientemente recia como para poderla reforzar y que te proteja, aunque no se puede considerar armadura. Hay muchas formas, aunque las más comunes se parecen a las vestimentas de clérigo, los adornos de monje o los ropajes de mago, puesto que los miembros de dichas clases es probable que eviten llevar armadura. Para más información sobre la ropa de explorador, consulta las págs. 272 a 273. La ropa de más calidad o la ropa para climas específicos es más cara."
+    },
+    {
+      "Nombre": "Saco (5)",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Un saco puede acarrear hasta Impedimenta 8 en objetos. Un saco que contiene Impedimenta 2 o menos se puede llevar en el cuerpo, usualmente pasado por el cinto. Puedes llevar un saco en una mano, pero tienes que usar las dos para meter y sacar objetos."
+    },
+    {
+      "Nombre": "Saco de dormir",
+      "valor": 2,
+      "moneda": "pc",
+      "Impedimenta": "L",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Silbato de señales",
+      "valor": 8,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Cuando se sopla, un silbato de señales se puede oír claramente hasta a media milla (800 m) en terreno despejado."
+    },
+    {
+      "Nombre": "Símbolo primigenio",
+      "valor": 0,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Los lanzadores de conjuros primigenios, especialmente los druidas, a menudo lucen adornos con materiales naturales para simbolizar su conexión con la Naturaleza, como por ejemplo anillos de plantas tejidas, amuletos hechos de partes de animales u otros símbolos relacionados con una orden druídica o filosofía de la Naturaleza."
+    },
+    {
+      "Nombre": "Símbolo religioso de madera",
+      "valor": 1,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Este trozo de madera o de plata está blasonado con una imagen que representa a un dios. Algunos lanzadores de conjuros divinos, como por ejemplo los clérigos, pueden emplear un símbolo religioso para usar ciertas aptitudes. Un símbolo religioso se puede llevar puesto en el cuerpo mediante una cadena o un broche, o puede sostenerse con la mano."
+    },
+    {
+      "Nombre": "Símbolo religioso de plata",
+      "valor": 2,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Este trozo de madera o de plata está blasonado con una imagen que representa a un dios. Algunos lanzadores de conjuros divinos, como por ejemplo los clérigos, pueden emplear un símbolo religioso para usar ciertas aptitudes. Un símbolo religioso se puede llevar puesto en el cuerpo mediante una cadena o un broche, o puede sostenerse con la mano."
+    },
+    {
+      "Nombre": "Texto religioso",
+      "valor": 1,
+      "moneda": "po",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Este manuscrito contiene escrituras de una religión en particular. Algunos lanzadores de conjuros divinos, como por ejemplo los clérigos, pueden utilizar un texto religioso para usar ciertas aptitudes. Un texto religioso se tiene que sostener en una mano para utilizarlo."
+    },
+    {
+      "Nombre": "Tienda de campaña ratonera",
+      "valor": 8,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Tienda de campaña para cuatro personas",
+      "valor": 5,
+      "moneda": "po",
+      "Impedimenta": 1,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Tienda de campaña pabellón",
+      "valor": 40,
+      "moneda": "po",
+      "Impedimenta": 12,
+      "Manos": 2,
+      "Rareza": "Común",
+      "Nivel": 2,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Tiza (10)",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": null
+    },
+    {
+      "Nombre": "Vaina de parada",
+      "valor": 5,
+      "moneda": "pp",
+      "Impedimenta": "L",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Puedes sacar esta vaina reforzada durante la misma acción de Interactuar que usas para desenvainar el arma que contiene, empuñando el arma en una mano y la vaina en la otra. Puedes utilizar para tu defensa una vaina de parada en gran medida como un arma con el rasgo parada: inviertes una acción para posicionarla defensivamente y obtienes un bonificador +1 por circunstancia a la CA hasta el inicio de tu siguiente turno. Hay vainas de parada disponibles para cualquier espada de las que se empuñan a una mano."
+    },
+    {
+      "Nombre": "Vaina oculta",
+      "valor": 25,
+      "moneda": "po",
+      "Impedimenta": "—",
+      "Manos": "—",
+      "Rareza": "Común",
+      "Nivel": 3,
+      "Descripcion": "Esta vaina de cuero es lo suficientemente grande como para alojar un objeto de hasta Impedimenta ligera y se utiliza típicamente para dagas, varitas, juegos de herramientas de ladrón y objetos similares. Puedes fijarla al interior de una bota, bajo unos brazales o una manga o en cualquier otro lugar discreto para obtener un bonificador +1 por objeto a las pruebas de Sigilo y a las clases de dificultad para esconder u ocultar el objeto de su interior."
+    },
+    {
+      "Nombre": "Vela (10)",
+      "valor": 1,
+      "moneda": "pc",
+      "Impedimenta": "—",
+      "Manos": 1,
+      "Rareza": "Común",
+      "Nivel": 0,
+      "Descripcion": "Una vela encendida emite luz tenue en un radio de 10 pies (3 m) durante 8 horas."
+    }
+  ]
+}

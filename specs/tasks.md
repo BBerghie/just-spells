@@ -4,6 +4,148 @@ Statuses: `TODO`, `IN PROGRESS`, `DONE`, `BLOCKED`.
 
 The tasks are intentionally small. Complete and validate one task before starting the next.
 
+## Interface language and layout
+
+### UI-001 — Translate the interface and align card actions
+
+**Status:** DONE
+
+**Goal:** Display application chrome in Spanish and keep card editing controls clear of card titles.
+
+**Acceptance criteria:**
+
+- Visible navigation, search, filters, editor controls, and generic catalog labels are in Spanish.
+- Card action buttons do not overlap the card title.
+- Pathfinder dataset content remains in its original language.
+
+**Implementation note:** Translated static and dynamically generated application labels, editor forms, filter names, card field labels, and accessible action names. Reserved title space for the `Editar` button and versioned the scripts so browsers reload the updated Spanish labels.
+
+### CATALOG-EDIT-001 — Add edit and create controls to equipment catalogs
+
+**Status:** DONE
+
+**Goal:** Let users edit source cards and create session-only records in armor, weapon, shield, and general item catalogs.
+
+**Acceptance criteria:**
+
+- Every generic catalog card has an Edit button, and its sidebar has a type-specific Create button.
+- Edits, restores, creation, and deletion use session storage and leave source JSON untouched.
+- Saved changes remain visible in search, filters, selection, and printing.
+- JavaScript syntax and browser loading are checked.
+
+**Implementation note:** Added type-specific create buttons, dynamic per-record forms, edit/restore/delete actions, and session-backed edit/custom-record state for all five equipment catalogs. Browser review confirmed edit and create controls on all 215 source cards, plus successful edit/restore and create/delete flows; `node --check main.js` and `git diff --check` pass.
+
+### DATA-004 — Discover generic catalog types from resources
+
+**Status:** DONE
+
+**Goal:** Discover every type from indexed JSON datasets and use one inferred filter system across all catalog views.
+
+**Acceptance criteria:**
+
+- Adding an indexed JSON type with records does not require a JavaScript catalog or filter registration.
+- Optional dataset label metadata supplies Spanish tab and create labels.
+- Spells, alchemical items, and generic catalog filters are inferred from their effective record fields.
+- All seven types use one generated view and editor; type-specific card templates preserve spell and alchemical layouts.
+
+**Implementation note:** All types are discovered from indexed datasets and use generated views, shared card actions, filters, selection, and editor forms. Spell and alchemical records retain specialized card templates within that shared flow. New dataset types need no JavaScript view, filter, or editor registration. The generated borderless-print control includes its initial label.
+
+### CATALOG-EDIT-002 — Use the shared catalog flow for every type
+
+**Status:** DONE
+
+**Goal:** Route spell and alchemical cards and editors through the same generated catalog system used by the newer types.
+
+**Acceptance criteria:**
+
+- All seven catalog views, card actions, selection lists, filters, create/edit forms, previews, and print controls are generated through the shared catalog flow.
+- Spell and alchemical cards retain their existing specialized visual templates.
+- Edited source records can be restored, and custom records can be deleted for all types.
+- Every generated borderless-print toggle has a visible Spanish label and stays synchronized.
+- Spell and alchemical title search, selection, deselection, and printing behavior continue working.
+
+**Implementation note:** The seven indexed types now share generated views and one dynamic editor with previews; spell and alchemical renderers plug into the common card flow. Browser checks covered all catalog counts and edit buttons, create/edit/preview/restore/delete for spell and alchemical records, search and selection toggles, and synchronized borderless-print labels. JavaScript syntax and whitespace checks passed.
+
+## Presentation
+
+### STYLE-001 — Refresh the application and card styles
+
+**Status:** DONE
+
+**Goal:** Give the application and all card types a more complete, consistent appearance using only project-owned CSS.
+
+**Acceptance criteria:**
+
+- App navigation, controls, sidebar, catalog layout, and dialogs share a responsive visual system.
+- Spell, alchemical, and generic catalog cards retain a consistent card frame and readable typography.
+- Selected-card printing retains its existing dimensions and layout.
+- No external style libraries are introduced.
+
+**Implementation note:** Reworked `style.css` and `style/spellCard.css` with shared colors, surfaces, spacing, focus states, responsive catalog layout, and refined card details. Added a version query to the card stylesheet URL in `index.html` so browsers refresh a cached older card layout. `node --check main.js` and `git diff --check` pass. Browser review confirmed the updated spell and armor layouts share the sidebar design, card widths render correctly, and title search still filters spells and alchemical items.
+
+## Dataset loading
+
+### FILTER-001 — Add field filters to every card type
+
+**Status:** DONE
+
+**Goal:** Add relevant sidebar filters to spell, alchemical item, armor, weapon, shield, and general item views.
+
+**Acceptance criteria:**
+
+- Every card type offers filters for its useful structured fields alongside title search.
+- Fields with 2–19 distinct values use selectors; fields with 20 or more use text inputs.
+- Array-valued fields match any contained value, and active filters combine with each other and title search.
+- Clearing filters restores matching cards without changing selection.
+
+**Implementation note:** Added a shared filter renderer and matcher, with field definitions for all seven catalog types. Filter choices are derived from effective records so session edits and custom spell/alchemical records are included. `node --check main.js` and `git diff --check` pass. Browser verification confirmed selector filtering for spell level and alchemical hand count, text filtering for spell traits, melee weapon traits, and item price, combined title/field filtering, and clearing a filter to restore all 103 general items. No browser console errors were reported.
+
+### DATA-003 — Add equipment and general item catalogs
+
+**Status:** IN PROGRESS
+
+**Goal:** Rename the new source datasets in English, identify them by type, and make them browseable in the application.
+
+**Acceptance criteria:**
+
+- New resource filenames are English and each root object declares its catalog `type` with records under `data`.
+- The static resource index includes all new datasets.
+- Each dataset appears in its own searchable view with safe text rendering, selection, deselection, and selected-card printing.
+- Spell, alchemical item, and equipment views use the same sidebar layout and shared search, selection, print, and card-color controls.
+- New catalog cards use the same visual template structure as spell and alchemical item cards.
+- Existing spell and alchemical views continue to use their current templates and workflows.
+
+**Implementation note:** Added armor, ranged weapons, melee weapons, shields, and general items catalogs. Their source filenames are `armor.json`, `ranged_weapons.json`, `melee_weapons.json`, `shields.json`, and `items.json`. Their card template shares the existing spell/alchemical frame and typography. Generic catalog views use the same sidebar structure and control order as spell and alchemical views. Syntax and dataset structure checks pass. Browser verification confirmed all five catalogs load, generic search filters records, selection and deselection work, and English-title search still works for spells and alchemical items. The in-app browser did not open native print preview, so print preview remains to be checked manually.
+
+### DATA-002 — Combine all datasets by declared type
+
+**Status:** DONE
+
+**Goal:** Load every indexed JSON dataset whose root `type` matches the requested section and merge its records into that section's main list.
+
+**Acceptance criteria:**
+
+- A static dataset index lists the JSON files in `resources` without requiring server-side directory enumeration.
+- Spell and alchemical loaders fetch all indexed files and combine each matching dataset's `data` records.
+- Files of another type do not enter the section's list; a missing matching type produces a clear load error.
+- Existing single-dataset files remain valid inputs.
+
+**Implementation note:** Added `resources/datasets.json` as a static-hosting-compatible file index. `loadTypedDataset(type)` fetches its listed JSON files in parallel, filters by root `type`, then concatenates the `data` arrays.
+
+### DATA-001 — Select datasets by their declared type
+
+**Status:** DONE
+
+**Goal:** Identify each bundled dataset from its root `type` field rather than inferring the dataset type from its filename.
+
+**Acceptance criteria:**
+
+- Spell and alchemical item JSON use a root object with a `type` discriminator and a `data` array.
+- Each section validates the expected discriminator before normalizing and rendering its records.
+- An HTTP or dataset format error is reported without silently loading the wrong data.
+
+**Implementation note:** Added `type: "spells"` and `type: "alchemical-items"` wrappers to the bundled JSON files and a shared typed dataset loader. The root JSON schema intentionally changed from an array to `{ type, data }`; per-record fields remain unchanged.
+
 ## Foundation
 
 ### JS-001 — Document and normalize the spell data model
@@ -348,7 +490,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Acceptance criteria:**
 
-- Selected cards have a real CSS border with an explicit width, style, and `var(--card-background)` color in bordered print mode.
+- Selected cards have a solid print frame with an explicit width and `var(--card-background)` color that remains visible when browser background graphics are disabled.
 - Print CSS requests exact color reproduction with the standard and WebKit print-color-adjust properties.
 - Card dimensions and page layout account for the border with `box-sizing: border-box` and do not unexpectedly add pages or clip content.
 - Internal colored separators and action icons continue to render correctly.
@@ -357,7 +499,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 **Validation:** Select multiple spell and alchemical cards, choose a non-black color, and verify the border in print preview and a generated PDF with browser background graphics both enabled and disabled where the browser permits.
 
-**Implementation note:** Print media now gives selected cards a real 2px solid border using `var(--card-background)`, keeps it within existing dimensions with `box-sizing: border-box`, and requests exact color reproduction through standard and WebKit properties. The rule is shared by both card types and leaves the existing selected-only print filtering intact.
+**Implementation note:** Print media gives selected cards a 0.48rem solid frame using `var(--card-background)`, matching the screen frame thickness and keeping it inside existing dimensions with `box-sizing: border-box`. The card content uses the frame's inner edge so it is not inset twice. Exact color reproduction is requested through standard and WebKit properties; the rule is shared by both card types and leaves selected-only filtering intact.
 
 ---
 
@@ -388,7 +530,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 
 ### PRINT-004 — Run print regression checks
 
-**Status:** DONE
+**Status:** IN PROGRESS
 
 **Goal:** Verify the complete print-border behavior and existing browse/print workflows after implementation.
 
@@ -406,7 +548,7 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Changed JavaScript passes `node --check` and changed CSS has no obvious parsing errors in supported browsers.
 - The manual validation result and any browser-specific limitation are recorded in the relevant task implementation notes.
 
-**Implementation note:** JavaScript syntax checks, `git diff --check`, deterministic toggle-state checks, local HTTP serving, and a headless Firefox render completed successfully. The installed Firefox supports headless screenshots but provides no command-line print/PDF operation, and no Chromium/WebDriver tooling is installed. Interactive print preview and generated-PDF checks—including background-graphics variations—remain blocked on an interactive browser environment. The implementation therefore must not be marked fully validated until those manual checks pass.
+**Implementation note:** The selected card's print frame now uses a 0.48rem solid border matching the on-screen frame, so its chosen color is not dependent on background graphics. The local browser loaded and parsed the updated print CSS; spell and alchemical cards share the rule. Interactive print preview/PDF checks with background graphics enabled and disabled remain to be completed manually.
 
 ---
 
@@ -526,3 +668,60 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Manual browser results and any environment limitations are recorded in the implementation note.
 
 **Implementation note:** Preview regions are cleared on create/edit open, Save, Cancel, and native dialog close. JavaScript syntax checks and `git diff --check` passed, the application loaded through Caddy, and a headless Firefox smoke test passed for spell/alchemical rendering, replacement, safe HTML-like text, array normalization, Cancel cleanup, and unchanged session storage. Interactive print-preview validation remains subject to the existing environment limitation recorded in PRINT-004.
+
+### UI-006 — Polish card layout and tab switching
+
+**Status:** DONE
+
+**Goal:** Keep card actions within the title row, align titles and action symbols, and avoid tab-switch layout flashes.
+
+**Implementation note:** Card title rows now use centered flex alignment, edit actions fit inside the row, and card borders and color controls share the same initial color. Tab switching uses direct element/class updates without synchronous text autosizing. Catalog filtering now reuses each card's record object instead of serializing and reparsing it on each keystroke.
+
+### CARD-PAGES-001 — Continue overflowing card text on numbered cards
+
+**Status:** IN PROGRESS
+
+**Goal:** Keep long record text readable by continuing overflowing content on additional cards.
+
+**Acceptance criteria:**
+
+- Text that exceeds a card's content area continues on additional cards with the same title and repeated card framing.
+- Multi-card titles show their page number and total, such as `(1/2)` and `(2/2)`.
+- Continuation cards remain searchable with their record, and selecting or deselecting one selects or deselects every card in the set.
+- Printing selected records includes every continuation page.
+- Editor previews use the same continuation layout as catalog cards.
+- Existing one-card records keep their original titles and selection behavior.
+
+**Implementation note:** Added a shared DOM-measured paginator for all discovered types. It fills each card's existing body, splits overflowing text at word boundaries (falling back to character boundaries for unbroken text), repeats the title and footer, and groups continuation pages for selection and printing. Browser verification confirms Alucinación begins on card `(1/2)` and continues on `(2/2)`, with no third empty card or content overflow. Selecting or deselecting either page toggles the full set. JavaScript syntax checks pass. Print preview remains unverified because the browser tab became unresponsive when opening it; the local HTTP check was also blocked by sandbox access to port 8080.
+
+### DATA-IMPORT-001 — Import validated typed JSON datasets
+
+**Status:** IN PROGRESS
+
+**Goal:** Let users add a resource-format JSON dataset to its matching catalog for the current browser session.
+
+**Acceptance criteria:**
+
+- A global import button is available on every catalog view.
+- The imported dataset type must match a discovered catalog, and all records must match the bundled field names and value types.
+- Valid records are added to the matching catalog and persist across reloads in the same session.
+- Invalid JSON, unknown types, and invalid records are rejected without partially changing catalogs or session storage.
+- Imported records support the existing search, filters, editing, selection, and printing behavior.
+
+**Implementation note:** Added the shared header picker, type/schema validation, all-record validation before mutation, type-aware normalization, and session-backed import into the existing custom record stores. Browser loading confirms the enabled import button remains alongside all seven generated catalog tabs. Added `resources/test_spells_import.json`, an unindexed fixture containing three invented spells with the exact bundled spell schema for manual import checks. `node --check` passes for both JavaScript files, `git diff --check` passes, and every bundled dataset has consistent record fields. Direct valid/invalid file-picker and reload verification remains pending because the browser evaluation bridge does not expose file/session APIs.
+
+### PRINT-DUPLEX-001 — Print matching card backs for long-edge duplex
+
+**Status:** IN PROGRESS
+
+**Goal:** Add an optional colored card back aligned to each selected card when printing portrait sheets duplex on the long edge.
+
+**Acceptance criteria:**
+
+- A synchronized toggle is available in every catalog sidebar and starts disabled.
+- Enabled duplex printing creates one matching back sheet after each front sheet, with up to nine card positions per sheet.
+- Back positions mirror horizontally and only correspond to occupied front card positions.
+- Back fill uses the chosen shared card color; borderless mode removes only the outer frame.
+- Selected-only printing and normal catalog rendering remain unchanged.
+
+**Implementation note:** Added R18 and documented the temporary print-document approach. The UI now exposes synchronized duplex toggles across all seven catalog sidebars, and browser checks confirmed that enabling one updates all seven labels and pressed states. The renderer groups selected card pages into 3-by-3 front sheets and builds horizontally mirrored color-back sheets. Back cards now use a double inset frame and a central diamond medallion in the same navy, cream, and gold palette as the front border. `node --check` and `git diff --check` pass. Print preview remains unverified because opening native print preview has made the browser automation unresponsive in this environment.

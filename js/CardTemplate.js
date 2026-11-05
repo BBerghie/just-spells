@@ -8,13 +8,16 @@ function spellCardTemplate(spell) {
   const title = document.createElement("h3");
   title.className = "name lined srname";
   title.dataset.search = `${spell.title ?? ""} ${spell.enTitle ?? ""}`;
-  title.append(document.createTextNode(`${spell.title ?? ""} `));
+  const titleText = document.createElement("span");
+  titleText.className = "card-title-text";
+  titleText.textContent = spell.title ?? "";
+  title.appendChild(titleText);
 
   const actionImagePath = getActionImg(spell.actionType);
   if (actionImagePath) {
     const actionImage = document.createElement("img");
     actionImage.src = actionImagePath;
-    actionImage.alt = spell.actionType ?? "";
+    actionImage.alt = getActionLabel(spell.actionType);
     title.appendChild(actionImage);
   }
 
@@ -30,7 +33,7 @@ function spellCardTemplate(spell) {
     spellStatusTemplate(
       "Objetivo",
       spell.objectives,
-      "Desencadenate",
+      "Desencadenante",
       spell.trigger,
     ),
   );
@@ -96,12 +99,15 @@ function alchemicalItemCardTemplate(alchemicalItem) {
   const title = document.createElement("h3");
   title.className = "name lined srname";
   title.dataset.search = `${alchemicalItem.title ?? ""} ${alchemicalItem.englishTitle ?? ""}`;
-  title.append(document.createTextNode(`${alchemicalItem.title ?? ""} `));
+  const titleText = document.createElement("span");
+  titleText.className = "card-title-text";
+  titleText.textContent = alchemicalItem.title ?? "";
+  title.appendChild(titleText);
   const actionImagePath = getActionImg(alchemicalItem.actions);
   if (actionImagePath) {
     const image = document.createElement("img");
     image.src = actionImagePath;
-    image.alt = alchemicalItem.actions ?? "";
+    image.alt = getActionLabel(alchemicalItem.actions);
     title.appendChild(image);
   }
   const attributes = document.createElement("div");
@@ -142,7 +148,7 @@ function alchemicalItemCardTemplate(alchemicalItem) {
   itemClass.textContent = getAlchemicalItemType(alchemicalItem.tags);
   const type = document.createElement("b");
   type.className = "type srtype";
-  type.textContent = `ITEM ${alchemicalItem.level ?? ""}`;
+  type.textContent = `OBJETO ${alchemicalItem.level ?? ""}`;
   template.append(body, itemClass, type);
   let validAttributes = [];
   addIfNotEmpty(alchemicalItem.price, "Precio", validAttributes);
@@ -286,4 +292,15 @@ function getActionImg(actionType) {
       imgPath = "";
   }
   return imgPath;
+}
+
+function getActionLabel(actionType) {
+  const labels = {
+    "one-action": "Una acción",
+    "two-actions": "Dos acciones",
+    "three-actions": "Tres acciones",
+    reaction: "Reacción",
+    "free-action": "Acción gratuita",
+  };
+  return labels[actionType] ?? "";
 }

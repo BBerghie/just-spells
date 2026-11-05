@@ -1,0 +1,12 @@
+{
+  "type": "dataset-index",
+  "files": [
+    "spells.json",
+    "alchemical_items.json",
+    "armor.json",
+    "ranged_weapons.json",
+    "melee_weapons.json",
+    "shields.json",
+    "items.json"
+  ]
+}

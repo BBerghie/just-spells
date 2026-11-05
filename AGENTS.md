@@ -8,15 +8,9 @@ The project intentionally uses plain HTML, CSS, and vanilla JavaScript. It has n
 
 ## Language
 
-All project-facing content must be written in English, including:
-
-- source code identifiers and comments;
-- UI labels and messages introduced or changed by new work;
-- README and documentation;
-- specifications and task descriptions;
-- developer-facing console messages.
-
-Existing Pathfinder content loaded from JSON may remain in its source language. Do not translate game data unless a task explicitly requires it.
+- Keep source code identifiers and comments, README and developer documentation, specifications, task descriptions, and console messages in English.
+- All user-visible application text must be written in Spanish, including navigation, controls, filters, editors, card field labels, and accessibility labels.
+- Pathfinder content loaded from JSON may remain in its source language. Do not translate game data unless a task explicitly requires it.
 
 ## Read before changing code
 
@@ -64,7 +58,7 @@ A simple local server can be started from the repository root with:
 caddy file-server --listen :8080
 ```
 
-Then open `http://localhost:8000`.
+Then open `http://localhost:8080`.
 
 ## Definition of done
 

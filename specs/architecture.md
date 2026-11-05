@@ -11,15 +11,18 @@ Just Spells is a static client-side application.
 - `style/spellCard.css` contains card styles.
 - `main.js` loads data, renders card lists, handles selection/search/tabs, and contains some utility behavior.
 - `js/CardTemplate.js` contains card rendering helpers/templates.
-- `resources/spells.json` is the bundled spell dataset.
-- `resources/alchemical_items.json` is the bundled alchemical item dataset.
+- `resources/datasets.json` indexes the JSON dataset filenames for static hosting.
+- Each indexed dataset declares a root `type` and stores its records under `data`; loaders merge every dataset matching the requested type.
+- All catalog types are discovered from indexed datasets with a `data` array. Optional root `label`, `singularLabel`, and `createLabel` fields provide Spanish UI labels. Every type uses the shared generated catalog view, card actions, filters, selection, printing, and record editor. Spell and alchemical records select their existing card templates through the shared renderer.
+- Generic catalog records render through a shared card template that uses the spell and alchemical card frame, body, title, field rows, and footer. Spell and alchemical records use their specialized templates inside the same card and edit flows.
+- The index file itself uses `{ "type": "dataset-index", "files": [...] }`.
 
 ### Runtime data flow
 
 Current flow:
 
 ```text
-Bundled JSON
+Dataset index -> typed bundled JSON (`type` and `data`)
     |
     v
 fetch()
@@ -37,6 +40,10 @@ DOM card elements
     +--> selection
     +--> print
 ```
+
+Filter fields for every type are inferred from effective record keys, excluding title and description fields. Field controls are generated from effective records: fields with 2–19 distinct values use a select, and fields with 20 or more values use text matching. All active controls are applied together to the rendered pool.
+
+To add a catalog type, add its JSON filename to `resources/datasets.json`, declare a new root `type`, and provide records under `data`. Optional Spanish root labels customize the generated tab and create button. The view, filters, editing form, session persistence, search, selection, and printing are generated from the dataset without a catalog or filter registration. A specialized renderer can preserve a distinct card layout while still using the shared catalog flow.
 
 ## Target architecture for editing
 
@@ -82,7 +89,9 @@ Print border mode is transient shared UI state. It is represented by a class on 
 
 ## Print rendering
 
-Selected cards use an explicit CSS border in print media, with `box-sizing: border-box` so the border remains inside the existing card dimensions. The card background continues to provide the wider visual frame when the browser honors exact print colors, while the real border provides a printable outline that does not depend on background graphics. A root-level borderless-mode class suppresses the outer border and frame without changing selection or internal card separators.
+Selected cards use an explicit CSS border in print media, with `box-sizing: border-box` so the colored frame remains inside the existing card dimensions. The print border matches the frame thickness and provides the visible selected color even when browser background graphics are disabled. A root-level borderless-mode class suppresses the outer border and frame without changing selection or internal card separators.
+
+When duplex backs are enabled, `beforeprint` builds a temporary print document from selected card clones. Each front sheet contains up to nine cards in a fixed 3-by-3 A4 portrait grid; its following back sheet mirrors occupied positions horizontally and fills them with the shared card color. The print document is removed on `afterprint`; this setting is transient and does not alter the catalog DOM or session state.
 
 ## Identity
 
@@ -111,6 +120,10 @@ just-spells.session.v1
 ```
 
 Store only user-generated session state needed to reconstruct edits/custom records. Do not duplicate the full bundled JSON dataset unless there is a clear reason.
+
+Generic equipment catalog edits are keyed by catalog type and source record ID in `editedCatalogRecords`; user-created catalog entries are stored per type in `customCatalogRecords`. On load, apply edits over source record copies and append custom records so bundled resource JSON remains immutable.
+
+Imported typed datasets are validated against the field names and value types discovered from bundled records. Their records are normalized through the corresponding spell/alchemical renderer model where needed, assigned session IDs, and appended to the existing per-type custom record arrays. Import validation completes for the entire file before state or session storage is changed.
 
 Session parsing must be defensive: invalid or incompatible stored data should not prevent the base application from loading.
 

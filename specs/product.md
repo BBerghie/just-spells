@@ -12,14 +12,16 @@ Pathfinder spell and item descriptions are useful during play but are not always
 
 The application currently:
 
-- loads spell data from `resources/spells.json`;
-- loads alchemical item data from `resources/alchemical_items.json`;
+- loads and combines all indexed JSON datasets of type `spells`;
+- loads and combines all indexed JSON datasets of type `alchemical-items`;
 - renders the records as printable cards;
-- provides separate spell and alchemical item views;
+- provides separate spell, alchemical item, armor, ranged weapon, melee weapon, shield, and general item views;
 - searches cards by title;
+- filters cards by type-specific structured fields;
 - lets the user select cards for printing;
 - allows the card background color to be changed;
 - uses the browser print dialog to print selected cards.
+- can print matching colored card backs on reverse sheets for long-edge duplex printing.
 
 ## Near-term product direction
 
