@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,90 +7,83 @@
         <link rel="stylesheet" href="./style/spellCard.css" />
         <script type="text/javascript" src="./main.js"></script>
         <script type="text/javascript" src="./js/CardTemplate.js"></script>
-        <title>A simple Path Finder spell cards maker</title>
+        <title>Just Spells — Pathfinder 2e cards</title>
     </head>
     <body>
-        <header class="no-print">
-            <h1 id="mainTitle">A simple Path Finder spell cards maker</h1>
-            <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'Spells')">Conjuros</button>
-                <button class="tablinks" onclick="openTab(event, 'Alchemy')">Objetos Alquímicos</button>
-            </div>
+        <header class="site-header no-print">
+            <a class="brand" href="./">Just Spells<span>Pathfinder 2e card maker</span></a>
+            <span class="header-note">Less searching. More playing.</span>
         </header>
         <main>
+            <section class="intro no-print">
+                <p class="eyebrow">YOUR TABLETOP COMPANION</p>
+                <h1>Keep your next move handy.</h1>
+                <p>Find your spells and items. Pick your cards. Print and play.</p>
+            </section>
+            <nav class="tab no-print" aria-label="Card collections">
+                <button class="tablinks active" aria-current="page" aria-controls="Spells" onclick="openTab(event, 'Spells')">Spells</button>
+                <button class="tablinks" aria-controls="Alchemy" onclick="openTab(event, 'Alchemy')">Alchemical items</button>
+            </nav>
             <div id="Spells" class="tabcontent">
-                <section class="spellContainer">
-                    <section class="fixed fixedContainer no-print">
-                        <section class="button-row">
-                            <input type="text"
-                                   id="searchInputSpells"
-                                   placeholder="Buscar por título..."
-                            />
-                            <label for="searchInputSpells">Búsqueda</label>
-                            <button id="createSpellButton" class="no-print" type="button">Create spell</button>
-                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Print without borders</button>
-                            <button onclick="window.print()">Imprimir</button>
-                            <div>
-                                <input type="color" id="colorPickerSpells" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
-                                <label for="colorPickerSpells">Elegir color de fondo</label>
+                <div class="spellContainer">
+                    <aside class="fixedContainer no-print" aria-label="Spells controls">
+                        <div class="button-row">
+                            <label for="searchInputSpells">Search spells</label>
+                            <input type="search" id="searchInputSpells" placeholder="Search by title…" />
+                            <button id="createSpellButton" type="button">+ Create spell</button>
+                        </div>
+                        <section class="selection-panel">
+                            <h2>Selected cards</h2>
+                            <ul id="selected-spells" class="selection-list"></ul>
+                            <p class="selection-empty">Your selection starts here.<br>Click a card to add it.</p>
+                        </section>
+                        <div class="print-controls">
+                            <div class="color-control">
+                                <label for="colorPickerSpells">Card color</label>
+                                <input type="color" id="colorPickerSpells" value="#000000" oninput="setCardColor(this.value)" />
                             </div>
-
-
-                        </section>
-                        <!-- List of selected Spells -->
-                        <section>
-                            <section class="selected-spells">
-                                <h2>Conjuros seleccionados</h2>
-                                <ul id="selected-spells" class="selected-spells"></ul>
-                            </section>
-
-                        </section>
-                    </section>
-
-
-                    <!-- List of Spells -->
-                    <section class="spell-section">
-                        <h2 class="no-print">Lista de conjuros</h2>
+                            <button class="print-border-toggle" type="button" aria-pressed="false">Print without borders</button>
+                            <button class="primary" onclick="window.print()">Print selected cards <span aria-hidden="true">↗</span></button>
+                        </div>
+                        <p class="sidebar-note">Edits stay in this browser session.</p>
+                    </aside>
+                    <section class="spell-section" aria-label="Spells">
+                        <div class="collection-heading no-print"><h2>Spells</h2><span>Click to select · Edit to customize</span></div>
                         <ul id="spellPool" class="spell-list"></ul>
+                        <p class="no-results no-print" hidden>No cards found. Try another title.</p>
                     </section>
-                </section>
+                </div>
             </div>
-
-            <div id="Alchemy" class="tabcontent">
-                <section class="spellContainer">
-                    <section class="fixed fixedContainer no-print">
-                        <section class="button-row">
-                            <input type="text"
-                                   id="searchInputAlchemy"
-                                   placeholder="Buscar por título..."
-                            />
-                            <label for="searchInputAlchemy">Búsqueda</label>
-                            <button id="createAlchemicalItemButton" class="no-print" type="button">Create alchemical item</button>
-                            <button class="print-border-toggle no-print" type="button" aria-pressed="false">Print without borders</button>
-                            <button onclick="window.print()">Imprimir</button>
-                            <div>
-                                <input type="color" id="colorPickerAlchemy" value="black" oninput="document.documentElement.style.setProperty('--card-background', this.value)"/>
-                                <label for="colorPickerAlchemy">Elegir color de fondo</label>
+        </main>
+            <div id="Alchemy" class="tabcontent" style="display: none;">
+                <div class="spellContainer">
+                    <aside class="fixedContainer no-print" aria-label="Alchemical items controls">
+                        <div class="button-row">
+                            <label for="searchInputAlchemy">Search alchemical items</label>
+                            <input type="search" id="searchInputAlchemy" placeholder="Search by title…" />
+                            <button id="createAlchemicalItemButton" type="button">+ Create alchemical item</button>
+                        </div>
+                        <section class="selection-panel">
+                            <h2>Selected cards</h2>
+                            <ul id="selected-alchemical-items" class="selection-list"></ul>
+                            <p class="selection-empty">Your selection starts here.<br>Click a card to add it.</p>
+                        </section>
+                        <div class="print-controls">
+                            <div class="color-control">
+                                <label for="colorPickerAlchemy">Card color</label>
+                                <input type="color" id="colorPickerAlchemy" value="#000000" oninput="setCardColor(this.value)" />
                             </div>
-
-
-                        </section>
-                        <!-- List of selected Spells -->
-                        <section>
-                            <section class="selected-alchemical-items">
-                                <h2>Objetos Alquímicos seleccionados</h2>
-                                <ul id="selected-alchemical-items" class="selected-alchemical-items"></ul>
-                            </section>
-                        </section>
-                    </section>
-
-
-                    <!-- List of Spells -->
-                    <section class="spell-section">
-                        <h2 class="no-print">Lista de Objetos Alquímicos</h2>
+                            <button class="print-border-toggle" type="button" aria-pressed="false">Print without borders</button>
+                            <button class="primary" onclick="window.print()">Print selected cards <span aria-hidden="true">↗</span></button>
+                        </div>
+                        <p class="sidebar-note">Edits stay in this browser session.</p>
+                    </aside>
+                    <section class="spell-section" aria-label="Alchemical items">
+                        <div class="collection-heading no-print"><h2>Alchemical items</h2><span>Click to select · Edit to customize</span></div>
                         <ul id="alchemicalItemPool" class="spell-list"></ul>
+                        <p class="no-results no-print" hidden>No cards found. Try another title.</p>
                     </section>
-                </section>
+                </div>
             </div>
         </main>
         <dialog id="spellEditorDialog" class="spell-editor no-print" aria-labelledby="spellEditorHeading">
@@ -180,7 +173,7 @@
                 </div>
             </form>
         </dialog>
-        <footer></footer>
+        <footer class="site-footer no-print">Just Spells <span>Made for your next adventure.</span></footer>
     </body>
 </html>
 

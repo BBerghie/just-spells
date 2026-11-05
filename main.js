@@ -854,6 +854,7 @@ function filterSpellCards() {
     const matches = title.includes(query);
     card.style.display = matches ? "" : "none";
   });
+  updateEmptyResults("spellPool");
 }
 function setupAlchemicalItemSearch() {
   const searchInput = document.getElementById("searchInputAlchemy");
@@ -865,6 +866,21 @@ function filterAlchemicalItemCards() {
     const title = card.querySelector(".srname")?.dataset.search.toLowerCase() ?? "";
     card.style.display = title.includes(query) ? "" : "none";
   });
+  updateEmptyResults("alchemicalItemPool");
+}
+
+function setCardColor(color) {
+  document.documentElement.style.setProperty("--card-background", color);
+  document.querySelectorAll('input[type="color"]').forEach((input) => {
+    input.value = color;
+  });
+}
+
+function updateEmptyResults(poolId) {
+  const pool = document.getElementById(poolId);
+  pool.nextElementSibling.hidden = Array.from(pool.children).some(
+    (card) => card.style.display !== "none",
+  );
 }
 
 function setBorderlessPrint(borderless) {
@@ -927,11 +943,14 @@ function openTab(evt, tabName) {
   tablinks = document.getElementsByClassName("tablinks");
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
+    tablinks[i].removeAttribute("aria-current");
   }
 
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
+  evt.currentTarget.setAttribute("aria-current", "page");
+  autoSizeText(document.getElementById(tabName));
 }
 
 function autoSizeText(root = document) {
@@ -939,6 +958,7 @@ function autoSizeText(root = document) {
   const elements = root.querySelectorAll(".resize");
 
   elements.forEach((element) => {
+    if (element.offsetHeight === 0) return;
     let fontSize = Number.parseFloat(getComputedStyle(element).fontSize);
 
     if (!Number.isFinite(fontSize)) {

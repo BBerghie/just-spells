@@ -526,3 +526,25 @@ The tasks are intentionally small. Complete and validate one task before startin
 - Manual browser results and any environment limitations are recorded in the implementation note.
 
 **Implementation note:** Preview regions are cleared on create/edit open, Save, Cancel, and native dialog close. JavaScript syntax checks and `git diff --check` passed, the application loaded through Caddy, and a headless Firefox smoke test passed for spell/alchemical rendering, replacement, safe HTML-like text, array normalization, Cancel cleanup, and unchanged session storage. Interactive print-preview validation remains subject to the existing environment limitation recorded in PRINT-004.
+
+
+## Minimalist redesign
+
+### UI-006 — Simplify the browsing interface
+
+**Status:** IN PROGRESS
+
+**Goal:** Give both collections a minimal, responsive interface with clear search, selection, and print controls.
+
+**Acceptance criteria:**
+
+- Use consistent neutral colors, typography, spacing, and English application labels.
+- Show one collection at a time with an obvious active navigation state.
+- Keep search, create/edit/preview, selection, shared card color, and print-border controls available.
+- Fit the browsing layout and editors on desktop and narrow mobile screens.
+- Preserve printed card dimensions and print only selected cards, including selections hidden by search or navigation.
+- Check JavaScript syntax and browser behavior through a local HTTP server; record validation limitations.
+
+**Implementation note:** Implemented a neutral responsive shell, one visible collection with active navigation, compact search/selection/print sidebar, empty selection and search states, and matching editor controls. Screen-only card styling moves Edit/Reset/Delete below the content. Color pickers stay synchronized. Print layout retains the existing dimensions and includes selected cards hidden by either search or navigation. Hidden alchemical text is sized only after its collection becomes visible. No dependencies or source-data changes were introduced.
+
+**Validation:** `node --check main.js`, `node --check js/CardTemplate.js`, and `git diff --check` pass. Caddy serves the application over HTTP (200 OK). Headless Firefox crashed inside the sandbox and did not complete screenshots when retried outside it with isolated profiles. Desktop/mobile visual review, interactive search/selection/editor regression checks, and print preview therefore remain pending; this task stays IN PROGRESS until browser validation is complete.

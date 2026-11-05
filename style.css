@@ -1,95 +1,81 @@
 :root {
-    --card-background: black;
-    --card-background-unselected: color-mix(in srgb, var(--card-background) 50%, transparent);
+    --card-background: #000000;
+    --card-background-unselected: #deded8;
+    --ink: #252923;
+    --muted: #687064;
+    --line: #dedfd8;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: #f7f8f4;
 }
-
-.title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; border: 1px solid var(--line); border-radius: 7px; padding: 10px 14px; background: #fff; color: var(--ink); font-size: 13px; }
+button:hover { background: #eeefe9; border-color: #a7aea0; }
+:focus-visible { outline: 2px solid #536b43; outline-offset: 4px; }
+input:not([type="color"]), select, textarea { border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: #fff; color: var(--ink); min-width: 0; }
+textarea { resize: vertical; }
+.site-header, main, .site-footer { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
+.site-header { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.brand { color: var(--ink); text-decoration: none; font-size: 21px; font-weight: 650; letter-spacing: -0.7px; }
+.brand span { display: block; margin-top: 5px; font-size: 11px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.header-note { color: var(--muted); font-size: 12px; }
+.intro { padding: 48px 0 32px; }
+.eyebrow { font-size: 10px; letter-spacing: 1.8px; color: var(--muted); font-weight: 600; }
+h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 500; letter-spacing: -1.6px; margin: 12px 0; }
+.intro > p:last-child { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.tab { display: flex; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.tablinks { padding: 14px 0; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--muted); }
+.tablinks.active { border-bottom-color: var(--ink); color: var(--ink); font-weight: 600; }
+.spellContainer { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 36px; align-items: start; }
+.fixedContainer { position: sticky; top: 24px; }
+.button-row, .print-controls { display: flex; flex-direction: column; gap: 12px; }
+.button-row label, .color-control label { font-size: 12px; font-weight: 500; }
+.button-row input { width: 100%; box-sizing: border-box; font-size: 13px; }
+.selection-panel { margin: 24px 0; padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.selection-panel h2 { font-size: 13px; font-weight: 600; margin: 0 0 12px; }
+.selection-list { padding-left: 16px; margin: 0; font-size: 12px; line-height: 1.8; max-height: 190px; overflow: auto; }
+.selection-list:empty { display: none; }
+.selection-empty { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 0; }
+.selection-list:not(:empty) + .selection-empty { display: none; }
+.color-control { display: flex; align-items: center; justify-content: space-between; }
+input[type="color"] { width: 32px; height: 30px; padding: 3px; border: 1px solid var(--line); border-radius: 5px; background: #fff; cursor: pointer; }
+button.primary, .spell-editor-actions button[type="submit"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+button.primary:hover, .spell-editor-actions button[type="submit"]:hover { background: #41483b; }
+.primary span { margin-left: 12px; }
+.print-border-toggle { font-size: 12px; }
+.sidebar-note { color: var(--muted); font-size: 11px; line-height: 1.6; text-align: center; }
+.collection-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+.collection-heading h2 { font-size: 15px; font-weight: 600; margin: 0; }
+.collection-heading span { color: var(--muted); font-size: 11px; }
+.spell-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+.no-results { color: var(--muted); padding: 48px 0; text-align: center; }
+.site-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding-top: 40px; padding-bottom: 28px; }
+@media (max-width: 700px) {
+    .site-header, main, .site-footer { padding-left: 20px; padding-right: 20px; }
+    .header-note { display: none; }
+    .intro { padding-top: 28px; }
+    .spellContainer { grid-template-columns: 1fr; gap: 24px; }
+    .fixedContainer { position: static; }
+    .button-row { display: grid; grid-template-columns: 1fr auto; }
+    .button-row label { grid-column: 1 / -1; }
+    .selection-panel { margin: 16px 0; padding: 16px 0; }
+    .print-controls { display: grid; grid-template-columns: 1fr 1fr; }
+    .print-controls .primary { grid-column: 1 / -1; }
+    .color-control { justify-content: start; gap: 12px; }
+    .sidebar-note { text-align: left; }
+    .collection-heading { align-items: start; }
+    .collection-heading span { text-align: right; }
 }
-
-.button-row {
-    display: flex;
-    flex-direction: column;
-    padding-left: 1vw;
-
-}
-
-
-.search {
-    input {
-        border: black solid 1px;
-    }
-}
-.spellContainer {
-    display: flex;
-    justify-content: left;
-}
-
-.fixedContainer {
-    width: 30%;
-    display: flex;
- justify-content: space-between;
-    height: 100%;
-    overflow-y:auto;
-}
-
-.controls {
-    display: flex;
-    /*gap: 1rem;*/
-    margin-bottom: 1.5rem;
-}
-.spell-list {
-    width: 21cm;
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0;
-}
-
-.alchemical-item-list {
-    width: 21cm;
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0;
-}
-
 @media print {
-    .no-print {
-        display: none !important;
-    }
-
-    .card.selected {
-        box-sizing: border-box;
-        border: 2px solid var(--card-background) !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .print-borderless .card.selected {
-        border: 0 !important;
-        background: transparent !important;
-        -webkit-print-color-adjust: economy;
-        print-color-adjust: economy;
-    }
-}
-
-.fixed {
-    position: sticky;
-    top: 5%;
-}
-
-.spell-section {
-    width: 70%;
-    height: 100%;
-}
-
-.selected-spells {
-    padding-right: 5%;
-    text-align: center;
+    :root { background: white; font-family: serif; }
+    body, main { margin: 0; padding: 0; max-width: none; }
+    .tabcontent { display: block !important; }
+    .spellContainer, .spell-section { display: contents; }
+    .spell-list { display: contents; }
+    .no-print { display: none !important; }
+    .card.selected { display: block !important; float: left; width: 6.93cm; height: 3.5in; margin: 0; box-sizing: border-box; border: 2px solid var(--card-background) !important; break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-borderless .card.selected { border: 0 !important; background: transparent !important; -webkit-print-color-adjust: economy; print-color-adjust: economy; }
 }
 
 .hidden {
@@ -99,8 +85,8 @@
 .spell-editor {
     width: min(52rem, calc(100vw - 2rem));
     max-height: calc(100vh - 2rem);
-    padding: 1.25rem;
-    border: 1px solid #555;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
     border-radius: 0.5rem;
     box-sizing: border-box;
     overflow-y: auto;
